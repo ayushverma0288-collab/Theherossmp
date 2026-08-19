@@ -95,11 +95,11 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section with Direct Banner Image */}
+      {/* Hero Section with Local Custom Banner Image */}
       <section style={{ 
         textAlign: "center", 
         padding: "4rem 1rem", 
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(13, 13, 13, 0.9)), url('https://i.ibb.co/L6K2mX1/banner.png')", 
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.45), rgba(13, 13, 13, 0.95)), url('/banner.png')", 
         backgroundSize: "cover", 
         backgroundPosition: "center", 
         backgroundRepeat: "no-repeat" 
