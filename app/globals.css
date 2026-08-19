@@ -2,21 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root, html, body, main, section, header, nav, footer, div {
-  background-color: transparent !important;
-  background: transparent !important;
-}
-
 body {
   background-image: url('/bg.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
   background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  color: #ffffff !important;
 }
 
-/* सिर्फ अंदर के कार्ड्स को हल्का सा डार्क/ग्लास इफ़ेक्ट देने के लिए */
-div[class*='border'], .bg-card, [class*='rounded-'] {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(8px) !important;
+* {
+  color: inherit;
 }
