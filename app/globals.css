@@ -1,55 +1,21 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body, main, #__next, header, nav, div {
+  background-color: transparent !important;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-body {
-    background-image: url('/bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-html, body {
-    background-image: url('/bg.jpg') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
-    min-height: 100vh;
-}
-html, body, main {
-    background-image: url('/bg.jpg') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
-    min-height: 100vh !important;
-    background-color: transparent !important;
+  background-image: url('/bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
-/* पोकेमोन वाला बैनर / फालतू इमेज छुपाने के लिए */
-img[alt*="Banner"], img[src*="banner"] {
-    display: none !important;
+/* कार्ड्स को हल्का डार्क और ग्लास लुक देने के लिए */
+div[class*='border'], div[class*='rounded'], .bg-card {
+  background-color: rgba(18, 18, 18, 0.75) !important;
+  backdrop-filter: blur(10px) !important;
 }
