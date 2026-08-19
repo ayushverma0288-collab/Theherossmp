@@ -13,7 +13,7 @@ export default function Home() {
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   useEffect(() => {
-    fetch('https://api.mcsrvstat.us/3/163.61.39.57:19144')
+    fetch('https://api.mcsrvstat.us/3/amd-9-1.skyraincloud.in:19144')
       .then((res) => res.json())
       .then((data) => {
         if (data && data.online) {
@@ -185,15 +185,15 @@ export default function Home() {
 
           <div style={cardStyle}>
             <span style={{ color: '#22c55e', fontWeight: 'bold' }}>● JAVA EDITION</span>
-            <p style={{ margin: '8px 0', fontFamily: 'monospace' }}>163.61.39.57:19144</p>
-            <button onClick={() => copyToClipboard('163.61.39.57:19144', 'java')} style={buttonStyle}>{copiedJava ? 'COPIED!' : 'COPY JAVA IP'}</button>
+            <p style={{ margin: '8px 0', fontFamily: 'monospace' }}>amd-9-1.skyraincloud.in:19144</p>
+            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in:19144', 'java')} style={buttonStyle}>{copiedJava ? 'COPIED!' : 'COPY JAVA IP'}</button>
           </div>
 
           <div style={cardStyle}>
             <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>● BEDROCK EDITION</span>
-            <p style={{ margin: '8px 0 4px 0', fontFamily: 'monospace' }}>IP: 163.61.39.57</p>
+            <p style={{ margin: '8px 0 4px 0', fontFamily: 'monospace' }}>IP: amd-9-1.skyraincloud.in</p>
             <p style={{ margin: '0', fontFamily: 'monospace' }}>Port: 19144</p>
-            <button onClick={() => copyToClipboard('163.61.39.57', 'bedrock')} style={buttonStyle}>{copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}</button>
+            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in', 'bedrock')} style={buttonStyle}>{copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}</button>
           </div>
 
           <div style={cardStyle}>
