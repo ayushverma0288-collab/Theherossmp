@@ -7,36 +7,48 @@ export default function Home() {
   const [copiedBedrock, setCopiedBedrock] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
   const [onlineCount, setOnlineCount] = useState<number>(0);
-  const [maxPlayers, setMaxPlayers] = useState<number>(77);
   const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   useEffect(() => {
-    fetch('https://api.mcsrvstat.us/3/amd-9-1.skyraincloud.in:19144')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.online) {
-          setOnlineCount(data.players?.online || 0);
-          setMaxPlayers(77);
-          if (data.players?.list) {
-            setPlayers(data.players.list);
+    const fetchPlayers = () => {
+      fetch('https://api.mcsrvstat.us/3/amd-9-1.skyraincloud.in:19144')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.online) {
+            setOnlineCount(data.players?.online || 0);
+            if (data.players && Array.isArray(data.players.list)) {
+              setPlayers(data.players.list);
+            } else {
+              setPlayers([]);
+            }
           } else {
+            setOnlineCount(0);
             setPlayers([]);
           }
-        }
-      })
-      .catch(() => {});
+        })
+        .catch(() => {
+          setOnlineCount(0);
+          setPlayers([]);
+        });
+    };
+
+    fetchPlayers();
+    const interval = setInterval(fetchPlayers, 15000); // Har 15 sec me update karega
+    return () => clearInterval(interval);
   }, []);
 
   const copyToClipboard = (text: string, type: 'java' | 'bedrock') => {
-    navigator.clipboard.writeText(text);
-    if (type === 'java') {
-      setCopiedJava(true);
-      setTimeout(() => setCopiedJava(false), 2000);
-    } else {
-      setCopiedBedrock(true);
-      setTimeout(() => setCopiedBedrock(false), 2000);
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      if (type === 'java') {
+        setCopiedJava(true);
+        setTimeout(() => setCopiedJava(false), 2000);
+      } else {
+        setCopiedBedrock(true);
+        setTimeout(() => setCopiedBedrock(false), 2000);
+      }
     }
   };
 
