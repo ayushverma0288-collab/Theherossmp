@@ -31,3 +31,11 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+html, body {
+    background-image: url('/bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
+}
