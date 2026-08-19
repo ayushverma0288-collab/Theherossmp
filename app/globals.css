@@ -39,3 +39,17 @@ html, body {
     background-attachment: fixed !important;
     min-height: 100vh;
 }
+html, body, main {
+    background-image: url('/bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+    background-color: transparent !important;
+}
+
+/* पोकेमोन वाला बैनर / फालतू इमेज छुपाने के लिए */
+img[alt*="Banner"], img[src*="banner"] {
+    display: none !important;
+}
