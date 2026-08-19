@@ -64,8 +64,18 @@ export default function Home() {
     border: '1px solid rgba(255, 255, 255, 0.1)',
     color: '#ffffff',
     textDecoration: 'none',
-    marginBottom: '10px',
-    transition: 'background 0.2s'
+    marginBottom: '10px'
+  };
+
+  const tagBoxStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px 14px',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    marginBottom: '8px'
   };
 
   return (
@@ -178,9 +188,69 @@ export default function Home() {
 
       {/* TAB 3: RANKS & TAGS */}
       {activeTab === 'ranks' && (
-        <div style={cardStyle}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 12px 0' }}>Server Ranks</h2>
-          <p style={{ color: '#cccccc' }}>Ranks & Perks store details coming soon!</p>
+        <div>
+          {/* Server Ranks Section */}
+          <div style={cardStyle}>
+            <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>👑 Server Ranks</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+              <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 'bold', color: '#eab308', fontSize: '16px' }}>VIP</div>
+                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹200</div>
+              </div>
+              <div style={{ background: 'rgba(234, 179, 8, 0.25)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 'bold', color: '#facc15', fontSize: '16px' }}>VIP++</div>
+                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹280</div>
+              </div>
+              <div style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid #3b82f6', padding: '12px', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 'bold', color: '#3b82f6', fontSize: '16px' }}>MVP</div>
+                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹190</div>
+              </div>
+              <div style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid #a855f7', padding: '12px', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 'bold', color: '#c084fc', fontSize: '16px' }}>MVP++</div>
+                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹240</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Server Tags Section */}
+          <div style={cardStyle}>
+            <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🏷️ Server Tags</h2>
+            
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#f97316' }}>OG_BUILDER</span>
+              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#06b6d4' }}>ADVANCED BUILDER</span>
+              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#10b981' }}>BASIC BUILDER</span>
+              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#6b7280' }}>NOOB</span>
+              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹80</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#ef4444' }}>PRO</span>
+              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹75</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB</span>
+              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#ec4899' }}>ALPHA</span>
+              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹140</span>
+            </div>
+          </div>
         </div>
       )}
     </main>
