@@ -17,6 +17,7 @@ export default function Home() {
 
   const discordUrl = "https://discord.gg/XFqtJQMPg";
   const instagramUrl = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
+  const instaGroupUrl = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
   useEffect(() => {
     const fetchServerStatus = async () => {
@@ -54,6 +55,15 @@ export default function Home() {
     navigator.clipboard.writeText(`${bedrockIP}:${bedrockPort}`);
     setCopiedBedrock(true);
     setTimeout(() => setCopiedBedrock(false), 2000);
+  };
+
+  const handleBuyRank = (rankName: string) => {
+    const confirmBuy = confirm(`To buy ${rankName} rank, join our Discord or Instagram group to contact Owner/Admin. Open Discord now?`);
+    if (confirmBuy) {
+      window.open(discordUrl, "_blank");
+    } else {
+      window.open(instaGroupUrl, "_blank");
+    }
   };
 
   const ranksList = ["VIP", "VIP++", "MVP", "MVP++"];
@@ -157,12 +167,21 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* Instagram Box */}
+              {/* Instagram Profile */}
               <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #E1306C", textAlign: "center" }}>
                 <h2 style={{ color: "#E1306C", marginTop: 0 }}>Instagram Page</h2>
                 <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Follow for server clips, announcements, and giveaways.</p>
                 <a href={instagramUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#E1306C", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
                   Follow on Instagram
+                </a>
+              </div>
+
+              {/* Instagram Group Box */}
+              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #C13584", textAlign: "center" }}>
+                <h2 style={{ color: "#C13584", marginTop: 0 }}>Instagram Broadcast Group</h2>
+                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Join our official Instagram group chat for quick updates & rank support.</p>
+                <a href={instaGroupUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#C13584", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
+                  Join Insta Group Chat
                 </a>
               </div>
 
@@ -179,7 +198,9 @@ export default function Home() {
                 <div key={rank} style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", textAlign: "center", border: "1px solid #333" }}>
                   <h2 style={{ color: "#e50914", margin: "0 0 0.5rem 0" }}>{rank}</h2>
                   <p style={{ color: "#aaa", fontSize: "0.85rem", marginBottom: "1rem" }}>Custom Perks & Kits</p>
-                  <button style={{ background: "#fff", color: "#000", border: "none", padding: "0.5rem 1rem", borderRadius: "4px", fontWeight: "bold", cursor: "pointer", width: "100%" }}>Buy Rank</button>
+                  <button onClick={() => handleBuyRank(rank)} style={{ background: "#e50914", color: "#fff", border: "none", padding: "0.6rem 1rem", borderRadius: "4px", fontWeight: "bold", cursor: "pointer", width: "100%" }}>
+                    Buy {rank} Rank
+                  </button>
                 </div>
               ))}
             </div>
