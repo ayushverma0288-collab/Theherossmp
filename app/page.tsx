@@ -56,6 +56,18 @@ export default function Home() {
     marginTop: '10px'
   };
 
+  const linkBoxStyle = {
+    display: 'block',
+    padding: '14px',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: '8px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#ffffff',
+    textDecoration: 'none',
+    marginBottom: '10px',
+    transition: 'background 0.2s'
+  };
+
   return (
     <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif' }}>
       {/* Header Logo */}
@@ -145,8 +157,22 @@ export default function Home() {
       {/* TAB 2: COMMUNITY & SOCIALS */}
       {activeTab === 'community' && (
         <div style={cardStyle}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 12px 0' }}>Join Our Community</h2>
-          <p style={{ color: '#cccccc' }}>Discord & Youtube links coming soon!</p>
+          <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>Join Our Community</h2>
+          
+          <a href="https://discord.gg/wR7UZzWakM" target="_blank" rel="noreferrer" style={linkBoxStyle}>
+            <div style={{ fontWeight: 'bold', color: '#5865F2', fontSize: '16px' }}>👾 Discord Server</div>
+            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Join our Discord community for chat and updates.</div>
+          </a>
+
+          <a href="https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==" target="_blank" rel="noreferrer" style={linkBoxStyle}>
+            <div style={{ fontWeight: 'bold', color: '#E1306C', fontSize: '16px' }}>📸 Instagram Page</div>
+            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Follow us on Instagram for photos & reels.</div>
+          </a>
+
+          <a href="https://ig.me/j/AbbBXSakl1QBm9YN/" target="_blank" rel="noreferrer" style={linkBoxStyle}>
+            <div style={{ fontWeight: 'bold', color: '#F77737', fontSize: '16px' }}>💬 Instagram Group Chat</div>
+            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Join our official Instagram group chat.</div>
+          </a>
         </div>
       )}
 
