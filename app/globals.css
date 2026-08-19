@@ -7,9 +7,6 @@ body {
   background-size: cover !important;
   background-position: center !important;
   background-attachment: fixed !important;
-  color: #ffffff !important;
-}
-
-* {
-  color: inherit;
+  background-repeat: no-repeat !important;
+  color: #ffffff;
 }
