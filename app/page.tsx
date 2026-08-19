@@ -243,7 +243,7 @@ export default function Home() {
 
             <div style={tagBoxStyle}>
               <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
+              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹90</span>
             </div>
 
             <div style={tagBoxStyle}>
