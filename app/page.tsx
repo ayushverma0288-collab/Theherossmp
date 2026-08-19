@@ -1,248 +1,69 @@
-"use client";
-import React, { useState, useEffect } from "react";
+'use client';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [copiedJava, setCopiedJava] = useState(false);
-  const [copiedBedrock, setCopiedBedrock] = useState(false);
-  const [serverData, setServerData] = useState<{ online: boolean; players: { online: number; max: number }; ping: number }>({
-    online: false,
-    players: { online: 0, max: 0 },
-    ping: 0
-  });
-
-  const javaIP = "163.61.39.57:19144";
-  const bedrockIP = "163.61.39.57";
-  const bedrockPort = "19144";
-
-  const discordUrl = "https://discord.gg/XFqtJQMPg";
-  const instagramUrl = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
-  const instaGroupUrl = "https://ig.me/j/AbbBXSakl1QBm9YN/";
+  const [players, setPlayers] = useState<string[]>([]);
+  const [onlineCount, setOnlineCount] = useState<number>(0);
+  const [maxPlayers, setMaxPlayers] = useState<number>(0);
 
   useEffect(() => {
-    const fetchServerStatus = async () => {
-      const startTime = Date.now();
-      try {
-        const res = await fetch("https://api.mcsrvstat.us/2/163.61.39.57:19144");
-        const data = await res.json();
-        const endTime = Date.now();
-        
-        setServerData({
-          online: data.online || false,
-          players: {
-            online: data.players?.online || 0,
-            max: data.players?.max || 0,
-          },
-          ping: Math.round(endTime - startTime)
-        });
-      } catch (err) {
-        console.error("Server status fetch error:", err);
-      }
-    };
-
-    fetchServerStatus();
-    const interval = setInterval(fetchServerStatus, 30000);
-    return () => clearInterval(interval);
+    fetch('https://api.mcsrvstat.us/3/163.61.39.57:19144')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.online) {
+          setOnlineCount(data.players.online || 0);
+          setMaxPlayers(data.players.max || 0);
+          if (data.players.list) {
+            setPlayers(data.players.list);
+          }
+        }
+      })
+      .catch((err) => console.error(err));
   }, []);
 
-  const copyJava = () => {
-    navigator.clipboard.writeText(javaIP);
-    setCopiedJava(true);
-    setTimeout(() => setCopiedJava(false), 2000);
-  };
-
-  const copyBedrock = () => {
-    navigator.clipboard.writeText(`${bedrockIP}:${bedrockPort}`);
-    setCopiedBedrock(true);
-    setTimeout(() => setCopiedBedrock(false), 2000);
-  };
-
-  const handleBuyRank = (rankName: string) => {
-    const confirmBuy = confirm(`To buy ${rankName} rank, join our Discord or Instagram group to contact Owner/Admin. Open Discord now?`);
-    if (confirmBuy) {
-      window.open(discordUrl, "_blank");
-    } else {
-      window.open(instaGroupUrl, "_blank");
-    }
-  };
-
-  const ranksList = ["VIP", "VIP++", "MVP", "MVP++"];
-  const tagsList = ["OG_BUILDER", "ADVANCED BUILDER", "BASIC BUILDER", "NOOB", "PRO", "GAREEB"];
-
   return (
-    <div style={{ backgroundColor: "#0d0d0d", color: "#fff", fontFamily: "sans-serif", minHeight: "100vh", margin: 0 }}>
-      {/* Navigation Bar */}
-      <nav style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", padding: "1rem 1.5rem", background: "rgba(22, 22, 22, 0.95)", borderBottom: "2px solid #e50914", position: "sticky", top: 0, zIndex: 100 }}>
-        <h1 style={{ color: "#e50914", margin: 0, fontSize: "1.4rem", letterSpacing: "1px" }}>THEHEROS<span style={{ color: "#fff" }}>SMP</span></h1>
-        
-        {/* Navigation Tabs */}
-        <div style={{ display: "flex", gap: "0.8rem", marginTop: "0.5rem" }}>
-          <button 
-            onClick={() => setActiveTab("dashboard")} 
-            style={{ background: activeTab === "dashboard" ? "#e50914" : "transparent", color: "#fff", border: "none", padding: "0.5rem 0.8rem", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
-            Dashboard
-          </button>
-          <button 
-            onClick={() => setActiveTab("socials")} 
-            style={{ background: activeTab === "socials" ? "#e50914" : "transparent", color: "#fff", border: "none", padding: "0.5rem 0.8rem", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
-            Community & Socials
-          </button>
-          <button 
-            onClick={() => setActiveTab("ranks")} 
-            style={{ background: activeTab === "ranks" ? "#e50914" : "transparent", color: "#fff", border: "none", padding: "0.5rem 0.8rem", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
-            Ranks & Tags
-          </button>
-        </div>
-      </nav>
+    <main className="min-h-screen p-6 text-white flex flex-col items-center justify-center">
+      <div className="max-w-2xl w-full space-y-6">
+        <h1 className="text-4xl font-extrabold text-center tracking-wide text-red-500 drop-shadow">
+          THEHEROSSMP
+        </h1>
 
-      {/* Hero Section Banner Image Display */}
-      <section style={{ 
-        position: "relative",
-        textAlign: "center", 
-        padding: "3rem 1rem 4rem 1rem", 
-        backgroundColor: "#0d0d0d",
-        overflow: "hidden"
-      }}>
-        {/* Main Custom Poster Banner */}
-        <div style={{
-          maxWidth: "1000px",
-          margin: "0 auto 2rem auto",
-          borderRadius: "12px",
-          overflow: "hidden",
-          boxShadow: "0 10px 30px rgba(229, 9, 20, 0.3)",
-          border: "1px solid #333"
-        }}>
-          <img 
-            src="https://raw.githubusercontent.com/Anshul-Code-Zone/assets/main/theherossmp-banner.png" 
-            alt="The Heros SMP Banner" 
-            style={{ width: "100%", height: "auto", display: "block" }} 
-            onError={(e) => {
-              // Fallback to official high quality Minecraft Artwork if raw link delays
-              e.currentTarget.src = "https://images.unsplash.com/photo-1627856013091-fed6e4e30025?q=80&w=1200&auto=format&fit=crop";
-            }}
-          />
-        </div>
-
-        <h2 style={{ fontSize: "2rem", marginBottom: "0.3rem", textTransform: "uppercase", textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>The Ultimate Minecraft SMP</h2>
-        <p style={{ color: "#ddd", fontSize: "1rem", marginBottom: "1.5rem" }}>Crossplay Survival Network (Java & Bedrock)</p>
-
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem" }}>
-          {/* Java Card */}
-          <div style={{ background: "rgba(20, 20, 20, 0.95)", padding: "1rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left" }}>
-            <span style={{ color: "#22c55e", fontSize: "0.8rem", fontWeight: "bold" }}>● JAVA EDITION</span>
-            <div style={{ fontSize: "0.9rem", fontWeight: "bold", margin: "0.3rem 0", color: "#fff", wordBreak: "break-all" }}>{javaIP}</div>
-            <button onClick={copyJava} style={{ width: "100%", background: "#e50914", color: "#fff", border: "none", padding: "0.6rem", borderRadius: "5px", cursor: "pointer", fontWeight: "bold" }}>
-              {copiedJava ? "COPIED JAVA IP!" : "COPY JAVA IP"}
-            </button>
-          </div>
-
-          {/* Bedrock Card */}
-          <div style={{ background: "rgba(20, 20, 20, 0.95)", padding: "1rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left" }}>
-            <span style={{ color: "#3b82f6", fontSize: "0.8rem", fontWeight: "bold" }}>● BEDROCK EDITION</span>
-            <div style={{ fontSize: "0.85rem", fontWeight: "bold", marginTop: "0.3rem", color: "#fff", wordBreak: "break-all" }}>IP: {bedrockIP}</div>
-            <div style={{ fontSize: "0.85rem", fontWeight: "bold", color: "#aaa" }}>Port: {bedrockPort}</div>
-            <button onClick={copyBedrock} style={{ width: "100%", background: "#e50914", color: "#fff", border: "none", padding: "0.6rem", borderRadius: "5px", cursor: "pointer", fontWeight: "bold", marginTop: "0.4rem" }}>
-              {copiedBedrock ? "COPIED BEDROCK IP!" : "COPY BEDROCK IP"}
-            </button>
+        {/* Server IP Info */}
+        <div className="bg-black/60 backdrop-blur-md p-6 rounded-xl border border-red-500/30 text-center space-y-4">
+          <h2 className="text-2xl font-bold">THE ULTIMATE MINECRAFT SMP</h2>
+          <div className="space-y-2">
+            <p><span className="text-green-400 font-bold">JAVA IP:</span> 163.61.39.57:19144</p>
+            <p><span className="text-blue-400 font-bold">BEDROCK IP:</span> 163.61.39.57 | <span className="font-bold">PORT:</span> 19144</p>
           </div>
         </div>
-      </section>
 
-      {/* Main Content Area */}
-      <main style={{ padding: "2rem 1rem", maxWidth: "1000px", margin: "0 auto" }}>
-        
-        {/* TAB 1: DASHBOARD */}
-        {activeTab === "dashboard" && (
-          <div>
-            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: 0 }}>Server Dashboard</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
-              <div style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", border: "1px solid #262626" }}>
-                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>Live Online Players</span>
-                <h2 style={{ color: serverData.online ? "#22c55e" : "#ef4444", margin: "0.4rem 0 0" }}>
-                  {serverData.online ? `${serverData.players.online} / ${serverData.players.max}` : "Offline"}
-                </h2>
-              </div>
-              <div style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", border: "1px solid #262626" }}>
-                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>Server Ping</span>
-                <h2 style={{ color: "#22c55e", margin: "0.4rem 0 0" }}>{serverData.ping} ms</h2>
-              </div>
-              <div style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", border: "1px solid #262626" }}>
-                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>Supported Versions</span>
-                <h2 style={{ color: "#fff", margin: "0.4rem 0 0", fontSize: "1.1rem" }}>1.2.1 ➔ 1.26.1+</h2>
-              </div>
-              <div style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", border: "1px solid #262626" }}>
-                <span style={{ color: "#aaa", fontSize: "0.9rem" }}>Host Provider</span>
-                <h2 style={{ color: "#e50914", margin: "0.4rem 0 0", fontSize: "1.1rem" }}>SkyRain Cloud</h2>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Live Online Players Section */}
+        <div className="bg-black/60 backdrop-blur-md p-6 rounded-xl border border-white/10 space-y-4">
+          <h3 className="text-xl font-bold flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+            Online Players ({onlineCount} / {maxPlayers})
+          </h3>
 
-        {/* TAB 2: COMMUNITY & SOCIALS */}
-        {activeTab === "socials" && (
-          <div>
-            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: 0 }}>Join Our Community</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem", marginTop: "1.5rem" }}>
-              
-              {/* Discord Box */}
-              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #5865F2", textAlign: "center" }}>
-                <h2 style={{ color: "#5865F2", marginTop: 0 }}>Discord Community</h2>
-                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Chat with players, get server updates, and create support tickets.</p>
-                <a href={discordUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#5865F2", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
-                  Join Discord Server
-                </a>
-              </div>
-
-              {/* Instagram Profile */}
-              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #E1306C", textAlign: "center" }}>
-                <h2 style={{ color: "#E1306C", marginTop: 0 }}>Instagram Page</h2>
-                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Follow for server clips, announcements, and giveaways.</p>
-                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#E1306C", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
-                  Follow on Instagram
-                </a>
-              </div>
-
-              {/* Instagram Group Box */}
-              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #C13584", textAlign: "center" }}>
-                <h2 style={{ color: "#C13584", marginTop: 0 }}>Instagram Broadcast Group</h2>
-                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Join our official Instagram group chat for quick updates & rank support.</p>
-                <a href={instaGroupUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#C13584", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
-                  Join Insta Group Chat
-                </a>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: RANKS & TAGS STORE */}
-        {activeTab === "ranks" && (
-          <div>
-            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: 0 }}>Available Ranks</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
-              {ranksList.map((rank) => (
-                <div key={rank} style={{ background: "#161616", padding: "1.2rem", borderRadius: "8px", textAlign: "center", border: "1px solid #333" }}>
-                  <h2 style={{ color: "#e50914", margin: "0 0 0.5rem 0" }}>{rank}</h2>
-                  <p style={{ color: "#aaa", fontSize: "0.85rem", marginBottom: "1rem" }}>Custom Perks & Kits</p>
-                  <button onClick={() => handleBuyRank(rank)} style={{ background: "#e50914", color: "#fff", border: "none", padding: "0.6rem 1rem", borderRadius: "4px", fontWeight: "bold", cursor: "pointer", width: "100%" }}>
-                    Buy {rank} Rank
-                  </button>
+          {players.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+              {players.map((player, idx) => (
+                <div key={idx} className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/5">
+                  <img
+                    src={`https://mc-heads.net/avatar/${player}/32`}
+                    alt={player}
+                    className="w-8 h-8 rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-200">{player}</span>
                 </div>
               ))}
             </div>
-
-            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: "2rem" }}>Player Tags</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.8rem", marginTop: "1rem" }}>
-              {tagsList.map((tag) => (
-                <div key={tag} style={{ background: "#1a1a1a", padding: "0.8rem", borderRadius: "6px", textAlign: "center", border: "1px solid #262626", color: "#eab308", fontWeight: "bold", fontSize: "0.85rem" }}>
-                  [{tag}]
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-      </main>
-    </div>
+          ) : (
+            <p className="text-gray-400 text-sm italic">
+              {onlineCount > 0 ? "Player names hidden by server settings" : "No players online right now."}
+            </p>
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
