@@ -15,6 +15,9 @@ export default function Home() {
   const bedrockIP = "amd-9-1.skyraincloud.in";
   const bedrockPort = "19144";
 
+  const discordUrl = "https://discord.gg/XFqtJQMPg";
+  const instagramUrl = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
+
   useEffect(() => {
     const fetchServerStatus = async () => {
       const startTime = Date.now();
@@ -62,7 +65,7 @@ export default function Home() {
       <nav style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", padding: "1rem 1.5rem", background: "#161616", borderBottom: "2px solid #e50914" }}>
         <h1 style={{ color: "#e50914", margin: 0, fontSize: "1.4rem", letterSpacing: "1px" }}>THEHEROS<span style={{ color: "#fff" }}>SMP</span></h1>
         
-        {/* Clickable Navigation Tabs */}
+        {/* Navigation Tabs */}
         <div style={{ display: "flex", gap: "0.8rem", marginTop: "0.5rem" }}>
           <button 
             onClick={() => setActiveTab("dashboard")} 
@@ -70,9 +73,9 @@ export default function Home() {
             Dashboard
           </button>
           <button 
-            onClick={() => setActiveTab("leaderboard")} 
-            style={{ background: activeTab === "leaderboard" ? "#e50914" : "transparent", color: "#fff", border: "none", padding: "0.5rem 0.8rem", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
-            Leaderboard
+            onClick={() => setActiveTab("socials")} 
+            style={{ background: activeTab === "socials" ? "#e50914" : "transparent", color: "#fff", border: "none", padding: "0.5rem 0.8rem", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
+            Community & Socials
           </button>
           <button 
             onClick={() => setActiveTab("ranks")} 
@@ -109,7 +112,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Main Content Area Based on Active Tab */}
+      {/* Main Content Area */}
       <main style={{ padding: "2rem 1rem", maxWidth: "1000px", margin: "0 auto" }}>
         
         {/* TAB 1: DASHBOARD */}
@@ -139,35 +142,30 @@ export default function Home() {
           </div>
         )}
 
-        {/* TAB 2: LEADERBOARD */}
-        {activeTab === "leaderboard" && (
+        {/* TAB 2: COMMUNITY & SOCIALS */}
+        {activeTab === "socials" && (
           <div>
-            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: 0 }}>Top Players Leaderboard</h3>
-            <div style={{ background: "#161616", marginTop: "1rem", borderRadius: "8px", overflowX: "auto", border: "1px solid #262626" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", minWidth: "300px" }}>
-                <thead>
-                  <tr style={{ background: "#222", color: "#aaa" }}>
-                    <th style={{ padding: "0.8rem" }}>Rank</th>
-                    <th style={{ padding: "0.8rem" }}>Player</th>
-                    <th style={{ padding: "0.8rem" }}>Tag</th>
-                    <th style={{ padding: "0.8rem" }}>Role</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style={{ borderBottom: "1px solid #222" }}>
-                    <td style={{ padding: "0.8rem" }}>🥇 #1</td>
-                    <td style={{ padding: "0.8rem", color: "#e50914", fontWeight: "bold" }}>Samosa_bhaiya</td>
-                    <td style={{ padding: "0.8rem", color: "#eab308" }}>[OG_BUILDER]</td>
-                    <td style={{ padding: "0.8rem", color: "#a855f7", fontWeight: "bold" }}>MVP++</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #222" }}>
-                    <td style={{ padding: "0.8rem" }}>🥈 #2</td>
-                    <td style={{ padding: "0.8rem" }}>ayushverma</td>
-                    <td style={{ padding: "0.8rem", color: "#3b82f6" }}>[PRO]</td>
-                    <td style={{ padding: "0.8rem", color: "#3b82f6", fontWeight: "bold" }}>MVP</td>
-                  </tr>
-                </tbody>
-              </table>
+            <h3 style={{ borderLeft: "4px solid #e50914", paddingLeft: "0.5rem", fontSize: "1.5rem", marginTop: 0 }}>Join Our Community</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem", marginTop: "1.5rem" }}>
+              
+              {/* Discord Box */}
+              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #5865F2", textAlign: "center" }}>
+                <h2 style={{ color: "#5865F2", marginTop: 0 }}>Discord Community</h2>
+                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Chat with players, get server updates, and create support tickets.</p>
+                <a href={discordUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#5865F2", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
+                  Join Discord Server
+                </a>
+              </div>
+
+              {/* Instagram Box */}
+              <div style={{ background: "#161616", padding: "1.5rem", borderRadius: "8px", border: "1px solid #E1306C", textAlign: "center" }}>
+                <h2 style={{ color: "#E1306C", marginTop: 0 }}>Instagram Page</h2>
+                <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Follow for server clips, announcements, and giveaways.</p>
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "#E1306C", color: "#fff", textDecoration: "none", padding: "0.7rem 1.5rem", borderRadius: "5px", fontWeight: "bold", marginTop: "0.5rem" }}>
+                  Follow on Instagram
+                </a>
+              </div>
+
             </div>
           </div>
         )}
