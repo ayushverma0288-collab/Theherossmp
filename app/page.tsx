@@ -7,10 +7,10 @@ export default function Home() {
   const [copiedBedrock, setCopiedBedrock] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
   const [onlineCount, setOnlineCount] = useState<number>(0);
-  const [maxPlayers, setMaxPlayers] = useState<number>(0);
+  const [maxPlayers, setMaxPlayers] = useState<number>(77);
   const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
-  const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM"; // Discord rank-payment channel link
+  const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   useEffect(() => {
     fetch('https://api.mcsrvstat.us/3/163.61.39.57:19144')
@@ -18,9 +18,11 @@ export default function Home() {
       .then((data) => {
         if (data && data.online) {
           setOnlineCount(data.players?.online || 0);
-          setMaxPlayers(data.players?.max || 0);
+          setMaxPlayers(77);
           if (data.players?.list) {
             setPlayers(data.players.list);
+          } else {
+            setPlayers([]);
           }
         }
       })
@@ -195,18 +197,22 @@ export default function Home() {
           </div>
 
           <div style={cardStyle}>
-            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}><span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount} / {maxPlayers})</h3>
+            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}>
+              <span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount}/77)
+            </h3>
             {players.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 {players.map((player, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '6px' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`https://mc-heads.net/avatar/${player}/24`} alt={player} style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
-                    <span style={{ fontSize: '14px' }}>{player}</span>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{player}</span>
                   </div>
                 ))}
               </div>
-            ) : (<p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>{onlineCount > 0 ? "Players online." : "No players online right now."}</p>)}
+            ) : (
+              <p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>No players online right now.</p>
+            )}
           </div>
         </div>
       )}
