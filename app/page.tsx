@@ -95,21 +95,21 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section with Custom Background Image */}
+      {/* Hero Section with Direct Banner Image */}
       <section style={{ 
         textAlign: "center", 
-        padding: "3.5rem 1rem", 
-        backgroundImage: "linear-gradient(rgba(13, 13, 13, 0.75), rgba(13, 13, 13, 0.9)), url('https://lh3.googleusercontent.com/d/1XyC-B5gT829-GvE1m-3uL4vN5uH9z6_X')", 
+        padding: "4rem 1rem", 
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(13, 13, 13, 0.9)), url('https://i.ibb.co/L6K2mX1/banner.png')", 
         backgroundSize: "cover", 
         backgroundPosition: "center", 
         backgroundRepeat: "no-repeat" 
       }}>
-        <h2 style={{ fontSize: "2.2rem", marginBottom: "0.3rem", textTransform: "uppercase", textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}>The Ultimate Minecraft SMP</h2>
-        <p style={{ color: "#ddd", fontSize: "1rem", marginBottom: "1.5rem", textShadow: "0 2px 5px rgba(0,0,0,0.8)" }}>Crossplay Survival Network (Java & Bedrock)</p>
+        <h2 style={{ fontSize: "2.2rem", marginBottom: "0.3rem", textTransform: "uppercase", textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>The Ultimate Minecraft SMP</h2>
+        <p style={{ color: "#ddd", fontSize: "1rem", marginBottom: "1.5rem", textShadow: "0 2px 5px rgba(0,0,0,0.9)" }}>Crossplay Survival Network (Java & Bedrock)</p>
 
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem" }}>
           {/* Java Card */}
-          <div style={{ background: "rgba(26, 26, 26, 0.9)", padding: "0.8rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left", backdropFilter: "blur(5px)" }}>
+          <div style={{ background: "rgba(20, 20, 20, 0.85)", padding: "0.8rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left", backdropFilter: "blur(6px)" }}>
             <span style={{ color: "#22c55e", fontSize: "0.8rem", fontWeight: "bold" }}>● JAVA EDITION</span>
             <div style={{ fontSize: "0.9rem", fontWeight: "bold", margin: "0.3rem 0", color: "#fff", wordBreak: "break-all" }}>{javaIP}</div>
             <button onClick={copyJava} style={{ width: "100%", background: "#e50914", color: "#fff", border: "none", padding: "0.5rem", borderRadius: "5px", cursor: "pointer", fontWeight: "bold" }}>
@@ -118,7 +118,7 @@ export default function Home() {
           </div>
 
           {/* Bedrock Card */}
-          <div style={{ background: "rgba(26, 26, 26, 0.9)", padding: "0.8rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left", backdropFilter: "blur(5px)" }}>
+          <div style={{ background: "rgba(20, 20, 20, 0.85)", padding: "0.8rem 1.2rem", borderRadius: "8px", border: "1px solid #333", width: "100%", maxWidth: "320px", textAlign: "left", backdropFilter: "blur(6px)" }}>
             <span style={{ color: "#3b82f6", fontSize: "0.8rem", fontWeight: "bold" }}>● BEDROCK EDITION</span>
             <div style={{ fontSize: "0.85rem", fontWeight: "bold", marginTop: "0.3rem", color: "#fff", wordBreak: "break-all" }}>IP: {bedrockIP}</div>
             <div style={{ fontSize: "0.85rem", fontWeight: "bold", color: "#aaa" }}>Port: {bedrockPort}</div>
