@@ -243,6 +243,11 @@ export default function Home() {
 
             <div style={tagBoxStyle}>
               <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB</span>
+              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹100</span>
+            </div>
+
+            <div style={tagBoxStyle}>
+              <span style={{ fontWeight: 'bold', color: '#a855f7' }}>ALPHA</span>
               <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹149</span>
             </div>
           </div>
