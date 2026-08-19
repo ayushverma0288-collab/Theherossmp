@@ -11,8 +11,8 @@ export default function Home() {
     ping: 0
   });
 
-  const javaIP = "amd-9-1.skyraincloud.in:19144";
-  const bedrockIP = "amd-9-1.skyraincloud.in";
+  const javaIP = "163.61.39.57:19144";
+  const bedrockIP = "163.61.39.57";
   const bedrockPort = "19144";
 
   const discordUrl = "https://discord.gg/XFqtJQMPg";
@@ -23,7 +23,7 @@ export default function Home() {
     const fetchServerStatus = async () => {
       const startTime = Date.now();
       try {
-        const res = await fetch("https://api.mcsrvstat.us/2/amd-9-1.skyraincloud.in:19144");
+        const res = await fetch("https://api.mcsrvstat.us/2/163.61.39.57:19144");
         const data = await res.json();
         const endTime = Date.now();
         
