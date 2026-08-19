@@ -8,6 +8,7 @@ export default function Home() {
   const [players, setPlayers] = useState<string[]>([]);
   const [onlineCount, setOnlineCount] = useState<number>(0);
   const [maxPlayers, setMaxPlayers] = useState<number>(0);
+  const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('https://api.mcsrvstat.us/3/163.61.39.57:19144')
@@ -67,27 +68,61 @@ export default function Home() {
     marginBottom: '10px'
   };
 
-  const tagBoxStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 14px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    marginBottom: '8px'
-  };
-
   const crateCardStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    padding: '14px',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '10px',
+    padding: '14px',
     marginBottom: '10px'
   };
+
+  const crateList = [
+    {
+      id: 'master',
+      name: 'Master Crate',
+      price: '₹150',
+      sub: '7 Keys included',
+      color: '#eab308',
+      icon: '📦',
+      imageUrl: 'https://i.postimg.cc/L6GM2JXJ/Screenshot-20260820-004855-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'god',
+      name: 'God Crate',
+      price: '₹450',
+      sub: '7 Keys included',
+      color: '#a855f7',
+      icon: '🔮',
+      imageUrl: 'https://i.postimg.cc/hPzHyKrK/Screenshot-20260820-004918-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'spawner',
+      name: 'Spawner Crate',
+      price: '₹220',
+      sub: '7 Keys included',
+      color: '#3b82f6',
+      icon: '⚙️',
+      imageUrl: 'https://i.postimg.cc/nVjJ5KVp/Screenshot-20260820-004906-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'silver',
+      name: 'Silver Crate',
+      price: 'Playable',
+      sub: '1 Hour = 2 Keys',
+      color: '#9ca3af',
+      icon: '🛡️',
+      imageUrl: 'https://i.postimg.cc/K8Qw44c7/Screenshot-20260820-004928-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'key',
+      name: 'Key Crate',
+      price: '₹410',
+      sub: '7 Keys included',
+      color: '#ec4899',
+      icon: '🔑',
+      imageUrl: 'https://i.postimg.cc/PfZ7YSrP/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    }
+  ];
 
   return (
     <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif' }}>
@@ -98,42 +133,10 @@ export default function Home() {
 
       {/* Navigation Tabs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', backgroundColor: 'rgba(0,0,0,0.8)', padding: '6px', borderRadius: '10px', marginBottom: '20px' }}>
-        <button
-          onClick={() => setActiveTab('dashboard')}
-          style={{
-            padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer',
-            backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff'
-          }}
-        >
-          Dashboard
-        </button>
-        <button
-          onClick={() => setActiveTab('community')}
-          style={{
-            padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer',
-            backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff'
-          }}
-        >
-          Community
-        </button>
-        <button
-          onClick={() => setActiveTab('ranks')}
-          style={{
-            padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer',
-            backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff'
-          }}
-        >
-          Ranks & Tags
-        </button>
-        <button
-          onClick={() => setActiveTab('crates')}
-          style={{
-            padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer',
-            backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff'
-          }}
-        >
-          🎁 Crates
-        </button>
+        <button onClick={() => setActiveTab('dashboard')} style={{ padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Dashboard</button>
+        <button onClick={() => setActiveTab('community')} style={{ padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Community</button>
+        <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Ranks & Tags</button>
+        <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 4px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
       </div>
 
       {/* TAB 1: DASHBOARD */}
@@ -147,24 +150,18 @@ export default function Home() {
           <div style={cardStyle}>
             <span style={{ color: '#22c55e', fontWeight: 'bold' }}>● JAVA EDITION</span>
             <p style={{ margin: '8px 0', fontFamily: 'monospace' }}>163.61.39.57:19144</p>
-            <button onClick={() => copyToClipboard('163.61.39.57:19144', 'java')} style={buttonStyle}>
-              {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
-            </button>
+            <button onClick={() => copyToClipboard('163.61.39.57:19144', 'java')} style={buttonStyle}>{copiedJava ? 'COPIED!' : 'COPY JAVA IP'}</button>
           </div>
 
           <div style={cardStyle}>
             <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>● BEDROCK EDITION</span>
             <p style={{ margin: '8px 0 4px 0', fontFamily: 'monospace' }}>IP: 163.61.39.57</p>
             <p style={{ margin: '0', fontFamily: 'monospace' }}>Port: 19144</p>
-            <button onClick={() => copyToClipboard('163.61.39.57', 'bedrock')} style={buttonStyle}>
-              {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
-            </button>
+            <button onClick={() => copyToClipboard('163.61.39.57', 'bedrock')} style={buttonStyle}>{copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}</button>
           </div>
 
           <div style={cardStyle}>
-            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}>
-              <span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount} / {maxPlayers})
-            </h3>
+            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}><span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount} / {maxPlayers})</h3>
             {players.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 {players.map((player, idx) => (
@@ -175,160 +172,66 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>
-                {onlineCount > 0 ? "Players online." : "No players online right now."}
-              </p>
-            )}
+            ) : (<p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>{onlineCount > 0 ? "Players online." : "No players online right now."}</p>)}
           </div>
         </div>
       )}
 
-      {/* TAB 2: COMMUNITY & SOCIALS */}
+      {/* TAB 2: COMMUNITY */}
       {activeTab === 'community' && (
         <div style={cardStyle}>
           <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>Join Our Community</h2>
-          
-          <a href="https://discord.gg/wR7UZzWakM" target="_blank" rel="noreferrer" style={linkBoxStyle}>
-            <div style={{ fontWeight: 'bold', color: '#5865F2', fontSize: '16px' }}>👾 Discord Server</div>
-            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Join our Discord community for chat and updates.</div>
-          </a>
-
-          <a href="https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==" target="_blank" rel="noreferrer" style={linkBoxStyle}>
-            <div style={{ fontWeight: 'bold', color: '#E1306C', fontSize: '16px' }}>📸 Instagram Page</div>
-            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Follow us on Instagram for photos & reels.</div>
-          </a>
-
-          <a href="https://ig.me/j/AbbBXSakl1QBm9YN/" target="_blank" rel="noreferrer" style={linkBoxStyle}>
-            <div style={{ fontWeight: 'bold', color: '#F77737', fontSize: '16px' }}>💬 Instagram Group Chat</div>
-            <div style={{ color: '#aaaaaa', fontSize: '12px', marginTop: '4px' }}>Join our official Instagram group chat.</div>
-          </a>
+          <a href="https://discord.gg/wR7UZzWakM" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#5865F2', fontSize: '16px' }}>👾 Discord Server</div></a>
+          <a href="https://www.instagram.com/modihater7" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#E1306C', fontSize: '16px' }}>📸 Instagram Page</div></a>
+          <a href="https://ig.me/j/AbbBXSakl1QBm9YN/" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#F77737', fontSize: '16px' }}>💬 Instagram Group Chat</div></a>
         </div>
       )}
 
       {/* TAB 3: RANKS & TAGS */}
       {activeTab === 'ranks' && (
         <div>
-          {/* Server Ranks Section */}
           <div style={cardStyle}>
             <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>👑 Server Ranks</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-              <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}>
-                <div style={{ fontWeight: 'bold', color: '#eab308', fontSize: '16px' }}>VIP</div>
-                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹200</div>
-              </div>
-              <div style={{ background: 'rgba(234, 179, 8, 0.25)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}>
-                <div style={{ fontWeight: 'bold', color: '#facc15', fontSize: '16px' }}>VIP++</div>
-                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹280</div>
-              </div>
-              <div style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid #3b82f6', padding: '12px', borderRadius: '8px' }}>
-                <div style={{ fontWeight: 'bold', color: '#3b82f6', fontSize: '16px' }}>MVP</div>
-                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹190</div>
-              </div>
-              <div style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid #a855f7', padding: '12px', borderRadius: '8px' }}>
-                <div style={{ fontWeight: 'bold', color: '#c084fc', fontSize: '16px' }}>MVP++</div>
-                <div style={{ color: '#ffffff', fontWeight: 'bold', marginTop: '4px' }}>₹240</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Server Tags Section */}
-          <div style={cardStyle}>
-            <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🏷️ Server Tags</h2>
-            
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#f97316' }}>OG_BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#06b6d4' }}>ADVANCED BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#10b981' }}>BASIC BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>Playable Gift</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#6b7280' }}>NOOB</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹80</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#ef4444' }}>PRO</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹75</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹90</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#ec4899' }}>ALPHA</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹140</span>
+              <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#eab308' }}>VIP</div><div>₹200</div></div>
+              <div style={{ background: 'rgba(234, 179, 8, 0.25)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#facc15' }}>VIP++</div><div>₹280</div></div>
+              <div style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid #3b82f6', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#3b82f6' }}>MVP</div><div>₹190</div></div>
+              <div style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid #a855f7', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#c084fc' }}>MVP++</div><div>₹240</div></div>
             </div>
           </div>
         </div>
       )}
 
-      {/* TAB 4: CRATES */}
+      {/* TAB 4: CRATES WITH IMAGE PREVIEWS */}
       {activeTab === 'crates' && (
         <div style={cardStyle}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🎁 Server Crates</h2>
+          <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🎁 Server Crates & Rewards</h2>
           
-          <div style={crateCardStyle}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://raw.githubusercontent.com/vvcephei/minecraft-icons/master/png/chest.png" alt="Master Crate" style={{ width: '42px', height: '42px' }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 'bold', color: '#eab308', fontSize: '16px' }}>Master Crate</div>
-              <div style={{ color: '#aaaaaa', fontSize: '12px' }}>7 Keys included</div>
-            </div>
-            <div style={{ fontWeight: 'bold', color: '#22c55e', fontSize: '16px' }}>₹150</div>
-          </div>
+          {crateList.map((crate) => (
+            <div key={crate.id} style={crateCardStyle}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{crate.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 'bold', color: crate.color, fontSize: '16px' }}>{crate.name}</div>
+                  <div style={{ color: '#aaaaaa', fontSize: '12px' }}>{crate.sub}</div>
+                </div>
+                <div style={{ fontWeight: 'bold', color: '#22c55e' }}>{crate.price}</div>
+              </div>
+              
+              <button 
+                onClick={() => setSelectedCrate(selectedCrate === crate.id ? null : crate.id)} 
+                style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: '#ffffff', width: '100%', padding: '8px', borderRadius: '6px', marginTop: '10px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>
+                {selectedCrate === crate.id ? '▼ Hide Rewards Photo' : '📷 View Rewards Photo'}
+              </button>
 
-          <div style={crateCardStyle}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://raw.githubusercontent.com/vvcephei/minecraft-icons/master/png/ender_chest.png" alt="God Crate" style={{ width: '42px', height: '42px' }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 'bold', color: '#a855f7', fontSize: '16px' }}>God Crate</div>
-              <div style={{ color: '#aaaaaa', fontSize: '12px' }}>7 Keys included</div>
+              {selectedCrate === crate.id && (
+                <div style={{ marginTop: '10px', overflow: 'hidden', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={crate.imageUrl} alt={crate.name} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                </div>
+              )}
             </div>
-            <div style={{ fontWeight: 'bold', color: '#22c55e', fontSize: '16px' }}>₹450</div>
-          </div>
-
-          <div style={crateCardStyle}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://raw.githubusercontent.com/vvcephei/minecraft-icons/master/png/trapped_chest.png" alt="Legend Crate" style={{ width: '42px', height: '42px' }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 'bold', color: '#3b82f6', fontSize: '16px' }}>Legend Crate</div>
-              <div style={{ color: '#aaaaaa', fontSize: '12px' }}>7 Keys included</div>
-            </div>
-            <div style={{ fontWeight: 'bold', color: '#22c55e', fontSize: '16px' }}>₹220</div>
-          </div>
-
-          <div style={crateCardStyle}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://raw.githubusercontent.com/vvcephei/minecraft-icons/master/png/iron_block.png" alt="Silver Crate" style={{ width: '42px', height: '42px' }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 'bold', color: '#9ca3af', fontSize: '16px' }}>Silver Crate</div>
-              <div style={{ color: '#aaaaaa', fontSize: '12px' }}>Play 1 Hour = Get 2 Keys</div>
-            </div>
-            <div style={{ fontWeight: 'bold', color: '#22c55e', fontSize: '13px' }}>Playable</div>
-          </div>
-
-          <div style={crateCardStyle}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://raw.githubusercontent.com/vvcephei/minecraft-icons/master/png/shulker_box.png" alt="Special Crate" style={{ width: '42px', height: '42px' }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 'bold', color: '#ec4899', fontSize: '16px' }}>Special Crate</div>
-              <div style={{ color: '#aaaaaa', fontSize: '12px' }}>7 Keys included</div>
-            </div>
-            <div style={{ fontWeight: 'bold', color: '#22c55e', fontSize: '16px' }}>₹410</div>
-          </div>
-
+          ))}
         </div>
       )}
     </main>
