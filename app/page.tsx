@@ -35,112 +35,107 @@ export default function Home() {
     }
   };
 
+  const cardStyle = {
+    backgroundColor: 'rgba(18, 18, 18, 0.85)',
+    backdropFilter: 'blur(8px)',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '20px',
+    marginBottom: '16px'
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#dc2626',
+    color: '#ffffff',
+    border: 'none',
+    padding: '12px',
+    borderRadius: '8px',
+    fontWeight: 'bold',
+    width: '100%',
+    cursor: 'pointer',
+    marginTop: '10px'
+  };
+
   return (
-    <main className="min-h-screen text-white p-4 sm:p-8 max-w-4xl mx-auto space-y-6">
+    <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif' }}>
       {/* Header Logo */}
-      <header className="flex justify-between items-center py-2">
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-wider text-red-600 drop-shadow">
-          THEHEROS<span className="text-white">SMP</span>
-        </h1>
-      </header>
+      <h1 style={{ color: '#dc2626', fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>
+        THEHEROS<span style={{ color: '#ffffff' }}>SMP</span>
+      </h1>
 
       {/* Navigation Tabs */}
-      <nav className="flex gap-2 bg-black/60 backdrop-blur-md p-1.5 rounded-xl border border-white/10">
+      <div style={{ display: 'flex', gap: '8px', backgroundColor: 'rgba(0,0,0,0.8)', padding: '6px', borderRadius: '10px', marginBottom: '20px' }}>
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex-1 py-2 rounded-lg font-bold text-xs sm:text-sm transition ${
-            activeTab === 'dashboard' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-white/5'
-          }`}
+          style={{
+            flex: 1, padding: '10px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer',
+            backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff'
+          }}
         >
           Dashboard
         </button>
         <button
           onClick={() => setActiveTab('community')}
-          className={`flex-1 py-2 rounded-lg font-bold text-xs sm:text-sm transition ${
-            activeTab === 'community' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-white/5'
-          }`}
+          style={{
+            flex: 1, padding: '10px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer',
+            backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff'
+          }}
         >
           Community & Socials
         </button>
         <button
           onClick={() => setActiveTab('ranks')}
-          className={`flex-1 py-2 rounded-lg font-bold text-xs sm:text-sm transition ${
-            activeTab === 'ranks' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-white/5'
-          }`}
+          style={{
+            flex: 1, padding: '10px', borderRadius: '6px', border: 'none', fontWeight: 'bold', cursor: 'pointer',
+            backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff'
+          }}
         >
           Ranks & Tags
         </button>
-      </nav>
+      </div>
 
       {/* TAB 1: DASHBOARD */}
       {activeTab === 'dashboard' && (
-        <div className="space-y-6">
-          {/* Main Title Banner */}
-          <div className="bg-black/60 backdrop-blur-md p-6 rounded-2xl border border-red-500/30 text-center space-y-2">
-            <h2 className="text-2xl sm:text-4xl font-extrabold">THE ULTIMATE MINECRAFT SMP</h2>
-            <p className="text-gray-300 text-xs sm:text-sm">Crossplay Survival Network (Java & Bedrock)</p>
+        <div>
+          <div style={{ ...cardStyle, textAlign: 'center' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: 'bold', margin: '0 0 8px 0' }}>THE ULTIMATE MINECRAFT SMP</h2>
+            <p style={{ color: '#aaaaaa', fontSize: '14px', margin: 0 }}>Crossplay Survival Network (Java & Bedrock)</p>
           </div>
 
-          {/* IP Boxes */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            {/* Java Edition */}
-            <div className="bg-black/60 backdrop-blur-md p-5 rounded-xl border border-white/10 space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
-                <span className="font-bold text-green-400 text-sm">JAVA EDITION</span>
-              </div>
-              <p className="font-mono text-sm text-gray-200">163.61.39.57:19144</p>
-              <button
-                onClick={() => copyToClipboard('163.61.39.57:19144', 'java')}
-                className="w-full py-2.5 bg-red-600 hover:bg-red-700 font-bold text-sm rounded-lg transition"
-              >
-                {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
-              </button>
-            </div>
-
-            {/* Bedrock Edition */}
-            <div className="bg-black/60 backdrop-blur-md p-5 rounded-xl border border-white/10 space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-                <span className="font-bold text-blue-400 text-sm">BEDROCK EDITION</span>
-              </div>
-              <div className="text-sm font-mono text-gray-200">
-                <p>IP: 163.61.39.57</p>
-                <p>Port: 19144</p>
-              </div>
-              <button
-                onClick={() => copyToClipboard('163.61.39.57', 'bedrock')}
-                className="w-full py-2.5 bg-red-600 hover:bg-red-700 font-bold text-sm rounded-lg transition"
-              >
-                {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
-              </button>
-            </div>
+          <div style={cardStyle}>
+            <span style={{ color: '#22c55e', fontWeight: 'bold' }}>● JAVA EDITION</span>
+            <p style={{ margin: '8px 0', fontFamily: 'monospace' }}>163.61.39.57:19144</p>
+            <button onClick={() => copyToClipboard('163.61.39.57:19144', 'java')} style={buttonStyle}>
+              {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
+            </button>
           </div>
 
-          {/* Server Stats & Live Players */}
-          <div className="bg-black/60 backdrop-blur-md p-5 rounded-xl border border-white/10 space-y-4">
-            <h3 className="text-lg font-bold flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
-              Live Online Players ({onlineCount} / {maxPlayers})
+          <div style={cardStyle}>
+            <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>● BEDROCK EDITION</span>
+            <p style={{ margin: '8px 0 4px 0', fontFamily: 'monospace' }}>IP: 163.61.39.57</p>
+            <p style={{ margin: '0', fontFamily: 'monospace' }}>Port: 19144</p>
+            <button onClick={() => copyToClipboard('163.61.39.57', 'bedrock')} style={buttonStyle}>
+              {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
+            </button>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}>
+              <span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount} / {maxPlayers})
             </h3>
-
             {players.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 {players.map((player, idx) => (
-                  <div key={idx} className="flex items-center gap-2 bg-white/10 p-2 rounded-lg border border-white/10">
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '6px' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`https://mc-heads.net/avatar/${player}/32`}
-                      alt={player}
-                      className="w-7 h-7 rounded"
-                    />
-                    <span className="text-xs sm:text-sm font-medium truncate">{player}</span>
+                    <img src={`https://mc-heads.net/avatar/${player}/24`} alt={player} style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
+                    <span style={{ fontSize: '14px' }}>{player}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-400 text-xs sm:text-sm italic">
-                {onlineCount > 0 ? "Players are currently online." : "No players online right now."}
+              <p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>
+                {onlineCount > 0 ? "Players online." : "No players online right now."}
               </p>
             )}
           </div>
@@ -149,45 +144,17 @@ export default function Home() {
 
       {/* TAB 2: COMMUNITY & SOCIALS */}
       {activeTab === 'community' && (
-        <div className="bg-black/60 backdrop-blur-md p-6 rounded-2xl border border-white/10 space-y-4">
-          <h2 className="text-xl font-bold text-red-500">Join Our Community</h2>
-          <div className="space-y-3">
-            <a
-              href="https://discord.gg"
-              target="_blank"
-              rel="noreferrer"
-              className="block p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition"
-            >
-              <h3 className="font-bold text-blue-400">Discord Server</h3>
-              <p className="text-xs text-gray-300">Join our Discord community for events, announcements, and support.</p>
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noreferrer"
-              className="block p-4 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition"
-            >
-              <h3 className="font-bold text-red-400">YouTube Channel</h3>
-              <p className="text-xs text-gray-300">Watch official SMP trailers and updates.</p>
-            </a>
-          </div>
+        <div style={cardStyle}>
+          <h2 style={{ color: '#dc2626', margin: '0 0 12px 0' }}>Join Our Community</h2>
+          <p style={{ color: '#cccccc' }}>Discord & Youtube links coming soon!</p>
         </div>
       )}
 
       {/* TAB 3: RANKS & TAGS */}
       {activeTab === 'ranks' && (
-        <div className="bg-black/60 backdrop-blur-md p-6 rounded-2xl border border-white/10 space-y-4">
-          <h2 className="text-xl font-bold text-red-500">Server Ranks & Store</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="bg-white/5 p-4 rounded-xl border border-yellow-500/30 space-y-2">
-              <h3 className="text-lg font-bold text-yellow-400">VIP Rank</h3>
-              <p className="text-xs text-gray-300">Custom prefix, fly in lobby, extra homes, and exclusive tags.</p>
-            </div>
-            <div className="bg-white/5 p-4 rounded-xl border border-red-500/30 space-y-2">
-              <h3 className="text-lg font-bold text-red-400">HERO Rank</h3>
-              <p className="text-xs text-gray-300">All VIP perks + custom particle trails and priority join access.</p>
-            </div>
-          </div>
+        <div style={cardStyle}>
+          <h2 style={{ color: '#dc2626', margin: '0 0 12px 0' }}>Server Ranks</h2>
+          <p style={{ color: '#cccccc' }}>Ranks & Perks store details coming soon!</p>
         </div>
       )}
     </main>
