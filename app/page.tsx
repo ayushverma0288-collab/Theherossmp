@@ -10,6 +10,8 @@ export default function Home() {
   const [maxPlayers, setMaxPlayers] = useState<number>(0);
   const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
+  const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM"; // Discord rank-payment channel link
+
   useEffect(() => {
     fetch('https://api.mcsrvstat.us/3/163.61.39.57:19144')
       .then((res) => res.json())
@@ -79,6 +81,20 @@ export default function Home() {
     marginBottom: '8px'
   };
 
+  const buyButtonStyle = {
+    backgroundColor: '#5865F2',
+    color: '#ffffff',
+    border: 'none',
+    padding: '6px 12px',
+    borderRadius: '6px',
+    fontWeight: 'bold',
+    fontSize: '12px',
+    cursor: 'pointer',
+    textDecoration: 'none',
+    display: 'inline-block',
+    textAlign: 'center' as const
+  };
+
   const crateCardStyle = {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -133,6 +149,13 @@ export default function Home() {
       icon: '🔑',
       imageUrl: 'https://i.postimg.cc/PfZ7YSrP/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
     }
+  ];
+
+  const ranksList = [
+    { name: 'VIP', price: '₹200', bg: 'rgba(234, 179, 8, 0.15)', border: '#eab308', color: '#eab308' },
+    { name: 'VIP++', price: '₹280', bg: 'rgba(234, 179, 8, 0.25)', border: '#eab308', color: '#facc15' },
+    { name: 'MVP', price: '₹190', bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', color: '#3b82f6' },
+    { name: 'MVP++', price: '₹240', bg: 'rgba(168, 85, 247, 0.2)', border: '#a855f7', color: '#c084fc' }
   ];
 
   return (
@@ -205,10 +228,17 @@ export default function Home() {
           <div style={cardStyle}>
             <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>👑 Server Ranks</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-              <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#eab308' }}>VIP</div><div>₹200</div></div>
-              <div style={{ background: 'rgba(234, 179, 8, 0.25)', border: '1px solid #eab308', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#facc15' }}>VIP++</div><div>₹280</div></div>
-              <div style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid #3b82f6', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#3b82f6' }}>MVP</div><div>₹190</div></div>
-              <div style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid #a855f7', padding: '12px', borderRadius: '8px' }}><div style={{ fontWeight: 'bold', color: '#c084fc' }}>MVP++</div><div>₹240</div></div>
+              {ranksList.map((rank, i) => (
+                <div key={i} style={{ background: rank.bg, border: `1px solid ${rank.border}`, padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold', color: rank.color, fontSize: '16px' }}>{rank.name}</div>
+                    <div style={{ fontSize: '14px', marginBottom: '8px' }}>{rank.price}</div>
+                  </div>
+                  <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>
+                    🛒 BUY RANK
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -232,23 +262,23 @@ export default function Home() {
             </div>
 
             <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#6b7280' }}>NOOB</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹80</span>
+              <span style={{ fontWeight: 'bold', color: '#6b7280' }}>NOOB (₹80)</span>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
             </div>
 
             <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#ef4444' }}>PRO</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹75</span>
+              <span style={{ fontWeight: 'bold', color: '#ef4444' }}>PRO (₹75)</span>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
             </div>
 
             <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹100</span>
+              <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB (₹100)</span>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
             </div>
 
             <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#a855f7' }}>ALPHA</span>
-              <span style={{ color: '#ffffff', fontWeight: 'bold' }}>₹149</span>
+              <span style={{ fontWeight: 'bold', color: '#a855f7' }}>ALPHA (₹149)</span>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
             </div>
           </div>
         </div>
@@ -267,7 +297,12 @@ export default function Home() {
                   <div style={{ fontWeight: 'bold', color: crate.color, fontSize: '16px' }}>{crate.name}</div>
                   <div style={{ color: '#aaaaaa', fontSize: '12px' }}>{crate.sub}</div>
                 </div>
-                <div style={{ fontWeight: 'bold', color: '#22c55e' }}>{crate.price}</div>
+                <div style={{ fontWeight: 'bold', color: '#22c55e', marginRight: '8px' }}>{crate.price}</div>
+                {crate.price !== 'Playable' && (
+                  <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>
+                    BUY
+                  </a>
+                )}
               </div>
               
               <button 
