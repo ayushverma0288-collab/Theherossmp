@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, main, #__next, header, nav, div {
+:root, html, body, main, section, header, nav, footer, div {
   background-color: transparent !important;
+  background: transparent !important;
 }
 
 body {
@@ -14,8 +15,8 @@ body {
   background-repeat: no-repeat !important;
 }
 
-/* कार्ड्स को हल्का डार्क और ग्लास लुक देने के लिए */
-div[class*='border'], div[class*='rounded'], .bg-card {
-  background-color: rgba(18, 18, 18, 0.75) !important;
-  backdrop-filter: blur(10px) !important;
+/* सिर्फ अंदर के कार्ड्स को हल्का सा डार्क/ग्लास इफ़ेक्ट देने के लिए */
+div[class*='border'], .bg-card, [class*='rounded-'] {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
 }
