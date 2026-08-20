@@ -26,56 +26,56 @@ function MainComponent() {
   const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
   const INSTAGRAM_GROUP_URL = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
-  // Updated Direct Working Image URLs
+  // Reliable Direct Visual Icons
   const spinRewards = [
     { 
       id: 1, 
       name: '32 Golden Apples', 
       shortText: '32 G-Apple', 
       command: '/give %PLAYER% golden_apple 32',
-      icon: 'https://i.postimg.cc/kM2WscHZ/1423-goldenapple.png'
+      icon: 'https://minecraft.wiki/images/Golden_Apple_JE2_BE2.png'
     },
     { 
       id: 2, 
       name: '20 Diamond Blocks', 
       shortText: '20 Dia Block', 
       command: '/give %PLAYER% diamond_block 20',
-      icon: 'https://i.postimg.cc/wjgtCcwS/4178-mc-diamond-block.png'
+      icon: 'https://minecraft.wiki/images/Block_of_Diamond_JE5_BE3.png'
     },
     { 
       id: 3, 
       name: 'Totem of Undying', 
       shortText: 'Totem', 
       command: '/give %PLAYER% totem_of_undying 1',
-      icon: 'https://i.postimg.cc/j2FNY7J1/7301-totem-mc.png'
+      icon: 'https://minecraft.wiki/images/Totem_of_Undying_JE2_BE2.png'
     },
     { 
       id: 4, 
       name: '1 Netherite Ingot', 
       shortText: 'Netherite', 
       command: '/give %PLAYER% netherite_ingot 1',
-      icon: 'https://i.postimg.cc/kXf95QJX/5032-Netherite-ingot.png'
+      icon: 'https://minecraft.wiki/images/Netherite_Ingot_JE1_BE1.png'
     },
     { 
       id: 5, 
       name: '1 Enchanted G-Apple', 
       shortText: 'God Apple', 
       command: '/give %PLAYER% enchanted_golden_apple 1',
-      icon: 'https://i.postimg.cc/fb78wKs2/2024-enchantedgoldenapple.png'
+      icon: 'https://minecraft.wiki/images/Enchanted_Golden_Apple_JE2_BE2.gif'
     },
     { 
       id: 6, 
       name: '1 Hour Fly Pass', 
       shortText: 'Fly Pass', 
       command: '/tempgrant %PLAYER% fly 1h',
-      icon: 'https://i.postimg.cc/6q8VGVkF/6758-Elytra.png'
+      icon: 'https://minecraft.wiki/images/Elytra_JE2_BE2.png'
     },
     { 
       id: 7, 
       name: '10k In-Game Cash', 
       shortText: '$10k Cash', 
       command: '/eco give %PLAYER% 10000',
-      icon: 'https://i.postimg.cc/mkHZhz5n/7347-minecraftmoney.png'
+      icon: 'https://minecraft.wiki/images/Gold_Ingot_JE4_BE2.png'
     },
   ];
 
@@ -331,7 +331,6 @@ function MainComponent() {
               </button>
             </div>
 
-            {/* SERVER OWNER & ADMIN CARD */}
             <div style={{ ...cardStyle, borderLeft: '4px solid #dc2626' }}>
               <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', color: '#dc2626', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '6px' }}>👑 Server Owner & Admin</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -449,11 +448,8 @@ function MainComponent() {
                       <img 
                         src={item.icon} 
                         alt={item.shortText} 
-                        style={{ width: '32px', height: '32px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
-                        onError={(e) => {
-                          // Fallback if Postimg link blocks browser
-                          (e.target as HTMLImageElement).src = 'https://mc-heads.net/avatar/MHO/32';
-                        }}
+                        style={{ width: '34px', height: '34px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
+                        crossOrigin="anonymous"
                       />
                       <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 3px #000', whiteSpace: 'nowrap', marginTop: '2px' }}>{item.shortText}</span>
                     </div>
@@ -511,7 +507,6 @@ function MainComponent() {
         {/* RANK/TAG TAB */}
         {activeTab === 'ranks' && (
           <div>
-            {/* Server Ranks Section */}
             <h2 style={{ color: '#dc2626', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '2px solid #dc2626', paddingBottom: '6px' }}>👑 Server Ranks</h2>
             {ranksList.map((rank, i) => (
               <div key={i} style={{ ...cardStyle, backgroundColor: rank.bg, borderColor: rank.border }}>
@@ -525,7 +520,6 @@ function MainComponent() {
               </div>
             ))}
 
-            {/* Playable Tags Section */}
             <h2 style={{ color: '#22c55e', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #22c55e', paddingBottom: '6px' }}>🎮 Playable Tags (Free)</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '10px', marginBottom: '20px' }}>
               {playableTags.map((tag, i) => (
@@ -539,7 +533,6 @@ function MainComponent() {
               ))}
             </div>
 
-            {/* Buyable Tags Section */}
             <h2 style={{ color: '#eab308', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #eab308', paddingBottom: '6px' }}>💎 Buyable Tags</h2>
             {paidTags.map((tag, i) => (
               <div key={i} style={{ ...cardStyle, borderLeft: `4px solid ${tag.color}` }}>
@@ -586,7 +579,6 @@ function MainComponent() {
         )}
       </div>
 
-      {/* RIGHT BOTTOM SIGNATURE FOOTER */}
       <footer style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '20px 0 10px 0', marginTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
         <div style={{ fontSize: '12px', color: '#888888', background: 'rgba(0, 0, 0, 0.4)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', fontStyle: 'italic' }}>
           <span>Website made by </span>
