@@ -20,13 +20,13 @@ export default function Home() {
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   const spinRewards = [
-    { id: 1, name: '32 Golden Apples', color: '#eab308', icon: '🍏', command: '/give %PLAYER% golden_apple 32' },
-    { id: 2, name: '20 Diamond Blocks', color: '#06b6d4', icon: '💎', command: '/give %PLAYER% diamond_block 20' },
-    { id: 3, name: 'Totem of Undying', color: '#f59e0b', icon: '🗿', command: '/give %PLAYER% totem_of_undying 1' },
-    { id: 4, name: '1 Netherite Ingot', color: '#4b5563', icon: '🧱', command: '/give %PLAYER% netherite_ingot 1' },
-    { id: 5, name: '1 Enchanted G-Apple', color: '#a855f7', icon: '🍎', command: '/give %PLAYER% enchanted_golden_apple 1' },
-    { id: 6, name: '1 Hour Fly Pass', color: '#3b82f6', icon: '✈️', command: '/tempgrant %PLAYER% fly 1h' },
-    { id: 7, name: '10k In-Game Cash', color: '#22c55e', icon: '💰', command: '/eco give %PLAYER% 10000' },
+    { id: 1, name: '32 Golden Apples', color: '#eab308', icon: 'https://cdn.discordapp.com/emojis/1085189392265011210.webp', command: '/give %PLAYER% golden_apple 32' },
+    { id: 2, name: '20 Diamond Blocks', color: '#06b6d4', icon: 'https://cdn.discordapp.com/emojis/1085189326838059038.webp', command: '/give %PLAYER% diamond_block 20' },
+    { id: 3, name: 'Totem of Undying', color: '#f59e0b', icon: 'https://cdn.discordapp.com/emojis/1085189445104861214.webp', command: '/give %PLAYER% totem_of_undying 1' },
+    { id: 4, name: '1 Netherite Ingot', color: '#4b5563', icon: 'https://cdn.discordapp.com/emojis/1085189422057177118.webp', command: '/give %PLAYER% netherite_ingot 1' },
+    { id: 5, name: '1 Enchanted G-Apple', color: '#a855f7', icon: 'https://cdn.discordapp.com/emojis/1085189408429850634.webp', command: '/give %PLAYER% enchanted_golden_apple 1' },
+    { id: 6, name: '1 Hour Fly Pass', color: '#3b82f6', icon: 'https://cdn.discordapp.com/emojis/1085189366360981554.webp', command: '/tempgrant %PLAYER% fly 1h' },
+    { id: 7, name: '10k In-Game Cash', color: '#22c55e', icon: 'https://cdn.discordapp.com/emojis/1085189382211248168.webp', command: '/eco give %PLAYER% 10000' },
   ];
 
   useEffect(() => {
@@ -333,22 +333,21 @@ export default function Home() {
               background: 'conic-gradient(#eab308 0 51.4deg, #06b6d4 51.4deg 102.8deg, #f59e0b 102.8deg 154.2deg, #4b5563 154.2deg 205.6deg, #a855f7 205.6deg 257deg, #3b82f6 257deg 308.4deg, #22c55e 308.4deg 360deg)'
             }}>
               {spinRewards.map((item, index) => {
-                const angle = (index * 51.4) + 25.7;
+                const angle = (index * (360 / spinRewards.length)) + (360 / spinRewards.length / 2);
                 return (
                   <div key={item.id} style={{
                     position: 'absolute',
-                    width: '50%',
-                    height: '50%',
-                    top: 0,
-                    right: 0,
-                    transformOrigin: '0% 100%',
-                    transform: `rotate(${angle}deg)`,
+                    top: '50%',
+                    left: '50%',
+                    width: '0px',
+                    height: '0px',
+                    transform: `rotate(${angle}deg) translateY(-85px) rotate(-${angle}deg)`,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '18px'
+                    justifyContent: 'center'
                   }}>
-                    <span style={{ transform: 'rotate(-45deg)', display: 'inline-block' }}>{item.icon}</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.icon} alt={item.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
                   </div>
                 );
               })}
@@ -379,8 +378,9 @@ export default function Home() {
             <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#eab308' }}>🏆 Possible Wheel Rewards:</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '6px' }}>
               {spinRewards.map((r) => (
-                <div key={r.id} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>{r.icon}</span>
+                <div key={r.id} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={r.icon} alt={r.name} style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
                   <span style={{ fontWeight: 'bold' }}>{r.name}</span>
                 </div>
               ))}
