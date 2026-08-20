@@ -24,6 +24,8 @@ function MainComponent() {
 
   const SECRET_ADMIN_PASS = "mrayushdr143";
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
+  const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
+  const INSTAGRAM_GROUP_URL = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
   const spinRewards = [
     { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', command: '/give %PLAYER% golden_apple 32' },
@@ -391,9 +393,18 @@ function MainComponent() {
       {/* SOCIAL / COMMUNITY TAB */}
       {activeTab === 'community' && (
         <div style={cardStyle}>
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px' }}>Join Our Community</h2>
-          <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
+          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
+          
+          <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
             <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
+          </a>
+
+          <a href={INSTAGRAM_PROFILE_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
+            <button style={{ ...buttonStyle, backgroundColor: '#E1306C' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
+          </a>
+
+          <a href={INSTAGRAM_GROUP_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
+            <button style={{ ...buttonStyle, backgroundColor: '#C13584' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
           </a>
         </div>
       )}
