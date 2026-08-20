@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 
 function MainComponent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('spin');
   const [copiedJava, setCopiedJava] = useState(false);
   const [copiedBedrock, setCopiedBedrock] = useState(false);
   const [onlineCount, setOnlineCount] = useState<number>(0);
@@ -26,20 +26,21 @@ function MainComponent() {
   const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
   const INSTAGRAM_GROUP_URL = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
+  // Updated Direct Working Image URLs
   const spinRewards = [
     { 
       id: 1, 
       name: '32 Golden Apples', 
       shortText: '32 G-Apple', 
       command: '/give %PLAYER% golden_apple 32',
-      icon: 'https://i.postimg.cc/RCRXbspx/1423-goldenapple.png'
+      icon: 'https://i.postimg.cc/kM2WscHZ/1423-goldenapple.png'
     },
     { 
       id: 2, 
       name: '20 Diamond Blocks', 
       shortText: '20 Dia Block', 
       command: '/give %PLAYER% diamond_block 20',
-      icon: 'https://i.postimg.cc/qRQyQYJP/6626-mc-diamond.png'
+      icon: 'https://i.postimg.cc/wjgtCcwS/4178-mc-diamond-block.png'
     },
     { 
       id: 3, 
@@ -53,21 +54,21 @@ function MainComponent() {
       name: '1 Netherite Ingot', 
       shortText: 'Netherite', 
       command: '/give %PLAYER% netherite_ingot 1',
-      icon: 'https://i.postimg.cc/W3ftdPbc/5032-Netherite-ingot.png'
+      icon: 'https://i.postimg.cc/kXf95QJX/5032-Netherite-ingot.png'
     },
     { 
       id: 5, 
       name: '1 Enchanted G-Apple', 
       shortText: 'God Apple', 
       command: '/give %PLAYER% enchanted_golden_apple 1',
-      icon: 'https://i.postimg.cc/hPmht6FD/2024-enchantedgoldenapple.png'
+      icon: 'https://i.postimg.cc/fb78wKs2/2024-enchantedgoldenapple.png'
     },
     { 
       id: 6, 
       name: '1 Hour Fly Pass', 
       shortText: 'Fly Pass', 
       command: '/tempgrant %PLAYER% fly 1h',
-      icon: 'https://i.postimg.cc/50j2dkq4/6758-Elytra.png'
+      icon: 'https://i.postimg.cc/6q8VGVkF/6758-Elytra.png'
     },
     { 
       id: 7, 
@@ -445,11 +446,14 @@ function MainComponent() {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      {/* Standard un-proxied img element so direct host links load clean */}
                       <img 
                         src={item.icon} 
                         alt={item.shortText} 
-                        style={{ width: '30px', height: '30px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
+                        style={{ width: '32px', height: '32px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
+                        onError={(e) => {
+                          // Fallback if Postimg link blocks browser
+                          (e.target as HTMLImageElement).src = 'https://mc-heads.net/avatar/MHO/32';
+                        }}
                       />
                       <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 3px #000', whiteSpace: 'nowrap', marginTop: '2px' }}>{item.shortText}</span>
                     </div>
