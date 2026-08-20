@@ -75,7 +75,7 @@ function MainComponent() {
       name: '10k In-Game Cash', 
       shortText: '$10k Cash', 
       command: '/eco give %PLAYER% 10000',
-      icon: 'https://i.postimg.cc/zGyntk3J/5032-Netherite-ingot.png'
+      icon: 'https://i.postimg.cc/022Gmvs5/7347-minecraftmoney.png'
     },
   ];
 
