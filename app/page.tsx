@@ -2,271 +2,213 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('rank');
 
   return (
-    <main className="min-h-screen bg-[url('/bg.jpg')] bg-cover bg-fixed bg-center text-white font-sans p-4 relative">
-      <div className="max-w-md mx-auto space-y-6">
+    <main style={{
+      minHeight: '100vh',
+      backgroundImage: "url('/bg.jpg')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      color: 'white',
+      fontFamily: 'sans-serif',
+      padding: '16px'
+    }}>
+      <div style={{ maxWidth: '450px', margin: '0 auto' }}>
         
         {/* Title */}
-        <h1 className="text-4xl font-extrabold text-center tracking-wider drop-shadow-md">
-          <span className="text-red-600">THEHERO</span>
-          <span className="text-white">SMP</span>
+        <h1 style={{
+          fontSize: '32px',
+          fontWeight: '900',
+          textAlign: 'center',
+          letterSpacing: '2px',
+          marginBottom: '20px',
+          textShadow: '0 2px 10px rgba(0,0,0,0.8)'
+        }}>
+          <span style={{ color: '#ef4444' }}>THEHERO</span>
+          <span>SMP</span>
         </h1>
 
-        {/* Navigation Bar */}
-        <div className="bg-black/80 backdrop-blur-md border border-gray-800 p-1.5 rounded-2xl flex justify-between items-center text-xs font-semibold shadow-2xl">
-          <button
-            onClick={() => setActiveTab('home')}
-            className={`px-3 py-2 rounded-xl transition ${activeTab === 'home' ? 'bg-red-600 text-white font-bold' : 'text-gray-300'}`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => setActiveTab('spin')}
-            className={`px-3 py-2 rounded-xl transition flex items-center gap-1 ${activeTab === 'spin' ? 'bg-red-600 text-white font-bold' : 'text-gray-300'}`}
-          >
-            🎡 Spin
-          </button>
-          <button
-            onClick={() => setActiveTab('social')}
-            className={`px-3 py-2 rounded-xl transition ${activeTab === 'social' ? 'bg-red-600 text-white font-bold' : 'text-gray-300'}`}
-          >
-            Social
-          </button>
-          <button
-            onClick={() => setActiveTab('rank')}
-            className={`px-3 py-2 rounded-xl transition ${activeTab === 'rank' ? 'bg-red-600 text-white font-bold' : 'text-gray-300'}`}
-          >
-            Ranks
-          </button>
-          <button
-            onClick={() => setActiveTab('crates')}
-            className={`px-3 py-2 rounded-xl transition flex items-center gap-1 ${activeTab === 'crates' ? 'bg-red-600 text-white font-bold' : 'text-gray-300'}`}
-          >
-            🎁 Crates
-          </button>
+        {/* Navigation Tabs */}
+        <div style={{
+          backgroundColor: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid #1f2937',
+          padding: '6px',
+          borderRadius: '16px',
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+          fontSize: '12px',
+          fontWeight: 'bold'
+        }}>
+          {[
+            { id: 'home', label: 'Home' },
+            { id: 'spin', label: '🎡 Spin' },
+            { id: 'social', label: 'Social' },
+            { id: 'rank', label: 'Ranks' },
+            { id: 'crates', label: '🎁 Crates' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '12px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: activeTab === tab.id ? '#dc2626' : 'transparent',
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* TAB 1: HOME */}
+        {/* HOME TAB */}
         {activeTab === 'home' && (
-          <div className="space-y-4">
-            <div className="bg-black/75 backdrop-blur border border-gray-800 p-5 rounded-2xl shadow-2xl">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-bold">Server Status</h2>
-                <span className="text-xl font-extrabold text-red-500">4</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ backgroundColor: 'rgba(15,23,42,0.85)', border: '1px solid #1e293b', padding: '20px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>Server Status</h2>
+                <span style={{ fontSize: '20px', color: '#ef4444', fontWeight: 'bold' }}>4</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-400">
-                <span className="text-green-500 font-bold">● ONLINE</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '14px', marginTop: '8px' }}>
+                <span style={{ color: '#22c55e', fontWeight: 'bold' }}>● ONLINE</span>
                 <span>Players Online</span>
               </div>
             </div>
 
-            <div className="bg-black/75 backdrop-blur border border-gray-800 p-5 rounded-2xl shadow-2xl">
-              <h3 className="text-lg font-bold mb-1">Java Edition</h3>
-              <p className="text-xs text-gray-400 mb-4">IP: amd-9-1.skyraincloud.in:19144</p>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
+            <div style={{ backgroundColor: 'rgba(15,23,42,0.85)', border: '1px solid #1e293b', padding: '20px', borderRadius: '16px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>Java Edition</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 16px 0' }}>IP: amd-9-1.skyraincloud.in:19144</p>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                 COPY JAVA IP
               </button>
             </div>
 
-            <div className="bg-black/75 backdrop-blur border border-gray-800 p-5 rounded-2xl shadow-2xl">
-              <h3 className="text-lg font-bold mb-1">Bedrock / PE Edition</h3>
-              <p className="text-xs text-gray-400">IP: amd-9-1.skyraincloud.in</p>
-              <p className="text-xs text-gray-400 mb-4">Port: 19144</p>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
+            <div style={{ backgroundColor: 'rgba(15,23,42,0.85)', border: '1px solid #1e293b', padding: '20px', borderRadius: '16px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>Bedrock / PE Edition</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 2px 0' }}>IP: amd-9-1.skyraincloud.in</p>
+              <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 16px 0' }}>Port: 19144</p>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                 COPY BEDROCK IP
               </button>
             </div>
           </div>
         )}
 
-        {/* TAB 2: SPIN */}
+        {/* SPIN TAB */}
         {activeTab === 'spin' && (
-          <div className="bg-black/80 backdrop-blur border border-gray-800 p-6 rounded-3xl text-center space-y-4 shadow-2xl">
-            <h2 className="text-xl font-bold text-red-500 flex items-center justify-center gap-2">
-              🎡 Daily Reward Wheel
-            </h2>
-            <p className="text-xs text-gray-400">Enter Gamertag & Spin every 24 Hours for free rewards!</p>
-            
-            <input
-              type="text"
-              placeholder="Enter Minecraft Gamertag"
-              className="w-full bg-black/60 border border-gray-700 rounded-xl p-3 text-sm focus:outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Referral Code (Optional - Get 1 Extra Spin)"
-              className="w-full bg-black/60 border border-amber-500/60 rounded-xl p-3 text-sm focus:outline-none text-amber-300"
-            />
-            <input
-              type="password"
-              placeholder="Admin Passcode (Optional)"
-              className="w-full bg-black/60 border border-gray-700 rounded-xl p-3 text-sm focus:outline-none"
-            />
-
-            <div className="py-4 flex justify-center">
-              <div className="w-56 h-56 rounded-full border-4 border-red-600 bg-gradient-to-r from-green-500 via-yellow-500 via-blue-500 to-purple-500 flex items-center justify-center font-bold text-black shadow-2xl">
-                WHEEL
-              </div>
-            </div>
-
-            <button className="w-full bg-slate-700 text-gray-300 font-bold py-3 rounded-xl">
-              SPIN AGAIN IN 24H ⏳
-            </button>
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #1f2937', padding: '24px', borderRadius: '24px', textAlign: 'center' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444', marginBottom: '8px' }}>🎡 Daily Reward Wheel</h2>
+            <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+            <input type="text" placeholder="Enter Minecraft Gamertag" style={{ width: '100%', padding: '12px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid #374151', color: 'white', marginBottom: '12px', boxSizing: 'border-box' }} />
+            <input type="text" placeholder="Referral Code (Optional)" style={{ width: '100%', padding: '12px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid #f59e0b', color: '#fbbf24', marginBottom: '20px', boxSizing: 'border-box' }} />
+            <button style={{ width: '100%', backgroundColor: '#475569', color: '#cbd5e1', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: 'bold' }}>SPIN AGAIN IN 24H ⏳</button>
           </div>
         )}
 
-        {/* TAB 3: SOCIAL */}
+        {/* SOCIAL TAB */}
         {activeTab === 'social' && (
-          <div className="bg-black/80 backdrop-blur border border-gray-800 p-6 rounded-3xl text-center space-y-4 shadow-2xl">
-            <h2 className="text-xl font-bold mb-4">Join Our Community</h2>
-            <button className="w-full bg-indigo-600 hover:bg-indigo-700 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
-              JOIN DISCORD SERVER 💬
-            </button>
-            <button className="w-full bg-pink-600 hover:bg-pink-700 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
-              FOLLOW INSTAGRAM PROFILE 📸
-            </button>
-            <button className="w-full bg-purple-600 hover:bg-purple-700 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
-              JOIN INSTAGRAM GROUP CHAT 💬
-            </button>
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #1f2937', padding: '24px', borderRadius: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>Join Our Community</h2>
+            <button style={{ backgroundColor: '#4f46e5', color: 'white', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: 'bold' }}>JOIN DISCORD SERVER 💬</button>
+            <button style={{ backgroundColor: '#db2777', color: 'white', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: 'bold' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
+            <button style={{ backgroundColor: '#9333ea', color: 'white', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: 'bold' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
           </div>
         )}
 
-        {/* TAB 4: RANKS & TAGS */}
+        {/* RANKS TAB */}
         {activeTab === 'rank' && (
-          <div className="space-y-4">
-            {/* VIP Rank */}
-            <div className="bg-black/60 backdrop-blur border border-amber-500/70 p-5 rounded-2xl relative shadow-xl">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-xl font-bold text-amber-400">VIP Rank</span>
-                <span className="text-xl font-extrabold text-white">₹200</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', border: '1.5px solid #f59e0b', padding: '16px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyBetween: 'space-between', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#fbbf24' }}>VIP Rank</span>
+                <span style={{ fontSize: '20px', fontWeight: '900' }}>₹200</span>
               </div>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition">
-                BUY VIA DISCORD 🛒
-              </button>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD 🛒</button>
             </div>
 
-            {/* VIP++ Rank */}
-            <div className="bg-black/60 backdrop-blur border border-yellow-500/70 p-5 rounded-2xl relative shadow-xl">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-xl font-bold text-yellow-400">VIP++ Rank</span>
-                <span className="text-xl font-extrabold text-white">₹280</span>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', border: '1.5px solid #eab308', padding: '16px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#facc15' }}>VIP++ Rank</span>
+                <span style={{ fontSize: '20px', fontWeight: '900' }}>₹280</span>
               </div>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition">
-                BUY VIA DISCORD 🛒
-              </button>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD 🛒</button>
             </div>
 
-            {/* MVP Rank */}
-            <div className="bg-black/60 backdrop-blur border border-blue-500/70 p-5 rounded-2xl relative shadow-xl">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-xl font-bold text-blue-400">MVP Rank</span>
-                <span className="text-xl font-extrabold text-white">₹190</span>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', border: '1.5px solid #3b82f6', padding: '16px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa' }}>MVP Rank</span>
+                <span style={{ fontSize: '20px', fontWeight: '900' }}>₹190</span>
               </div>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition">
-                BUY VIA DISCORD 🛒
-              </button>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD 🛒</button>
             </div>
 
-            {/* MVP++ Rank */}
-            <div className="bg-black/60 backdrop-blur border border-purple-500/70 p-5 rounded-2xl relative shadow-xl">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-xl font-bold text-purple-400">MVP++ Rank</span>
-                <span className="text-xl font-extrabold text-white">₹240</span>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', border: '1.5px solid #a855f7', padding: '16px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#c084fc' }}>MVP++ Rank</span>
+                <span style={{ fontSize: '20px', fontWeight: '900' }}>₹240</span>
               </div>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition">
-                BUY VIA DISCORD 🛒
-              </button>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD 🛒</button>
             </div>
 
-            {/* Tags Section */}
-            <div className="pt-4 space-y-3">
-              <h3 className="text-lg font-bold text-green-400 flex items-center gap-2">
-                🎮 Playable Tags (Free)
-              </h3>
-              
-              <div className="bg-black/80 border border-green-600/50 p-4 rounded-xl flex justify-between items-center">
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#4ade80', margin: '16px 0 0 0' }}>🎮 Playable Tags (Free)</h3>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #22c55e', padding: '14px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontWeight: 'bold', color: '#22c55e' }}>OG_BUILDER</div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>Earnable in-game</div>
+              </div>
+              <span style={{ border: '1px solid #22c55e', color: '#4ade80', padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>PLAYABLE</span>
+            </div>
+
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #22c55e', padding: '14px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontWeight: 'bold', color: '#22c55e' }}>ADVANCED BUILDER</div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>Earnable in-game</div>
+              </div>
+              <span style={{ border: '1px solid #22c55e', color: '#4ade80', padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>PLAYABLE</span>
+            </div>
+
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#facc15', margin: '12px 0 0 0' }}>💎 Buyable Tags</h3>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #ef4444', padding: '16px', borderRadius: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <div>
-                  <div className="font-bold text-green-500">OG_BUILDER</div>
-                  <div className="text-xs text-gray-400">Earnable in-game</div>
+                  <div style={{ fontWeight: 'bold', color: '#ef4444' }}>GAREEB Tag</div>
+                  <div style={{ fontSize: '12px', color: '#9ca3af' }}>Validity: 1 MONTH</div>
                 </div>
-                <span className="border border-green-500 text-green-400 text-xs px-3 py-1 rounded-lg">PLAYABLE</span>
+                <span style={{ fontSize: '20px', fontWeight: 'bold' }}>₹100</span>
               </div>
-
-              <div className="bg-black/80 border border-green-600/50 p-4 rounded-xl flex justify-between items-center">
-                <div>
-                  <div className="font-bold text-green-500">ADVANCED BUILDER</div>
-                  <div className="text-xs text-gray-400">Earnable in-game</div>
-                </div>
-                <span className="border border-green-500 text-green-400 text-xs px-3 py-1 rounded-lg">PLAYABLE</span>
-              </div>
-
-              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 pt-2">
-                💎 Buyable Tags
-              </h3>
-
-              <div className="bg-black/80 border border-red-600/50 p-4 rounded-2xl space-y-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="font-bold text-red-500">GAREEB Tag</div>
-                    <div className="text-xs text-gray-400">Validity: 1 MONTH</div>
-                  </div>
-                  <span className="text-xl font-bold">₹100</span>
-                </div>
-                <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-xs transition">
-                  BUY TAG VIA DISCORD 🛒
-                </button>
-              </div>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '10px', borderRadius: '10px', fontWeight: 'bold', fontSize: '12px' }}>BUY TAG VIA DISCORD 🛒</button>
             </div>
           </div>
         )}
 
-        {/* TAB 5: CRATES */}
+        {/* CRATES TAB */}
         {activeTab === 'crates' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              {/* Master Crate */}
-              <div className="bg-black/80 border border-yellow-500/70 p-3 rounded-2xl text-center space-y-1">
-                <div className="text-yellow-400 font-bold text-sm">Master Crate</div>
-                <div className="text-lg font-extrabold">₹150</div>
-                <div className="text-xs text-gray-400">7 Keys included</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid #f59e0b', padding: '16px', borderRadius: '16px', textAlign: 'center' }}>
+                <div style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '14px' }}>Master Crate</div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '4px 0' }}>₹150</div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>7 Keys included</div>
               </div>
-
-              {/* God Crate */}
-              <div className="bg-black/80 border border-purple-500/70 p-3 rounded-2xl text-center space-y-1">
-                <div className="text-purple-400 font-bold text-sm">God Crate</div>
-                <div className="text-lg font-extrabold">₹450</div>
-                <div className="text-xs text-gray-400">7 Keys included</div>
-              </div>
-
-              {/* Spawner Crate */}
-              <div className="bg-black/80 border border-blue-500/70 p-3 rounded-2xl text-center space-y-1">
-                <div className="text-blue-400 font-bold text-sm">Spawner Crate</div>
-                <div className="text-lg font-extrabold">₹220</div>
-                <div className="text-xs text-gray-400">7 Keys included</div>
-              </div>
-
-              {/* Silver Crate */}
-              <div className="bg-black/80 border border-gray-500/70 p-3 rounded-2xl text-center space-y-1">
-                <div className="text-gray-300 font-bold text-sm">Silver Crate</div>
-                <div className="text-lg font-extrabold text-green-400">Playable</div>
-                <div className="text-xs text-gray-400">1 Hour = 2 Keys</div>
+              <div style={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid #a855f7', padding: '16px', borderRadius: '16px', textAlign: 'center' }}>
+                <div style={{ color: '#c084fc', fontWeight: 'bold', fontSize: '14px' }}>God Crate</div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '4px 0' }}>₹450</div>
+                <div style={{ fontSize: '12px', color: '#9ca3af' }}>7 Keys included</div>
               </div>
             </div>
 
-            {/* Key Crate */}
-            <div className="bg-black/80 border border-pink-500/70 p-4 rounded-2xl text-center space-y-1 max-w-[200px] mx-auto">
-              <div className="text-pink-400 font-bold text-sm">Key Crate</div>
-              <div className="text-lg font-extrabold">₹410</div>
-              <div className="text-xs text-gray-400">7 Keys included</div>
-            </div>
-
-            <div className="bg-black/90 border border-gray-800 p-5 rounded-2xl text-center space-y-3">
-              <h3 className="font-bold text-lg">Buy Keys for Master Crate</h3>
-              <button className="w-full bg-red-600 hover:bg-red-700 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
-                PURCHASE ON DISCORD 💬
-              </button>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #1f2937', padding: '20px', borderRadius: '16px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '12px' }}>Buy Keys for Master Crate</h3>
+              <button style={{ width: '100%', backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '12px', borderRadius: '12px', fontWeight: 'bold' }}>PURCHASE ON DISCORD 💬</button>
             </div>
           </div>
         )}
