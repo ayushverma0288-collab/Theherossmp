@@ -1,7 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function Home() {
+function MainComponent() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('dashboard');
   const [copiedJava, setCopiedJava] = useState(false);
   const [copiedBedrock, setCopiedBedrock] = useState(false);
@@ -16,6 +18,15 @@ export default function Home() {
   const [wonReward, setWonReward] = useState<string | null>(null);
   const [lastSpinTime, setLastSpinTime] = useState<number | null>(null);
 
+  // Referral System & Admin Pass
+  const [myRefCode, setMyRefCode] = useState('');
+  const [usedRefCode, setUsedRefCode] = useState('');
+  const [extraSpins, setExtraSpins] = useState<number>(0);
+  const [copiedRef, setCopiedRef] = useState(false);
+
+  // 🔑 Aapka Personal Admin Secret Pass
+  const ADMIN_PASS = "mrayushdr143";
+
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   const spinRewards = [
@@ -29,6 +40,26 @@ export default function Home() {
   ];
 
   useEffect(() => {
+    // Unique Referral Code creation for this visitor
+    let ref = localStorage.getItem('my_referral_code');
+    if (!ref) {
+      ref = 'HERO-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+      localStorage.setItem('my_referral_code', ref);
+    }
+    setMyRefCode(ref);
+
+    // Load extra spins count
+    const savedExtraSpins = localStorage.getItem('extra_spins_count');
+    if (savedExtraSpins) {
+      setExtraSpins(parseInt(savedExtraSpins, 10));
+    }
+
+    // Check URL Referral parameter (?ref=...)
+    const urlRef = searchParams.get('ref');
+    if (urlRef) {
+      setUsedRefCode(urlRef);
+    }
+
     const savedTime = localStorage.getItem('last_spin_time');
     if (savedTime) {
       setLastSpinTime(parseInt(savedTime, 10));
@@ -64,9 +95,13 @@ export default function Home() {
     fetchPlayers();
     const interval = setInterval(fetchPlayers, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [searchParams]);
+
+  const isAdmin = () => username.trim() === ADMIN_PASS;
 
   const canSpin = () => {
+    if (isAdmin()) return true;
+    if (extraSpins > 0) return true;
     if (!lastSpinTime) return true;
     const now = Date.now();
     const hoursPassed = (now - lastSpinTime) / (1000 * 60 * 60);
@@ -87,11 +122,11 @@ export default function Home() {
 
   const handleSpin = () => {
     if (!username.trim()) {
-      alert('Please enter your Minecraft Gamertag first!');
+      alert('Please enter your Minecraft Gamertag or Admin Secret Pass first!');
       return;
     }
     if (!canSpin()) {
-      alert('You can only spin once every 24 hours!');
+      alert('You can only spin once every 24 hours! Invite friends with your referral link for extra spins.');
       return;
     }
     if (isSpinning) return;
@@ -112,12 +147,35 @@ export default function Home() {
     setTimeout(() => {
       setIsSpinning(false);
       setWonReward(selected.name);
-      const now = Date.now();
-      setLastSpinTime(now);
-      localStorage.setItem('last_spin_time', now.toString());
+
+      if (!isAdmin()) {
+        if (extraSpins > 0) {
+          const newExtra = extraSpins - 1;
+          setExtraSpins(newExtra);
+          localStorage.setItem('extra_spins_count', newExtra.toString());
+        } else {
+          const now = Date.now();
+          setLastSpinTime(now);
+          localStorage.setItem('last_spin_time', now.toString());
+        }
+
+        if (usedRefCode && usedRefCode !== myRefCode) {
+          const referrerBonusKey = `ref_bonus_${usedRefCode}`;
+          const currentBonus = parseInt(localStorage.getItem(referrerBonusKey) || '0', 10);
+          localStorage.setItem(referrerBonusKey, (currentBonus + 1).toString());
+          setUsedRefCode('');
+        }
+      }
 
       sendDiscordNotification(username, selected.name, selected.command);
     }, 4000);
+  };
+
+  const copyRefLink = () => {
+    const link = `${window.location.origin}?ref=${myRefCode}`;
+    navigator.clipboard.writeText(link);
+    setCopiedRef(true);
+    setTimeout(() => setCopiedRef(false), 2000);
   };
 
   const copyToClipboard = (text: string, type: 'java' | 'bedrock') => {
@@ -273,7 +331,7 @@ export default function Home() {
       {activeTab === 'spin' && (
         <div style={{ ...cardStyle, textAlign: 'center' }}>
           <h2 style={{ color: '#dc2626', margin: '0 0 8px 0', fontSize: '22px' }}>🎡 Daily Reward Wheel</h2>
-          <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '20px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+          <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
 
           <input
             type="text"
@@ -288,12 +346,44 @@ export default function Home() {
               backgroundColor: 'rgba(0,0,0,0.5)',
               color: '#ffffff',
               fontSize: '14px',
-              marginBottom: '20px',
+              marginBottom: '10px',
               textAlign: 'center',
               boxSizing: 'border-box',
               outline: 'none'
             }}
           />
+
+          {isAdmin() ? (
+            <div style={{ padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', marginBottom: '16px', fontWeight: 'bold' }}>
+              ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+              <input
+                type="text"
+                placeholder="Referral Code (Optional)"
+                value={usedRefCode}
+                onChange={(e) => setUsedRefCode(e.target.value)}
+                style={{
+                  flex: 1,
+                  padding: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  color: '#ffffff',
+                  fontSize: '12px',
+                  textAlign: 'center',
+                  outline: 'none'
+                }}
+              />
+            </div>
+          )}
+
+          {extraSpins > 0 && !isAdmin() && (
+            <div style={{ color: '#22c55e', fontSize: '13px', fontWeight: 'bold', marginBottom: '10px' }}>
+              🎁 You have {extraSpins} Extra Spin(s) available from Referrals!
+            </div>
+          )}
 
           <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 20px auto' }}>
             <div style={{
@@ -355,6 +445,17 @@ export default function Home() {
             }}>
             {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯' : 'SPIN AGAIN IN 24H ⏳'}
           </button>
+
+          {/* Referral Link Share Box */}
+          <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)' }}>
+            <div style={{ fontSize: '12px', color: '#aaaaaa', marginBottom: '6px' }}>🔗 Invite Friends to get **+1 Free Spin**:</div>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <input type="text" readOnly value={`${typeof window !== 'undefined' ? window.location.origin : ''}?ref=${myRefCode}`} style={{ flex: 1, padding: '6px 10px', borderRadius: '4px', border: 'none', background: 'rgba(0,0,0,0.5)', color: '#ffffff', fontSize: '11px' }} />
+              <button onClick={copyRefLink} style={{ padding: '6px 12px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer' }}>
+                {copiedRef ? 'COPIED!' : 'COPY LINK'}
+              </button>
+            </div>
+          </div>
 
           {wonReward && (
             <div style={{ marginTop: '16px', padding: '14px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '8px' }}>
@@ -485,5 +586,13 @@ export default function Home() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div style={{ color: '#fff', textAlign: 'center', padding: '50px' }}>Loading...</div>}>
+      <MainComponent />
+    </Suspense>
   );
 }
