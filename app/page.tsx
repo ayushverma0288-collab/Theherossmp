@@ -30,7 +30,7 @@ export default function Home() {
           borderRadius: '16px',
           padding: '6px',
           display: 'flex',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           marginBottom: '24px',
           border: '1px solid rgba(255,255,255,0.1)'
         }}>
