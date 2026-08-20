@@ -10,16 +10,19 @@ function MainComponent() {
   const [onlineCount, setOnlineCount] = useState<number>(0);
   const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
-  // Spin Wheel States
+  // User & Referral States
   const [username, setUsername] = useState('');
   const [adminPasscode, setAdminPasscode] = useState('');
+  const [referralInput, setReferralInput] = useState('');
+  const [myRefCode, setMyRefCode] = useState('');
+  const [hasUsedReferral, setHasUsedReferral] = useState(false);
+  const [extraSpins, setExtraSpins] = useState<number>(0);
+
+  // Spin Wheel States
   const [isSpinning, setIsSpinning] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wonReward, setWonReward] = useState<string | null>(null);
   const [lastSpinTime, setLastSpinTime] = useState<number | null>(null);
-
-  const [myRefCode, setMyRefCode] = useState('');
-  const [extraSpins, setExtraSpins] = useState<number>(0);
 
   const SECRET_ADMIN_PASS = "mrayushdr143";
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
@@ -28,64 +31,21 @@ function MainComponent() {
 
   // Spin Rewards Configuration
   const spinRewards = [
-    { 
-      id: 1, 
-      name: '32 Golden Apples', 
-      shortText: '32 G-Apple', 
-      command: '/give %PLAYER% golden_apple 32',
-      icon: 'https://minecraft.wiki/images/Golden_Apple_JE2_BE2.png'
-    },
-    { 
-      id: 2, 
-      name: '20 Diamond Blocks', 
-      shortText: '20 Dia Block', 
-      command: '/give %PLAYER% diamond_block 20',
-      icon: 'https://minecraft.wiki/images/Block_of_Diamond_JE5_BE3.png'
-    },
-    { 
-      id: 3, 
-      name: 'Totem of Undying', 
-      shortText: 'Totem', 
-      command: '/give %PLAYER% totem_of_undying 1',
-      icon: 'https://minecraft.wiki/images/Totem_of_Undying_JE2_BE2.png'
-    },
-    { 
-      id: 4, 
-      name: '1 Netherite Ingot', 
-      shortText: 'Netherite', 
-      command: '/give %PLAYER% netherite_ingot 1',
-      icon: 'https://i.postimg.cc/zGyntk3J/5032-Netherite-ingot.png'
-    },
-    { 
-      id: 5, 
-      name: '1 Enchanted G-Apple', 
-      shortText: 'God Apple', 
-      command: '/give %PLAYER% enchanted_golden_apple 1',
-      icon: 'https://minecraft.wiki/images/Enchanted_Golden_Apple_JE2_BE2.gif'
-    },
-    { 
-      id: 6, 
-      name: '1 Hour Fly Pass', 
-      shortText: 'Fly Pass', 
-      command: '/tempgrant %PLAYER% fly 1h',
-      icon: 'https://minecraft.wiki/images/Elytra_JE2_BE2.png'
-    },
-    { 
-      id: 7, 
-      name: '10k In-Game Cash', 
-      shortText: '$10k Cash', 
-      command: '/eco give %PLAYER% 10000',
-      icon: 'https://i.postimg.cc/022Gmvs5/7347-minecraftmoney.png'
-    },
+    { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', command: '/give %PLAYER% golden_apple 32', icon: 'https://minecraft.wiki/images/Golden_Apple_JE2_BE2.png' },
+    { id: 2, name: '20 Diamond Blocks', shortText: '20 Dia Block', command: '/give %PLAYER% diamond_block 20', icon: 'https://minecraft.wiki/images/Block_of_Diamond_JE5_BE3.png' },
+    { id: 3, name: 'Totem of Undying', shortText: 'Totem', command: '/give %PLAYER% totem_of_undying 1', icon: 'https://minecraft.wiki/images/Totem_of_Undying_JE2_BE2.png' },
+    { id: 4, name: '1 Netherite Ingot', shortText: 'Netherite', command: '/give %PLAYER% netherite_ingot 1', icon: 'https://i.postimg.cc/zGyntk3J/5032-Netherite-ingot.png' },
+    { id: 5, name: '1 Enchanted G-Apple', shortText: 'God Apple', command: '/give %PLAYER% enchanted_golden_apple 1', icon: 'https://minecraft.wiki/images/Enchanted_Golden_Apple_JE2_BE2.gif' },
+    { id: 6, name: '1 Hour Fly Pass', shortText: 'Fly Pass', command: '/tempgrant %PLAYER% fly 1h', icon: 'https://minecraft.wiki/images/Elytra_JE2_BE2.png' },
+    { id: 7, name: '10k In-Game Cash', shortText: '$10k Cash', command: '/eco give %PLAYER% 10000', icon: 'https://i.postimg.cc/022Gmvs5/7347-minecraftmoney.png' },
   ];
 
   useEffect(() => {
-    let ref = localStorage.getItem('my_referral_code');
-    if (!ref) {
-      ref = 'HERO-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-      localStorage.setItem('my_referral_code', ref);
-    }
-    setMyRefCode(ref);
+    const savedUser = localStorage.getItem('registered_username');
+    if (savedUser) setUsername(savedUser);
+
+    const isRefUsed = localStorage.getItem('has_used_referral');
+    if (isRefUsed === 'true') setHasUsedReferral(true);
 
     const savedExtraSpins = localStorage.getItem('extra_spins_count');
     if (savedExtraSpins) setExtraSpins(parseInt(savedExtraSpins, 10));
@@ -97,17 +57,11 @@ function MainComponent() {
       try {
         let res = await fetch(`https://api.mcsrvstat.us/bedrock/3/amd-9-1.skyraincloud.in:19144?t=${Date.now()}`);
         let data = await res.json();
-
         if (!data || !data.online || data.players?.online === 0) {
           res = await fetch(`https://api.mcsrvstat.us/3/amd-9-1.skyraincloud.in:19144?t=${Date.now()}`);
           data = await res.json();
         }
-
-        if (data && data.online) {
-          setOnlineCount(data.players?.online || 0);
-        } else {
-          setOnlineCount(0);
-        }
+        setOnlineCount(data?.online ? data.players?.online || 0 : 0);
       } catch {
         setOnlineCount(0);
       }
@@ -117,6 +71,15 @@ function MainComponent() {
     const interval = setInterval(fetchPlayers, 10000);
     return () => clearInterval(interval);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (username.trim()) {
+      const generatedCode = 'HERO-' + username.trim().toUpperCase();
+      setMyRefCode(generatedCode);
+    } else {
+      setMyRefCode('');
+    }
+  }, [username]);
 
   const isAdmin = () => adminPasscode.trim() === SECRET_ADMIN_PASS || username.trim() === SECRET_ADMIN_PASS;
 
@@ -140,10 +103,30 @@ function MainComponent() {
   };
 
   const handleSpin = () => {
-    if (!username.trim()) {
+    const cleanUser = username.trim();
+    if (!cleanUser) {
       alert('Pehle apna Minecraft Gamertag daalein!');
       return;
     }
+
+    // Process Referral for New Users
+    if (!hasUsedReferral && !isAdmin()) {
+      let currentExtra = extraSpins;
+      if (referralInput.trim().length > 0) {
+        if (referralInput.trim().toUpperCase() === myRefCode) {
+          alert("Aap apna hi Referral Code use nahi kar sakte!");
+          return;
+        }
+        currentExtra += 1; // Buy 1 Get 1 Free Spin
+        setExtraSpins(currentExtra);
+        localStorage.setItem('extra_spins_count', currentExtra.toString());
+        alert("🎉 Referral Code Applied! Aapko 1 Extra Bonus Spin mila hai (Total 2 Spins)!");
+      }
+      setHasUsedReferral(true);
+      localStorage.setItem('has_used_referral', 'true');
+      localStorage.setItem('registered_username', cleanUser);
+    }
+
     if (!canSpin()) {
       alert('24 Hours ka Cooldown active hai!');
       return;
@@ -181,19 +164,21 @@ function MainComponent() {
         }
       }
 
-      sendDiscordNotification(username, selected.name, selected.command);
+      sendDiscordNotification(cleanUser, selected.name, selected.command);
     }, 4000);
   };
 
-  const copyToClipboard = (text: string, type: 'java' | 'bedrock') => {
+  const copyToClipboard = (text: string, type: 'java' | 'bedrock' | 'ref') => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(text);
       if (type === 'java') {
         setCopiedJava(true);
         setTimeout(() => setCopiedJava(false), 2000);
-      } else {
+      } else if (type === 'bedrock') {
         setCopiedBedrock(true);
         setTimeout(() => setCopiedBedrock(false), 2000);
+      } else {
+        alert("Referral Code Copied: " + text);
       }
     }
   };
@@ -220,46 +205,11 @@ function MainComponent() {
   };
 
   const crateList = [
-    {
-      id: 'master',
-      name: 'Master Crate',
-      price: '₹150',
-      sub: '7 Keys included',
-      color: '#eab308',
-      image: 'https://i.postimg.cc/nhpJvwWR/Screenshot-20260820-004855-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
-    },
-    {
-      id: 'god',
-      name: 'God Crate',
-      price: '₹450',
-      sub: '7 Keys included',
-      color: '#a855f7',
-      image: 'https://i.postimg.cc/XJFH1nG5/Screenshot-20260820-004918-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
-    },
-    {
-      id: 'spawner',
-      name: 'Spawner Crate',
-      price: '₹220',
-      sub: '7 Keys included',
-      color: '#3b82f6',
-      image: 'https://i.postimg.cc/dVx5qhG7/Screenshot-20260820-004906-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
-    },
-    {
-      id: 'silver',
-      name: 'Silver Crate',
-      price: 'Playable',
-      sub: '1 Hour = 2 Keys',
-      color: '#9ca3af',
-      image: 'https://i.postimg.cc/Xq482d6w/Screenshot-20260820-004928-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
-    },
-    {
-      id: 'key',
-      name: 'Key Crate',
-      price: '₹410',
-      sub: '7 Keys included',
-      color: '#ec4899',
-      image: 'https://i.postimg.cc/YChxytZT/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
-    }
+    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308', image: 'https://i.postimg.cc/nhpJvwWR/Screenshot-20260820-004855-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
+    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7', image: 'https://i.postimg.cc/XJFH1nG5/Screenshot-20260820-004918-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
+    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6', image: 'https://i.postimg.cc/dVx5qhG7/Screenshot-20260820-004906-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
+    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af', image: 'https://i.postimg.cc/Xq482d6w/Screenshot-20260820-004928-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
+    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899', image: 'https://i.postimg.cc/YChxytZT/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' }
   ];
 
   const ranksList = [
@@ -358,6 +308,7 @@ function MainComponent() {
                 type="text"
                 placeholder="Enter Minecraft Gamertag"
                 value={username}
+                disabled={hasUsedReferral}
                 onChange={(e) => setUsername(e.target.value)}
                 style={{
                   width: '90%',
@@ -365,7 +316,7 @@ function MainComponent() {
                   padding: '12px',
                   borderRadius: '8px',
                   border: '1px solid rgba(255,255,255,0.2)',
-                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  backgroundColor: hasUsedReferral ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.5)',
                   color: '#ffffff',
                   fontSize: '14px',
                   textAlign: 'center',
@@ -376,10 +327,36 @@ function MainComponent() {
               />
             </div>
 
+            {/* Strict Referral Input - Show ONLY for New Users */}
+            {!hasUsedReferral && (
+              <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
+                <input
+                  type="text"
+                  placeholder="Referral Code (Optional - Get 1 Extra Spin)"
+                  value={referralInput}
+                  onChange={(e) => setReferralInput(e.target.value)}
+                  style={{
+                    width: '90%',
+                    maxWidth: '380px',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid #eab308',
+                    backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                    color: '#ffffff',
+                    fontSize: '13px',
+                    textAlign: 'center',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    margin: '0 auto'
+                  }}
+                />
+              </div>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '16px' }}>
               <input
                 type="text"
-                placeholder="Admin Passcode / Referral (Optional)"
+                placeholder="Admin Passcode (Optional)"
                 value={adminPasscode}
                 onChange={(e) => setAdminPasscode(e.target.value)}
                 style={{
@@ -398,6 +375,19 @@ function MainComponent() {
                 }}
               />
             </div>
+
+            {myRefCode && (
+              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '10px', backgroundColor: 'rgba(34, 197, 94, 0.15)', border: '1px solid #22c55e', borderRadius: '8px', fontSize: '13px' }}>
+                <span>Your Referral Code: <strong>{myRefCode}</strong></span>
+                <button onClick={() => copyToClipboard(myRefCode, 'ref')} style={{ marginLeft: '10px', padding: '4px 8px', backgroundColor: '#22c55e', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>COPY</button>
+              </div>
+            )}
+
+            {extraSpins > 0 && (
+              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
+                🎁 BONUS SPINS AVAILABLE: {extraSpins}
+              </div>
+            )}
 
             {isAdmin() && (
               <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
@@ -488,15 +478,12 @@ function MainComponent() {
         {activeTab === 'community' && (
           <div style={cardStyle}>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
-
             <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
               <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
             </a>
-
             <a href={INSTAGRAM_PROFILE_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
               <button style={{ ...buttonStyle, backgroundColor: '#E1306C' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
             </a>
-
             <a href={INSTAGRAM_GROUP_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
               <button style={{ ...buttonStyle, backgroundColor: '#C13584' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
             </a>
