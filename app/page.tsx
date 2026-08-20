@@ -18,11 +18,14 @@ function MainComponent() {
   const [hasUsedReferral, setHasUsedReferral] = useState(false);
   const [extraSpins, setExtraSpins] = useState<number>(0);
 
+  // Points / Coin System States
+  const [coins, setCoins] = useState<number>(0);
+  const [lastCoinTime, setLastCoinTime] = useState<number | null>(null);
+
   // Spin Wheel States
   const [isSpinning, setIsSpinning] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wonReward, setWonReward] = useState<string | null>(null);
-  const [lastSpinTime, setLastSpinTime] = useState<number | null>(null);
 
   const SECRET_ADMIN_PASS = "mrayushdr143";
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
@@ -53,8 +56,18 @@ function MainComponent() {
     const savedExtraSpins = localStorage.getItem('extra_spins_count');
     if (savedExtraSpins) setExtraSpins(parseInt(savedExtraSpins, 10));
 
-    const savedTime = localStorage.getItem('last_spin_time');
-    if (savedTime) setLastSpinTime(parseInt(savedTime, 10));
+    // Load Coins and Playtime Tracker
+    const savedCoins = localStorage.getItem('user_coins');
+    if (savedCoins) setCoins(parseInt(savedCoins, 10));
+
+    const savedCoinTime = localStorage.getItem('last_coin_time');
+    if (savedCoinTime) {
+      setLastCoinTime(parseInt(savedCoinTime, 10));
+    } else {
+      const now = Date.now();
+      setLastCoinTime(now);
+      localStorage.setItem('last_coin_time', now.toString());
+    }
 
     const fetchPlayers = async () => {
       try {
@@ -72,7 +85,32 @@ function MainComponent() {
 
     fetchPlayers();
     const interval = setInterval(fetchPlayers, 10000);
-    return () => clearInterval(interval);
+
+    // 30-Minute Playtime Check Interval
+    const coinInterval = setInterval(() => {
+      const now = Date.now();
+      const last = localStorage.getItem('last_coin_time');
+      const lastTime = last ? parseInt(last, 10) : now;
+
+      // 30 mins = 30 * 60 * 1000 = 1800000 ms
+      if (now - lastTime >= 1800000) {
+        const randomReward = Math.floor(Math.random() * 7) + 1; // 1 to 7 Coins
+        const currentCoins = parseInt(localStorage.getItem('user_coins') || '0', 10);
+        const newTotal = currentCoins + randomReward;
+
+        setCoins(newTotal);
+        setLastCoinTime(now);
+        localStorage.setItem('user_coins', newTotal.toString());
+        localStorage.setItem('last_coin_time', now.toString());
+
+        alert(`🎉 30 Mins Active Reward: You earned ${randomReward} Coins! Total Coins: ${newTotal}`);
+      }
+    }, 10000); // Check every 10 sec
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(coinInterval);
+    };
   }, [searchParams]);
 
   const handleGamertagChange = (val: string) => {
@@ -89,8 +127,8 @@ function MainComponent() {
   const canSpin = () => {
     if (isAdmin()) return true;
     if (extraSpins > 0) return true;
-    if (!lastSpinTime) return true;
-    return (Date.now() - lastSpinTime) / (1000 * 60 * 60) >= 24;
+    if (coins >= 20) return true;
+    return false;
   };
 
   const sendDiscordNotification = async (playerName: string, rewardName: string, command: string) => {
@@ -130,7 +168,7 @@ function MainComponent() {
     }
 
     if (!canSpin()) {
-      alert('24 Hours ka Cooldown active hai!');
+      alert(`Spin karne ke liye 20 Coins chahiye! (Aapke paas ${coins} Coins hain)`);
       return;
     }
     if (isSpinning) return;
@@ -160,9 +198,9 @@ function MainComponent() {
           setExtraSpins(newExtra);
           localStorage.setItem('extra_spins_count', newExtra.toString());
         } else {
-          const now = Date.now();
-          setLastSpinTime(now);
-          localStorage.setItem('last_spin_time', now.toString());
+          const newCoins = coins - 20;
+          setCoins(newCoins);
+          localStorage.setItem('user_coins', newCoins.toString());
         }
       }
 
@@ -234,6 +272,8 @@ function MainComponent() {
     { name: 'GALAXY Tag', price: '₹90', duration: '25 DAYS', color: '#8b5cf6' },
     { name: 'ALPHA Tag', price: '₹140', duration: '2 MONTHS', color: '#06b6d4' }
   ];
+
+  const remainingCoinsNeeded = coins >= 20 ? 0 : 20 - coins;
 
   return (
     <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
@@ -307,7 +347,19 @@ function MainComponent() {
         {activeTab === 'spin' && (
           <div style={{ ...cardStyle, textAlign: 'center' }}>
             <h2 style={{ color: '#dc2626', margin: '0 0 8px 0', fontSize: '22px' }}>🎡 Daily Reward Wheel</h2>
-            <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+            <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Earn Coins every 30 Mins & Spin for Free Rewards!</p>
+
+            {/* COIN / POINTS STATS CARD */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '16px', maxWidth: '380px', margin: '0 auto 16px auto' }}>
+              <div style={{ backgroundColor: 'rgba(234, 179, 8, 0.15)', border: '1px solid #eab308', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#eab308', fontWeight: 'bold' }}>YOUR COINS</div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff' }}>🪙 {coins}</div>
+              </div>
+              <div style={{ backgroundColor: 'rgba(59, 130, 246, 0.15)', border: '1px solid #3b82f6', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#3b82f6', fontWeight: 'bold' }}>REMAINING FOR SPIN</div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff' }}>{remainingCoinsNeeded > 0 ? `🪙 ${remainingCoinsNeeded}` : 'READY!'}</div>
+              </div>
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
               <input
@@ -464,7 +516,7 @@ function MainComponent() {
                 cursor: canSpin() ? 'pointer' : 'not-allowed',
                 opacity: isSpinning ? 0.7 : 1
               }}>
-              {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯' : 'SPIN AGAIN IN 24H ⏳'}
+              {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯 (20 COINS)' : `NEED ${remainingCoinsNeeded} MORE COINS 🪙`}
             </button>
 
             {wonReward && (
