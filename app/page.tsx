@@ -8,22 +8,25 @@ export default function Home() {
     <div style={{
       minHeight: '100vh',
       backgroundColor: '#0d0d0d',
-      backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('/bg.jpg')",
+      backgroundImage: "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), url('/bg.jpg')",
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
       padding: '20px 16px',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      fontFamily: 'sans-serif'
     }}>
       <div style={{ width: '100%', maxWidth: '420px' }}>
         
+        {/* Title */}
         <h1 style={{ fontSize: '32px', fontWeight: '900', textAlign: 'center', margin: '10px 0 24px 0', letterSpacing: '1px' }}>
           <span style={{ color: '#ff3b30' }}>THEHERO</span>
           <span style={{ color: '#ffffff' }}>SMP</span>
         </h1>
 
+        {/* Navigation Tabs */}
         <div style={{
           backgroundColor: 'rgba(20, 20, 20, 0.85)',
           backdropFilter: 'blur(10px)',
@@ -49,7 +52,7 @@ export default function Home() {
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '10px',
-                padding: '10px 8px',
+                padding: '10px 6px',
                 fontSize: '12px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
@@ -61,11 +64,12 @@ export default function Home() {
           ))}
         </div>
 
+        {/* HOME TAB */}
         {activeTab === 'home' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '20px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>Server Status</span>
+                <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Server Status</span>
                 <span style={{ fontSize: '22px', color: '#ff3b30', fontWeight: 'bold' }}>1</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '14px' }}>
@@ -75,7 +79,7 @@ export default function Home() {
             </div>
 
             <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '20px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '6px' }}>Java Edition</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '6px', color: '#fff' }}>Java Edition</h3>
               <p style={{ fontSize: '13px', color: '#a0aec0', marginBottom: '16px' }}>IP: amd-9-1.skyraincloud.in:19144</p>
               <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold', cursor: 'pointer' }}>
                 COPY JAVA IP
@@ -83,7 +87,7 @@ export default function Home() {
             </div>
 
             <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '20px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '6px' }}>Bedrock / PE Edition</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '6px', color: '#fff' }}>Bedrock / PE Edition</h3>
               <p style={{ fontSize: '13px', color: '#a0aec0' }}>IP: amd-9-1.skyraincloud.in</p>
               <p style={{ fontSize: '13px', color: '#a0aec0', marginBottom: '16px' }}>Port: 19144</p>
               <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold', cursor: 'pointer' }}>
@@ -93,6 +97,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* SPIN TAB */}
         {activeTab === 'spin' && (
           <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '24px', padding: '24px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
             <h2 style={{ color: '#ff3b30', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>🎡 Daily Reward Wheel</h2>
@@ -106,6 +111,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* SOCIAL TAB */}
         {activeTab === 'social' && (
           <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '24px', padding: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '14px', border: '1px solid rgba(255,255,255,0.1)' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#fff' }}>Join Our Community</h2>
@@ -115,6 +121,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* RANK TAB */}
         {activeTab === 'rank' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
@@ -131,23 +138,63 @@ export default function Home() {
                 <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold', cursor: 'pointer' }}>BUY VIA DISCORD 🛒</button>
               </div>
             ))}
+
+            <h3 style={{ color: '#34c759', fontSize: '18px', fontWeight: 'bold', marginTop: '10px' }}>🎮 Playable Tags (Free)</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {['OG_BUILDER', 'ADVANCED BUILDER', 'BASIC BUILDER'].map((tag, i) => (
+                <div key={i} style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', borderLeft: '4px solid #34c759', borderRadius: '12px', padding: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ color: '#34c759', fontWeight: 'bold' }}>{tag}</div>
+                    <div style={{ fontSize: '11px', color: '#a0aec0' }}>Earnable in-game</div>
+                  </div>
+                  <span style={{ backgroundColor: '#1c3d27', color: '#34c759', padding: '4px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #34c759' }}>PLAYABLE</span>
+                </div>
+              ))}
+            </div>
+
+            <h3 style={{ color: '#ecc94b', fontSize: '18px', fontWeight: 'bold', marginTop: '10px' }}>💎 Buyable Tags</h3>
+            <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', borderLeft: '4px solid #ff3b30', borderRadius: '16px', padding: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ color: '#ff3b30', fontWeight: 'bold', fontSize: '16px' }}>GAREEB Tag</span>
+                <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>₹100</span>
+              </div>
+              <div style={{ fontSize: '11px', color: '#a0aec0', marginBottom: '12px' }}>Validity: 1 MONTH</div>
+              <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontWeight: 'bold', cursor: 'pointer' }}>BUY TAG VIA DISCORD 🛒</button>
+            </div>
           </div>
         )}
 
+        {/* CRATES TAB */}
         {activeTab === 'crates' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {[
-              { name: 'Master Crate', price: '₹150', color: '#ecc94b' },
-              { name: 'God Crate', price: '₹450', color: '#b794f4' },
-              { name: 'Spawner Crate', price: '₹220', color: '#63b3ed' }
-            ].map((c, i) => (
-              <div key={i} style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', border: `1.5px solid ${c.color}`, borderRadius: '20px', padding: '18px', textAlign: 'center' }}>
-                <div style={{ color: c.color, fontWeight: 'bold', fontSize: '18px' }}>{c.name}</div>
-                <div style={{ fontSize: '22px', fontWeight: 'bold', margin: '8px 0', color: '#fff' }}>{c.price}</div>
-                <p style={{ fontSize: '12px', color: '#a0aec0', marginBottom: '12px' }}>7 Keys included</p>
-                <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold', cursor: 'pointer' }}>BUY VIA DISCORD 🛒</button>
-              </div>
-            ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {[
+                { name: 'Master Crate', price: '₹150', color: '#ecc94b', keys: '7 Keys included' },
+                { name: 'God Crate', price: '₹450', color: '#b794f4', keys: '7 Keys included' },
+                { name: 'Spawner Crate', price: '₹220', color: '#63b3ed', keys: '7 Keys included' },
+                { name: 'Silver Crate', price: 'Playable', color: '#a0aec0', keys: '1 Hour = 2 Keys' },
+                { name: 'Key Crate', price: '₹410', color: '#e83e8c', keys: '7 Keys included' }
+              ].map((c, i) => (
+                <div key={i} style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', border: `1.5px solid ${c.color}`, borderRadius: '16px', padding: '12px', textAlign: 'center' }}>
+                  <div style={{ backgroundColor: '#8b8b8b', border: '2px solid #373737', borderRadius: '8px', padding: '4px', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '10px', color: '#000', fontWeight: 'bold', marginBottom: '2px' }}>{c.name} Rewards</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px', backgroundColor: '#8b8b8b' }}>
+                      {Array.from({ length: 21 }).map((_, idx) => (
+                        <div key={idx} style={{ width: '100%', height: '14px', backgroundColor: '#8b8b8b', border: '1px solid #373737' }} />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ color: c.color, fontWeight: 'bold', fontSize: '15px' }}>{c.name}</div>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: '2px 0' }}>{c.price}</div>
+                  <p style={{ fontSize: '10px', color: '#a0aec0' }}>{c.keys}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: '18px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '12px' }}>Buy Keys for Master Crate</h3>
+              <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold', cursor: 'pointer' }}>PURCHASE ON DISCORD 💬</button>
+            </div>
           </div>
         )}
 
