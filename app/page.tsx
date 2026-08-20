@@ -27,13 +27,55 @@ function MainComponent() {
   const INSTAGRAM_GROUP_URL = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
   const spinRewards = [
-    { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', command: '/give %PLAYER% golden_apple 32' },
-    { id: 2, name: '20 Diamond Blocks', shortText: '20 Dia Block', command: '/give %PLAYER% diamond_block 20' },
-    { id: 3, name: 'Totem of Undying', shortText: 'Totem', command: '/give %PLAYER% totem_of_undying 1' },
-    { id: 4, name: '1 Netherite Ingot', shortText: 'Netherite', command: '/give %PLAYER% netherite_ingot 1' },
-    { id: 5, name: '1 Enchanted G-Apple', shortText: 'God Apple', command: '/give %PLAYER% enchanted_golden_apple 1' },
-    { id: 6, name: '1 Hour Fly Pass', shortText: 'Fly Pass', command: '/tempgrant %PLAYER% fly 1h' },
-    { id: 7, name: '10k In-Game Cash', shortText: '$10k Cash', command: '/eco give %PLAYER% 10000' },
+    { 
+      id: 1, 
+      name: '32 Golden Apples', 
+      shortText: '32 G-Apple', 
+      command: '/give %PLAYER% golden_apple 32',
+      icon: 'https://i.postimg.cc/RCRXbspx/1423-goldenapple.png'
+    },
+    { 
+      id: 2, 
+      name: '20 Diamond Blocks', 
+      shortText: '20 Dia Block', 
+      command: '/give %PLAYER% diamond_block 20',
+      icon: 'https://i.postimg.cc/qRQyQYJP/6626-mc-diamond.png'
+    },
+    { 
+      id: 3, 
+      name: 'Totem of Undying', 
+      shortText: 'Totem', 
+      command: '/give %PLAYER% totem_of_undying 1',
+      icon: 'https://i.postimg.cc/j2FNY7J1/7301-totem-mc.png'
+    },
+    { 
+      id: 4, 
+      name: '1 Netherite Ingot', 
+      shortText: 'Netherite', 
+      command: '/give %PLAYER% netherite_ingot 1',
+      icon: 'https://i.postimg.cc/W3ftdPbc/5032-Netherite-ingot.png'
+    },
+    { 
+      id: 5, 
+      name: '1 Enchanted G-Apple', 
+      shortText: 'God Apple', 
+      command: '/give %PLAYER% enchanted_golden_apple 1',
+      icon: 'https://i.postimg.cc/hPmht6FD/2024-enchantedgoldenapple.png'
+    },
+    { 
+      id: 6, 
+      name: '1 Hour Fly Pass', 
+      shortText: 'Fly Pass', 
+      command: '/tempgrant %PLAYER% fly 1h',
+      icon: 'https://i.postimg.cc/50j2dkq4/6758-Elytra.png'
+    },
+    { 
+      id: 7, 
+      name: '10k In-Game Cash', 
+      shortText: '$10k Cash', 
+      command: '/eco give %PLAYER% 10000',
+      icon: 'https://i.postimg.cc/mkHZhz5n/7347-minecraftmoney.png'
+    },
   ];
 
   useEffect(() => {
@@ -363,7 +405,7 @@ function MainComponent() {
               </div>
             )}
 
-            <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 20px auto' }}>
+            <div style={{ position: 'relative', width: '300px', height: '300px', margin: '0 auto 20px auto' }}>
               <div style={{
                 position: 'absolute',
                 top: '-12px',
@@ -397,13 +439,14 @@ function MainComponent() {
                       left: '50%',
                       width: '0px',
                       height: '0px',
-                      transform: `rotate(${angle}deg) translateY(-90px) rotate(-${angle}deg)`,
+                      transform: `rotate(${angle}deg) translateY(-95px) rotate(-${angle}deg)`,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
+                      <img src={item.icon} alt={item.shortText} style={{ width: '28px', height: '28px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} />
+                      <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 3px #000', whiteSpace: 'nowrap', marginTop: '2px' }}>{item.shortText}</span>
                     </div>
                   );
                 })}
