@@ -7,7 +7,6 @@ function MainComponent() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('dashboard');
   const [copiedJava, setCopiedJava] = useState(false);
   const [copiedBedrock, setCopiedBedrock] = useState(false);
-  const [players, setPlayers] = useState<string[]>([]);
   const [onlineCount, setOnlineCount] = useState<number>(0);
   const [selectedCrate, setSelectedCrate] = useState<string | null>(null);
 
@@ -63,15 +62,11 @@ function MainComponent() {
 
         if (data && data.online) {
           setOnlineCount(data.players?.online || 0);
-          if (data.players && Array.isArray(data.players.list)) setPlayers(data.players.list);
-          else setPlayers([]);
         } else {
           setOnlineCount(0);
-          setPlayers([]);
         }
       } catch {
         setOnlineCount(0);
-        setPlayers([]);
       }
     };
 
@@ -246,294 +241,306 @@ function MainComponent() {
   ];
 
   return (
-    <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif' }}>
-      <h1 style={{ color: '#dc2626', fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>
-        THEHEROS<span style={{ color: '#ffffff' }}>SMP</span>
-      </h1>
+    <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+      <div>
+        <h1 style={{ color: '#dc2626', fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>
+          THEHEROS<span style={{ color: '#ffffff' }}>SMP</span>
+        </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', backgroundColor: 'rgba(0,0,0,0.8)', padding: '6px', borderRadius: '10px', marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('dashboard')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Home</button>
-        <button onClick={() => setActiveTab('spin')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'spin' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎡 Spin</button>
-        <button onClick={() => setActiveTab('community')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Social</button>
-        <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Rank/Tag</button>
-        <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
-      </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', backgroundColor: 'rgba(0,0,0,0.8)', padding: '6px', borderRadius: '10px', marginBottom: '20px' }}>
+          <button onClick={() => setActiveTab('dashboard')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Home</button>
+          <button onClick={() => setActiveTab('spin')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'spin' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎡 Spin</button>
+          <button onClick={() => setActiveTab('community')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Social</button>
+          <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Rank/Tag</button>
+          <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
+        </div>
 
-      {/* DASHBOARD TAB */}
-      {activeTab === 'dashboard' && (
-        <>
-          <div style={cardStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Server Status</h2>
-                <span style={{ color: '#22c55e', fontSize: '14px', fontWeight: 'bold' }}>● ONLINE</span>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#dc2626' }}>{onlineCount}</div>
-                <div style={{ fontSize: '12px', color: '#aaaaaa' }}>Players Online</div>
+        {/* DASHBOARD TAB */}
+        {activeTab === 'dashboard' && (
+          <>
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Server Status</h2>
+                  <span style={{ color: '#22c55e', fontSize: '14px', fontWeight: 'bold' }}>● ONLINE</span>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#dc2626' }}>{onlineCount}</div>
+                  <div style={{ fontSize: '12px', color: '#aaaaaa' }}>Players Online</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div style={cardStyle}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Java Edition</h3>
-            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in:19144</p>
-            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in:19144', 'java')} style={buttonStyle}>
-              {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
-            </button>
-          </div>
+            <div style={cardStyle}>
+              <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Java Edition</h3>
+              <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in:19144</p>
+              <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in:19144', 'java')} style={buttonStyle}>
+                {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
+              </button>
+            </div>
 
-          <div style={cardStyle}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Bedrock / PE Edition</h3>
-            <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in</p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>Port: 19144</p>
-            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in', 'bedrock')} style={buttonStyle}>
-              {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
-            </button>
-          </div>
+            <div style={cardStyle}>
+              <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Bedrock / PE Edition</h3>
+              <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in</p>
+              <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>Port: 19144</p>
+              <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in', 'bedrock')} style={buttonStyle}>
+                {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
+              </button>
+            </div>
 
-          <div style={cardStyle}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Online Players ({players.length})</h3>
-            {players.length > 0 ? (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {players.map((p, i) => (
-                  <span key={i} style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p}</span>
-                ))}
+            {/* SERVER OWNER & ADMIN CARD */}
+            <div style={{ ...cardStyle, borderLeft: '4px solid #dc2626' }}>
+              <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', color: '#dc2626', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '6px' }}>👑 Server Owner & Admin</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#eab308' }}>👑 Server Owner</span>
+                  <span style={{ fontSize: '14px', backgroundColor: 'rgba(234, 179, 8, 0.2)', padding: '4px 10px', borderRadius: '6px', border: '1px solid #eab308', fontWeight: 'bold', color: '#facc15' }}>Sriyash Rajesh Pagi</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#a855f7' }}>⚡ Server Admin</span>
+                  <span style={{ fontSize: '14px', backgroundColor: 'rgba(168, 85, 247, 0.2)', padding: '4px 10px', borderRadius: '6px', border: '1px solid #a855f7', fontWeight: 'bold', color: '#c084fc' }}>Samosa_bhaiya</span>
+                </div>
               </div>
-            ) : (
-              <p style={{ fontSize: '13px', color: '#aaaaaa', margin: 0 }}>No players online currently.</p>
+            </div>
+          </>
+        )}
+
+        {/* SPIN WHEEL TAB */}
+        {activeTab === 'spin' && (
+          <div style={{ ...cardStyle, textAlign: 'center' }}>
+            <h2 style={{ color: '#dc2626', margin: '0 0 8px 0', fontSize: '22px' }}>🎡 Daily Reward Wheel</h2>
+            <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
+              <input
+                type="text"
+                placeholder="Enter Minecraft Gamertag"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{
+                  width: '90%',
+                  maxWidth: '380px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                  margin: '0 auto'
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '16px' }}>
+              <input
+                type="text"
+                placeholder="Admin Passcode / Referral (Optional)"
+                value={adminPasscode}
+                onChange={(e) => setAdminPasscode(e.target.value)}
+                style={{
+                  width: '90%',
+                  maxWidth: '380px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  color: '#ffffff',
+                  fontSize: '13px',
+                  textAlign: 'center',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                  margin: '0 auto'
+                }}
+              />
+            </div>
+
+            {isAdmin() && (
+              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
+                ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
+              </div>
             )}
-          </div>
-        </>
-      )}
 
-      {/* SPIN WHEEL TAB */}
-      {activeTab === 'spin' && (
-        <div style={{ ...cardStyle, textAlign: 'center' }}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 8px 0', fontSize: '22px' }}>🎡 Daily Reward Wheel</h2>
-          <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+            <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 20px auto' }}>
+              <div style={{
+                position: 'absolute',
+                top: '-12px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 0,
+                height: 0,
+                borderLeft: '12px solid transparent',
+                borderRight: '12px solid transparent',
+                borderTop: '20px solid #dc2626',
+                zIndex: 10
+              }}></div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
-            <input
-              type="text"
-              placeholder="Enter Minecraft Gamertag"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              <div style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                border: '4px solid #dc2626',
+                position: 'relative',
+                overflow: 'hidden',
+                transform: `rotate(${wheelRotation}deg)`,
+                transition: isSpinning ? 'transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)' : 'none',
+                background: 'conic-gradient(#eab308 0 51.4deg, #06b6d4 51.4deg 102.8deg, #f59e0b 102.8deg 154.2deg, #4b5563 154.2deg 205.6deg, #a855f7 205.6deg 257deg, #3b82f6 257deg 308.4deg, #22c55e 308.4deg 360deg)'
+              }}>
+                {spinRewards.map((item, index) => {
+                  const angle = (index * (360 / spinRewards.length)) + (360 / spinRewards.length / 2);
+                  return (
+                    <div key={item.id} style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      width: '0px',
+                      height: '0px',
+                      transform: `rotate(${angle}deg) translateY(-90px) rotate(-${angle}deg)`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <button
+              onClick={handleSpin}
+              disabled={isSpinning || !canSpin()}
               style={{
-                width: '90%',
-                maxWidth: '380px',
+                backgroundColor: canSpin() ? '#dc2626' : '#4b5563',
+                color: '#ffffff',
+                border: 'none',
                 padding: '12px',
                 borderRadius: '8px',
-                border: '1px solid rgba(255,255,255,0.2)',
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                color: '#ffffff',
-                fontSize: '14px',
-                textAlign: 'center',
-                boxSizing: 'border-box',
-                outline: 'none',
-                margin: '0 auto'
-              }}
-            />
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '16px' }}>
-            <input
-              type="text"
-              placeholder="Admin Passcode / Referral (Optional)"
-              value={adminPasscode}
-              onChange={(e) => setAdminPasscode(e.target.value)}
-              style={{
+                fontWeight: 'bold',
                 width: '90%',
                 maxWidth: '380px',
-                padding: '10px',
-                borderRadius: '8px',
-                border: '1px solid rgba(255,255,255,0.2)',
-                backgroundColor: 'rgba(0,0,0,0.3)',
-                color: '#ffffff',
-                fontSize: '13px',
-                textAlign: 'center',
-                boxSizing: 'border-box',
-                outline: 'none',
-                margin: '0 auto'
-              }}
-            />
+                cursor: canSpin() ? 'pointer' : 'not-allowed',
+                opacity: isSpinning ? 0.7 : 1
+              }}>
+              {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯' : 'SPIN AGAIN IN 24H ⏳'}
+            </button>
+
+            {wonReward && (
+              <div style={{ marginTop: '16px', padding: '14px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '8px' }}>
+                <h3 style={{ margin: 0, color: '#22c55e', fontSize: '18px' }}>🎉 Congratulations {username}!</h3>
+                <p style={{ margin: '6px 0 0 0', fontSize: '15px' }}>You won: <strong>{wonReward}</strong>!</p>
+              </div>
+            )}
           </div>
+        )}
 
-          {isAdmin() && (
-            <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
-              ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
-            </div>
-          )}
+        {/* SOCIAL / COMMUNITY TAB */}
+        {activeTab === 'community' && (
+          <div style={cardStyle}>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
 
-          <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 20px auto' }}>
-            <div style={{
-              position: 'absolute',
-              top: '-12px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '12px solid transparent',
-              borderRight: '12px solid transparent',
-              borderTop: '20px solid #dc2626',
-              zIndex: 10
-            }}></div>
+            <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
+              <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
+            </a>
 
-            <div style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              border: '4px solid #dc2626',
-              position: 'relative',
-              overflow: 'hidden',
-              transform: `rotate(${wheelRotation}deg)`,
-              transition: isSpinning ? 'transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)' : 'none',
-              background: 'conic-gradient(#eab308 0 51.4deg, #06b6d4 51.4deg 102.8deg, #f59e0b 102.8deg 154.2deg, #4b5563 154.2deg 205.6deg, #a855f7 205.6deg 257deg, #3b82f6 257deg 308.4deg, #22c55e 308.4deg 360deg)'
-            }}>
-              {spinRewards.map((item, index) => {
-                const angle = (index * (360 / spinRewards.length)) + (360 / spinRewards.length / 2);
-                return (
-                  <div key={item.id} style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '0px',
-                    height: '0px',
-                    transform: `rotate(${angle}deg) translateY(-90px) rotate(-${angle}deg)`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
+            <a href={INSTAGRAM_PROFILE_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
+              <button style={{ ...buttonStyle, backgroundColor: '#E1306C' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
+            </a>
+
+            <a href={INSTAGRAM_GROUP_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
+              <button style={{ ...buttonStyle, backgroundColor: '#C13584' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
+            </a>
+          </div>
+        )}
+
+        {/* RANK/TAG TAB */}
+        {activeTab === 'ranks' && (
+          <div>
+            {/* Server Ranks Section */}
+            <h2 style={{ color: '#dc2626', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '2px solid #dc2626', paddingBottom: '6px' }}>👑 Server Ranks</h2>
+            {ranksList.map((rank, i) => (
+              <div key={i} style={{ ...cardStyle, backgroundColor: rank.bg, borderColor: rank.border }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h3 style={{ margin: 0, color: rank.color, fontSize: '20px' }}>{rank.name} Rank</h3>
+                  <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{rank.price}</span>
+                </div>
+                <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                  <button style={buttonStyle}>BUY VIA DISCORD 🛒</button>
+                </a>
+              </div>
+            ))}
+
+            {/* Playable Tags Section */}
+            <h2 style={{ color: '#22c55e', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #22c55e', paddingBottom: '6px' }}>🎮 Playable Tags (Free)</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '10px', marginBottom: '20px' }}>
+              {playableTags.map((tag, i) => (
+                <div key={i} style={{ ...cardStyle, borderLeft: '4px solid #22c55e', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 0 }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '16px', color: '#22c55e' }}>{tag.name}</h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>{tag.desc}</p>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <button
-            onClick={handleSpin}
-            disabled={isSpinning || !canSpin()}
-            style={{
-              backgroundColor: canSpin() ? '#dc2626' : '#4b5563',
-              color: '#ffffff',
-              border: 'none',
-              padding: '12px',
-              borderRadius: '8px',
-              fontWeight: 'bold',
-              width: '90%',
-              maxWidth: '380px',
-              cursor: canSpin() ? 'pointer' : 'not-allowed',
-              opacity: isSpinning ? 0.7 : 1
-            }}>
-            {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯' : 'SPIN AGAIN IN 24H ⏳'}
-          </button>
-
-          {wonReward && (
-            <div style={{ marginTop: '16px', padding: '14px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '8px' }}>
-              <h3 style={{ margin: 0, color: '#22c55e', fontSize: '18px' }}>🎉 Congratulations {username}!</h3>
-              <p style={{ margin: '6px 0 0 0', fontSize: '15px' }}>You won: <strong>{wonReward}</strong>!</p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* SOCIAL / COMMUNITY TAB */}
-      {activeTab === 'community' && (
-        <div style={cardStyle}>
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
-
-          <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
-            <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
-          </a>
-
-          <a href={INSTAGRAM_PROFILE_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
-            <button style={{ ...buttonStyle, backgroundColor: '#E1306C' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
-          </a>
-
-          <a href={INSTAGRAM_GROUP_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
-            <button style={{ ...buttonStyle, backgroundColor: '#C13584' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
-          </a>
-        </div>
-      )}
-
-      {/* RANK/TAG TAB */}
-      {activeTab === 'ranks' && (
-        <div>
-          {/* Server Ranks Section */}
-          <h2 style={{ color: '#dc2626', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '2px solid #dc2626', paddingBottom: '6px' }}>👑 Server Ranks</h2>
-          {ranksList.map((rank, i) => (
-            <div key={i} style={{ ...cardStyle, backgroundColor: rank.bg, borderColor: rank.border }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ margin: 0, color: rank.color, fontSize: '20px' }}>{rank.name} Rank</h3>
-                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{rank.price}</span>
-              </div>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                <button style={buttonStyle}>BUY VIA DISCORD 🛒</button>
-              </a>
-            </div>
-          ))}
-
-          {/* Playable Tags Section */}
-          <h2 style={{ color: '#22c55e', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #22c55e', paddingBottom: '6px' }}>🎮 Playable Tags (Free)</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '10px', marginBottom: '20px' }}>
-            {playableTags.map((tag, i) => (
-              <div key={i} style={{ ...cardStyle, borderLeft: '4px solid #22c55e', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 0 }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '16px', color: '#22c55e' }}>{tag.name}</h3>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>{tag.desc}</p>
+                  <span style={{ padding: '4px 8px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', color: '#22c55e' }}>PLAYABLE</span>
                 </div>
-                <span style={{ padding: '4px 8px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', color: '#22c55e' }}>PLAYABLE</span>
+              ))}
+            </div>
+
+            {/* Buyable Tags Section */}
+            <h2 style={{ color: '#eab308', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #eab308', paddingBottom: '6px' }}>💎 Buyable Tags</h2>
+            {paidTags.map((tag, i) => (
+              <div key={i} style={{ ...cardStyle, borderLeft: `4px solid ${tag.color}` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <h3 style={{ margin: 0, color: tag.color, fontSize: '18px' }}>{tag.name}</h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>Validity: {tag.duration}</p>
+                  </div>
+                  <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{tag.price}</span>
+                </div>
+                <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                  <button style={{ ...buttonStyle, backgroundColor: tag.color }}>BUY TAG VIA DISCORD 🛒</button>
+                </a>
               </div>
             ))}
           </div>
+        )}
 
-          {/* Buyable Tags Section */}
-          <h2 style={{ color: '#eab308', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #eab308', paddingBottom: '6px' }}>💎 Buyable Tags</h2>
-          {paidTags.map((tag, i) => (
-            <div key={i} style={{ ...cardStyle, borderLeft: `4px solid ${tag.color}` }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <h3 style={{ margin: 0, color: tag.color, fontSize: '18px' }}>{tag.name}</h3>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>Validity: {tag.duration}</p>
+        {/* CRATES TAB */}
+        {activeTab === 'crates' && (
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+              {crateList.map((crate) => (
+                <div key={crate.id} onClick={() => setSelectedCrate(crate.id)} style={{ ...cardStyle, cursor: 'pointer', textAlign: 'center', borderColor: crate.color, padding: '12px' }}>
+                  <div style={{ width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <img src={crate.image} alt={crate.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <h3 style={{ margin: '0 0 4px 0', color: crate.color, fontSize: '16px' }}>{crate.name}</h3>
+                  <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', fontSize: '14px' }}>{crate.price}</p>
+                  <p style={{ margin: 0, fontSize: '11px', color: '#aaaaaa' }}>{crate.sub}</p>
                 </div>
-                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{tag.price}</span>
-              </div>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                <button style={{ ...buttonStyle, backgroundColor: tag.color }}>BUY TAG VIA DISCORD 🛒</button>
-              </a>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
 
-      {/* CRATES TAB */}
-      {activeTab === 'crates' && (
-        <div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-            {crateList.map((crate) => (
-              <div key={crate.id} onClick={() => setSelectedCrate(crate.id)} style={{ ...cardStyle, cursor: 'pointer', textAlign: 'center', borderColor: crate.color, padding: '12px' }}>
-                <div style={{ width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                  <img src={crate.image} alt={crate.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <h3 style={{ margin: '0 0 4px 0', color: crate.color, fontSize: '16px' }}>{crate.name}</h3>
-                <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', fontSize: '14px' }}>{crate.price}</p>
-                <p style={{ margin: 0, fontSize: '11px', color: '#aaaaaa' }}>{crate.sub}</p>
+            {selectedCrate && (
+              <div style={{ ...cardStyle, marginTop: '16px', textAlign: 'center' }}>
+                <h3 style={{ margin: '0 0 10px 0' }}>Buy Keys for {crateList.find(c => c.id === selectedCrate)?.name}</h3>
+                <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                  <button style={buttonStyle}>PURCHASE ON DISCORD 💬</button>
+                </a>
               </div>
-            ))}
+            )}
           </div>
+        )}
+      </div>
 
-          {selectedCrate && (
-            <div style={{ ...cardStyle, marginTop: '16px', textAlign: 'center' }}>
-              <h3 style={{ margin: '0 0 10px 0' }}>Buy Keys for {crateList.find(c => c.id === selectedCrate)?.name}</h3>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                <button style={buttonStyle}>PURCHASE ON DISCORD 💬</button>
-              </a>
-            </div>
-          )}
+      {/* RIGHT BOTTOM SIGNATURE FOOTER */}
+      <footer style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '20px 0 10px 0', marginTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div style={{ fontSize: '12px', color: '#888888', background: 'rgba(0, 0, 0, 0.4)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', fontStyle: 'italic' }}>
+          <span>Website made by </span>
+          <span style={{ color: '#dc2626', fontWeight: 'bold', fontStyle: 'normal', textShadow: '0 0 8px rgba(220,38,38,0.5)' }}>Samosa_bhaiya ✨</span>
         </div>
-      )}
+      </footer>
     </main>
   );
 }
