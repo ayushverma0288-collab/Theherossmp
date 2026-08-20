@@ -5,13 +5,13 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('spin');
 
   const spinItems = [
-    { label: '$10k Cash', bg: '#4cd964' },
-    { label: '32 G-Apple', bg: '#ffcc00' },
-    { label: '20 Dia Block', bg: '#5ac8fa' },
-    { label: 'Totem', bg: '#ff9500' },
-    { label: 'Netherite', bg: '#5856d6' },
-    { label: 'God Apple', bg: '#af52de' },
-    { label: 'Fly Pass', bg: '#007aff' }
+    { label: '$10k Cash', bg: '#4cd964', img: 'https://mc.nerdfonts.com/img/cash.png', emoji: '💵' },
+    { label: '32 G-Apple', bg: '#ffcc00', img: 'https://minecraft.wiki/images/Golden_Apple_JE2_BE2.png', emoji: '🍏' },
+    { label: '20 Dia Block', bg: '#5ac8fa', img: 'https://minecraft.wiki/images/Block_of_Diamond_JE5_BE3.png', emoji: '💎' },
+    { label: 'Totem', bg: '#ff9500', img: 'https://minecraft.wiki/images/Totem_of_Undying_JE2_BE2.png', emoji: '🗿' },
+    { label: 'Netherite', bg: '#5856d6', img: 'https://minecraft.wiki/images/Netherite_Ingot_JE2_BE2.png', emoji: '⬛' },
+    { label: 'God Apple', bg: '#af52de', img: 'https://minecraft.wiki/images/Enchanted_Golden_Apple_JE2_BE2.gif', emoji: '🍎' },
+    { label: 'Fly Pass', bg: '#007aff', img: 'https://minecraft.wiki/images/Elytra_JE2_BE2.png', emoji: '🛡️' }
   ];
 
   return (
@@ -107,7 +107,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* SPIN TAB (EXACT MATCH) */}
+        {/* SPIN TAB (EXACT PIXEL-PERFECT REPLICA) */}
         {activeTab === 'spin' && (
           <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.9)', backdropFilter: 'blur(10px)', borderRadius: '24px', padding: '24px 20px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
             <h2 style={{ color: '#ff3b30', fontSize: '22px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
@@ -123,39 +123,94 @@ export default function Home() {
             
             <input type="text" placeholder="Admin Passcode (Optional)" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#141414', border: '1px solid #333', color: 'white', marginBottom: '24px', outline: 'none', textAlign: 'center' }} />
 
-            {/* Wheel Container with Exact Top Pointer & Styled Slices */}
-            <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 24px auto' }}>
+            {/* Wheel Container */}
+            <div style={{ position: 'relative', width: '290px', height: '290px', margin: '0 auto 24px auto' }}>
               
-              {/* Pointer */}
-              <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderTop: '20px solid #ff3b30', zIndex: 10 }} />
+              {/* Top Red Pointer Arrow */}
+              <div style={{
+                position: 'absolute',
+                top: '-12px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '0',
+                height: '0',
+                borderLeft: '14px solid transparent',
+                borderRight: '14px solid transparent',
+                borderTop: '22px solid #ff3b30',
+                zIndex: 30
+              }} />
 
-              {/* Graphical Wheel */}
+              {/* Exact Multi-Color Wheel */}
               <div style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: '50%',
                 border: '4px solid #ff3b30',
-                background: 'conic-gradient(#4cd964 0deg 51.4deg, #ffcc00 51.4deg 102.8deg, #5ac8fa 102.8deg 154.2deg, #ff9500 154.2deg 205.6deg, #5856d6 205.6deg 257deg, #af52de 257deg 308.4deg, #007aff 308.4deg 360deg)',
                 position: 'relative',
                 overflow: 'hidden',
-                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+                boxShadow: '0 0 25px rgba(0,0,0,0.7)'
               }}>
-                {/* Labels inside the wheel */}
-                {spinItems.map((item, idx) => {
-                  const angle = (360 / 7) * idx + (360 / 14);
+                <svg viewBox="0 0 300 300" style={{ width: '100%', height: '100%' }}>
+                  {spinItems.map((item, index) => {
+                    const totalSlices = 7;
+                    const sliceAngle = 360 / totalSlices;
+                    const startAngle = index * sliceAngle - 90;
+                    const endAngle = (index + 1) * sliceAngle - 90;
+
+                    const x1 = 150 + 150 * Math.cos((Math.PI * startAngle) / 180);
+                    const y1 = 150 + 150 * Math.sin((Math.PI * startAngle) / 180);
+                    const x2 = 150 + 150 * Math.cos((Math.PI * endAngle) / 180);
+                    const y2 = 150 + 150 * Math.sin((Math.PI * endAngle) / 180);
+
+                    const pathData = `M 150 150 L ${x1} ${y1} A 150 150 0 0 1 ${x2} ${y2} Z`;
+
+                    return (
+                      <path key={index} d={pathData} fill={item.bg} stroke="#000" strokeWidth="1.5" />
+                    );
+                  })}
+                </svg>
+
+                {/* Upright Horizontal Overlay Labels and Icons */}
+                {spinItems.map((item, index) => {
+                  const totalSlices = 7;
+                  const angle = (360 / totalSlices) * index + (360 / totalSlices / 2) - 90;
+                  const radius = 95;
+                  const rad = (angle * Math.PI) / 180;
+                  const x = 145 + radius * Math.cos(rad);
+                  const y = 145 + radius * Math.sin(rad);
+
                   return (
-                    <div key={idx} style={{
+                    <div key={index} style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-85px)`,
-                      color: '#000',
-                      fontWeight: '800',
-                      fontSize: '11px',
-                      whiteSpace: 'nowrap',
-                      textShadow: '0px 0px 2px rgba(255,255,255,0.8)'
+                      left: `${x}px`,
+                      top: `${y}px`,
+                      transform: 'translate(-50%, -50%)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      pointerEvents: 'none',
+                      zIndex: 20
                     }}>
-                      {item.label}
+                      <img 
+                        src={item.img} 
+                        alt={item.label} 
+                        style={{ width: '38px', height: '38px', objectFit: 'contain', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))' }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <span style={{
+                        color: '#000000',
+                        fontSize: '11px',
+                        fontWeight: '900',
+                        fontFamily: 'sans-serif',
+                        marginTop: '2px',
+                        whiteSpace: 'nowrap',
+                        textShadow: '0px 0px 2px rgba(255,255,255,0.7)'
+                      }}>
+                        {item.label}
+                      </span>
                     </div>
                   );
                 })}
@@ -195,29 +250,6 @@ export default function Home() {
                 <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold', cursor: 'pointer' }}>BUY VIA DISCORD 🛒</button>
               </div>
             ))}
-
-            <h3 style={{ color: '#34c759', fontSize: '18px', fontWeight: 'bold', marginTop: '10px' }}>🎮 Playable Tags (Free)</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {['OG_BUILDER', 'ADVANCED BUILDER', 'BASIC BUILDER'].map((tag, i) => (
-                <div key={i} style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', borderLeft: '4px solid #34c759', borderRadius: '12px', padding: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ color: '#34c759', fontWeight: 'bold' }}>{tag}</div>
-                    <div style={{ fontSize: '11px', color: '#a0aec0' }}>Earnable in-game</div>
-                  </div>
-                  <span style={{ backgroundColor: '#1c3d27', color: '#34c759', padding: '4px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #34c759' }}>PLAYABLE</span>
-                </div>
-              ))}
-            </div>
-
-            <h3 style={{ color: '#ecc94b', fontSize: '18px', fontWeight: 'bold', marginTop: '10px' }}>💎 Buyable Tags</h3>
-            <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', borderLeft: '4px solid #ff3b30', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ color: '#ff3b30', fontWeight: 'bold', fontSize: '16px' }}>GAREEB Tag</span>
-                <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>₹100</span>
-              </div>
-              <div style={{ fontSize: '11px', color: '#a0aec0', marginBottom: '12px' }}>Validity: 1 MONTH</div>
-              <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontWeight: 'bold', cursor: 'pointer' }}>BUY TAG VIA DISCORD 🛒</button>
-            </div>
           </div>
         )}
 
@@ -233,24 +265,11 @@ export default function Home() {
                 { name: 'Key Crate', price: '₹410', color: '#e83e8c', keys: '7 Keys included' }
               ].map((c, i) => (
                 <div key={i} style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', border: `1.5px solid ${c.color}`, borderRadius: '16px', padding: '12px', textAlign: 'center' }}>
-                  <div style={{ backgroundColor: '#8b8b8b', border: '2px solid #373737', borderRadius: '8px', padding: '4px', marginBottom: '8px' }}>
-                    <div style={{ fontSize: '10px', color: '#000', fontWeight: 'bold', marginBottom: '2px' }}>{c.name} Rewards</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px', backgroundColor: '#8b8b8b' }}>
-                      {Array.from({ length: 21 }).map((_, idx) => (
-                        <div key={idx} style={{ width: '100%', height: '14px', backgroundColor: '#8b8b8b', border: '1px solid #373737' }} />
-                      ))}
-                    </div>
-                  </div>
                   <div style={{ color: c.color, fontWeight: 'bold', fontSize: '15px' }}>{c.name}</div>
                   <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: '2px 0' }}>{c.price}</div>
                   <p style={{ fontSize: '10px', color: '#a0aec0' }}>{c.keys}</p>
                 </div>
               ))}
-            </div>
-
-            <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: '18px', textAlign: 'center' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginBottom: '12px' }}>Buy Keys for Master Crate</h3>
-              <button style={{ width: '100%', backgroundColor: '#ff3b30', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold', cursor: 'pointer' }}>PURCHASE ON DISCORD 💬</button>
             </div>
           </div>
         )}
