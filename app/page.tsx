@@ -26,7 +26,7 @@ function MainComponent() {
   const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/modihater7?igsh=MWpnNWsyNzY0dHRzcA==";
   const INSTAGRAM_GROUP_URL = "https://ig.me/j/AbbBXSakl1QBm9YN/";
 
-  // Reliable Direct Visual Icons
+  // Exact Updated Images Requested
   const spinRewards = [
     { 
       id: 1, 
@@ -54,7 +54,7 @@ function MainComponent() {
       name: '1 Netherite Ingot', 
       shortText: 'Netherite', 
       command: '/give %PLAYER% netherite_ingot 1',
-      icon: 'https://minecraft.wiki/images/Netherite_Ingot_JE1_BE1.png'
+      icon: 'https://i.postimg.cc/zGyntk3J/5032-Netherite-ingot.png'
     },
     { 
       id: 5, 
@@ -75,7 +75,7 @@ function MainComponent() {
       name: '10k In-Game Cash', 
       shortText: '$10k Cash', 
       command: '/eco give %PLAYER% 10000',
-      icon: 'https://minecraft.wiki/images/Gold_Ingot_JE4_BE2.png'
+      icon: 'https://i.postimg.cc/022Gmvs5/7347-minecraftmoney.png'
     },
   ];
 
@@ -449,7 +449,14 @@ function MainComponent() {
                         src={item.icon} 
                         alt={item.shortText} 
                         style={{ width: '34px', height: '34px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
-                        crossOrigin="anonymous"
+                        onError={(e) => {
+                          // Fallback to official minecraft assets if Postimg blocks
+                          if (item.shortText === 'Netherite') {
+                            (e.target as HTMLImageElement).src = 'https://minecraft.wiki/images/Netherite_Ingot_JE1_BE1.png';
+                          } else if (item.shortText === '$10k Cash') {
+                            (e.target as HTMLImageElement).src = 'https://minecraft.wiki/images/Gold_Ingot_JE4_BE2.png';
+                          }
+                        }}
                       />
                       <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 3px #000', whiteSpace: 'nowrap', marginTop: '2px' }}>{item.shortText}</span>
                     </div>
