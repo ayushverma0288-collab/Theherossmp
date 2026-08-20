@@ -445,7 +445,12 @@ function MainComponent() {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <img src={item.icon} alt={item.shortText} style={{ width: '28px', height: '28px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} />
+                      {/* Standard un-proxied img element so direct host links load clean */}
+                      <img 
+                        src={item.icon} 
+                        alt={item.shortText} 
+                        style={{ width: '30px', height: '30px', objectFit: 'contain', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }} 
+                      />
                       <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 3px #000', whiteSpace: 'nowrap', marginTop: '2px' }}>{item.shortText}</span>
                     </div>
                   );
