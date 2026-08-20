@@ -182,11 +182,46 @@ function MainComponent() {
   };
 
   const crateList = [
-    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308' },
-    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7' },
-    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6' },
-    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af' },
-    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899' }
+    {
+      id: 'master',
+      name: 'Master Crate',
+      price: '₹150',
+      sub: '7 Keys included',
+      color: '#eab308',
+      image: 'https://i.postimg.cc/nhpJvwWR/Screenshot-20260820-004855-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'god',
+      name: 'God Crate',
+      price: '₹450',
+      sub: '7 Keys included',
+      color: '#a855f7',
+      image: 'https://i.postimg.cc/XJFH1nG5/Screenshot-20260820-004918-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'spawner',
+      name: 'Spawner Crate',
+      price: '₹220',
+      sub: '7 Keys included',
+      color: '#3b82f6',
+      image: 'https://i.postimg.cc/dVx5qhG7/Screenshot-20260820-004906-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'silver',
+      name: 'Silver Crate',
+      price: 'Playable',
+      sub: '1 Hour = 2 Keys',
+      color: '#9ca3af',
+      image: 'https://i.postimg.cc/Xq482d6w/Screenshot-20260820-004928-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    },
+    {
+      id: 'key',
+      name: 'Key Crate',
+      price: '₹410',
+      sub: '7 Keys included',
+      color: '#ec4899',
+      image: 'https://i.postimg.cc/YChxytZT/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg'
+    }
   ];
 
   const ranksList = [
@@ -394,7 +429,7 @@ function MainComponent() {
       {activeTab === 'community' && (
         <div style={cardStyle}>
           <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
-          
+
           <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', marginBottom: '10px' }}>
             <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
           </a>
@@ -431,7 +466,10 @@ function MainComponent() {
         <div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
             {crateList.map((crate) => (
-              <div key={crate.id} onClick={() => setSelectedCrate(crate.id)} style={{ ...cardStyle, cursor: 'pointer', textAlign: 'center', borderColor: crate.color }}>
+              <div key={crate.id} onClick={() => setSelectedCrate(crate.id)} style={{ ...cardStyle, cursor: 'pointer', textAlign: 'center', borderColor: crate.color, padding: '12px' }}>
+                <div style={{ width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                  <img src={crate.image} alt={crate.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
                 <h3 style={{ margin: '0 0 4px 0', color: crate.color, fontSize: '16px' }}>{crate.name}</h3>
                 <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', fontSize: '14px' }}>{crate.price}</p>
                 <p style={{ margin: 0, fontSize: '11px', color: '#aaaaaa' }}>{crate.sub}</p>
