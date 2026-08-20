@@ -231,6 +231,20 @@ function MainComponent() {
     { name: 'MVP++', price: '₹240', bg: 'rgba(168, 85, 247, 0.2)', border: '#a855f7', color: '#c084fc' }
   ];
 
+  const playableTags = [
+    { name: 'OG_BUILDER', type: 'Playable Tag', desc: 'Earnable in-game' },
+    { name: 'ADVANCED BUILDER', type: 'Playable Tag', desc: 'Earnable in-game' },
+    { name: 'BASIC BUILDER', type: 'Playable Tag', desc: 'Earnable in-game' }
+  ];
+
+  const paidTags = [
+    { name: 'GAREEB Tag', price: '₹100', duration: '1 MONTH', color: '#ef4444' },
+    { name: 'NOOB Tag', price: '₹80', duration: '20 DAYS', color: '#f97316' },
+    { name: 'PRO Tag', price: '₹80', duration: '30 DAYS', color: '#10b981' },
+    { name: 'GALAXY Tag', price: '₹90', duration: '25 DAYS', color: '#8b5cf6' },
+    { name: 'ALPHA Tag', price: '₹140', duration: '2 MONTHS', color: '#06b6d4' }
+  ];
+
   return (
     <main style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#ffffff', fontFamily: 'sans-serif' }}>
       <h1 style={{ color: '#dc2626', fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '20px' }}>
@@ -241,7 +255,7 @@ function MainComponent() {
         <button onClick={() => setActiveTab('dashboard')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Home</button>
         <button onClick={() => setActiveTab('spin')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'spin' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎡 Spin</button>
         <button onClick={() => setActiveTab('community')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'community' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Social</button>
-        <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Ranks</button>
+        <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Rank/Tag</button>
         <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
       </div>
 
@@ -444,9 +458,11 @@ function MainComponent() {
         </div>
       )}
 
-      {/* RANKS TAB */}
+      {/* RANK/TAG TAB */}
       {activeTab === 'ranks' && (
         <div>
+          {/* Server Ranks Section */}
+          <h2 style={{ color: '#dc2626', fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '2px solid #dc2626', paddingBottom: '6px' }}>👑 Server Ranks</h2>
           {ranksList.map((rank, i) => (
             <div key={i} style={{ ...cardStyle, backgroundColor: rank.bg, borderColor: rank.border }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -455,6 +471,37 @@ function MainComponent() {
               </div>
               <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                 <button style={buttonStyle}>BUY VIA DISCORD 🛒</button>
+              </a>
+            </div>
+          ))}
+
+          {/* Playable Tags Section */}
+          <h2 style={{ color: '#22c55e', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #22c55e', paddingBottom: '6px' }}>🎮 Playable Tags (Free)</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '10px', marginBottom: '20px' }}>
+            {playableTags.map((tag, i) => (
+              <div key={i} style={{ ...cardStyle, borderLeft: '4px solid #22c55e', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 0 }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '16px', color: '#22c55e' }}>{tag.name}</h3>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>{tag.desc}</p>
+                </div>
+                <span style={{ padding: '4px 8px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', color: '#22c55e' }}>PLAYABLE</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Buyable Tags Section */}
+          <h2 style={{ color: '#eab308', fontSize: '20px', fontWeight: 'bold', margin: '24px 0 12px 0', borderBottom: '2px solid #eab308', paddingBottom: '6px' }}>💎 Buyable Tags</h2>
+          {paidTags.map((tag, i) => (
+            <div key={i} style={{ ...cardStyle, borderLeft: `4px solid ${tag.color}` }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: 0, color: tag.color, fontSize: '18px' }}>{tag.name}</h3>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>Validity: {tag.duration}</p>
+                </div>
+                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{tag.price}</span>
+              </div>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                <button style={{ ...buttonStyle, backgroundColor: tag.color }}>BUY TAG VIA DISCORD 🛒</button>
               </a>
             </div>
           ))}
