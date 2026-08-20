@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 
 function MainComponent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('spin');
   const [copiedJava, setCopiedJava] = useState(false);
   const [copiedBedrock, setCopiedBedrock] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
@@ -13,6 +13,7 @@ function MainComponent() {
 
   // Spin Wheel States
   const [username, setUsername] = useState('');
+  const [adminPasscode, setAdminPasscode] = useState('');
   const [isSpinning, setIsSpinning] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wonReward, setWonReward] = useState<string | null>(null);
@@ -24,8 +25,8 @@ function MainComponent() {
   const [extraSpins, setExtraSpins] = useState<number>(0);
   const [copiedRef, setCopiedRef] = useState(false);
 
-  // 🔑 Aapka Personal Admin Secret Pass
-  const ADMIN_PASS = "mrayushdr143";
+  // 🔑 Secret Admin Passcode
+  const SECRET_ADMIN_PASS = "mrayushdr143";
 
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
@@ -40,7 +41,6 @@ function MainComponent() {
   ];
 
   useEffect(() => {
-    // Unique Referral Code creation for this visitor
     let ref = localStorage.getItem('my_referral_code');
     if (!ref) {
       ref = 'HERO-' + Math.random().toString(36).substring(2, 7).toUpperCase();
@@ -48,13 +48,11 @@ function MainComponent() {
     }
     setMyRefCode(ref);
 
-    // Load extra spins count
     const savedExtraSpins = localStorage.getItem('extra_spins_count');
     if (savedExtraSpins) {
       setExtraSpins(parseInt(savedExtraSpins, 10));
     }
 
-    // Check URL Referral parameter (?ref=...)
     const urlRef = searchParams.get('ref');
     if (urlRef) {
       setUsedRefCode(urlRef);
@@ -97,7 +95,7 @@ function MainComponent() {
     return () => clearInterval(interval);
   }, [searchParams]);
 
-  const isAdmin = () => username.trim() === ADMIN_PASS;
+  const isAdmin = () => adminPasscode.trim() === SECRET_ADMIN_PASS || username.trim() === SECRET_ADMIN_PASS;
 
   const canSpin = () => {
     if (isAdmin()) return true;
@@ -122,11 +120,11 @@ function MainComponent() {
 
   const handleSpin = () => {
     if (!username.trim()) {
-      alert('Please enter your Minecraft Gamertag or Admin Secret Pass first!');
+      alert('Please enter your Minecraft Gamertag first!');
       return;
     }
     if (!canSpin()) {
-      alert('You can only spin once every 24 hours! Invite friends with your referral link for extra spins.');
+      alert('Cooldown active! Spin again in 24 Hours or use Admin Code.');
       return;
     }
     if (isSpinning) return;
@@ -134,15 +132,18 @@ function MainComponent() {
     setIsSpinning(true);
     setWonReward(null);
 
-    const randomIndex = Math.floor(Math.random() * spinRewards.length);
+    const totalSlices = spinRewards.length;
+    const sliceAngle = 360 / totalSlices;
+    const randomIndex = Math.floor(Math.random() * totalSlices);
     const selected = spinRewards[randomIndex];
 
-    const degreesPerSlice = 360 / spinRewards.length;
-    const targetSliceDegree = 360 - (randomIndex * degreesPerSlice);
-    const extraRounds = 360 * 5;
-    const totalNewRotation = wheelRotation + extraRounds + targetSliceDegree;
+    // Perfect alignment fix: arrow points at 0 degrees top
+    const targetAngle = (totalSlices - randomIndex) * sliceAngle - (sliceAngle / 2);
+    const fullSpins = 360 * 5; 
+    const currentRotationOffset = wheelRotation % 360;
+    const newTotalRotation = wheelRotation + fullSpins + (targetAngle - currentRotationOffset + 360) % 360;
 
-    setWheelRotation(totalNewRotation);
+    setWheelRotation(newTotalRotation);
 
     setTimeout(() => {
       setIsSpinning(false);
@@ -157,13 +158,6 @@ function MainComponent() {
           const now = Date.now();
           setLastSpinTime(now);
           localStorage.setItem('last_spin_time', now.toString());
-        }
-
-        if (usedRefCode && usedRefCode !== myRefCode) {
-          const referrerBonusKey = `ref_bonus_${usedRefCode}`;
-          const currentBonus = parseInt(localStorage.getItem(referrerBonusKey) || '0', 10);
-          localStorage.setItem(referrerBonusKey, (currentBonus + 1).toString());
-          setUsedRefCode('');
         }
       }
 
@@ -212,56 +206,12 @@ function MainComponent() {
     marginTop: '10px'
   };
 
-  const linkBoxStyle = {
-    display: 'block',
-    padding: '14px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: '8px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: '#ffffff',
-    textDecoration: 'none',
-    marginBottom: '10px'
-  };
-
-  const tagBoxStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 14px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    marginBottom: '8px'
-  };
-
-  const buyButtonStyle = {
-    backgroundColor: '#5865F2',
-    color: '#ffffff',
-    border: 'none',
-    padding: '6px 12px',
-    borderRadius: '6px',
-    fontWeight: 'bold',
-    fontSize: '12px',
-    cursor: 'pointer',
-    textDecoration: 'none',
-    display: 'inline-block',
-    textAlign: 'center' as const
-  };
-
-  const crateCardStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    padding: '14px',
-    marginBottom: '10px'
-  };
-
   const crateList = [
-    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308', icon: '📦', imageUrl: 'https://i.postimg.cc/L6GM2JXJ/Screenshot-20260820-004855-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
-    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7', icon: '🔮', imageUrl: 'https://i.postimg.cc/hPzHyKrK/Screenshot-20260820-004918-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
-    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6', icon: '⚙️', imageUrl: 'https://i.postimg.cc/nVjJ5KVp/Screenshot-20260820-004906-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
-    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af', icon: '🛡️', imageUrl: 'https://i.postimg.cc/K8Qw44c7/Screenshot-20260820-004928-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' },
-    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899', icon: '🔑', imageUrl: 'https://i.postimg.cc/PfZ7YSrP/Screenshot-20260820-004935-Mojo-Launcher-(Minecraft-Java-Edition-for-Android).jpg' }
+    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308', icon: '📦' },
+    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7', icon: '🔮' },
+    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6', icon: '⚙️' },
+    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af', icon: '🛡️' },
+    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899', icon: '🔑' }
   ];
 
   const ranksList = [
@@ -284,49 +234,6 @@ function MainComponent() {
         <button onClick={() => setActiveTab('ranks')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'ranks' ? '#dc2626' : 'transparent', color: '#ffffff' }}>Ranks</button>
         <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
       </div>
-
-      {activeTab === 'dashboard' && (
-        <div>
-          <div style={{ ...cardStyle, textAlign: 'center' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: 'bold', margin: '0 0 8px 0' }}>THE ULTIMATE MINECRAFT SMP</h2>
-            <p style={{ color: '#aaaaaa', fontSize: '14px', margin: 0 }}>Crossplay Survival Network (Java & Bedrock)</p>
-          </div>
-
-          <div style={cardStyle}>
-            <span style={{ color: '#22c55e', fontWeight: 'bold' }}>● JAVA EDITION</span>
-            <p style={{ margin: '8px 0', fontFamily: 'monospace' }}>amd-9-1.skyraincloud.in:19144</p>
-            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in:19144', 'java')} style={buttonStyle}>{copiedJava ? 'COPIED!' : 'COPY JAVA IP'}</button>
-          </div>
-
-          <div style={cardStyle}>
-            <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>● BEDROCK EDITION</span>
-            <p style={{ margin: '8px 0 4px 0', fontFamily: 'monospace' }}>IP: amd-9-1.skyraincloud.in</p>
-            <p style={{ margin: '0', fontFamily: 'monospace' }}>Port: 19144</p>
-            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in', 'bedrock')} style={buttonStyle}>{copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}</button>
-          </div>
-
-          <div style={cardStyle}>
-            <h3 style={{ fontSize: '18px', margin: '0 0 12px 0' }}>
-              <span style={{ color: '#22c55e' }}>●</span> Live Online Players ({onlineCount}/77)
-            </h3>
-            {players.length > 0 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-                {players.map((player, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '8px', borderRadius: '6px' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://mc-heads.net/avatar/${player}/24`} alt={player} style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
-                    <span style={{ fontSize: '14px', fontWeight: 'bold' }}>{player}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ color: '#888888', fontStyle: 'italic', margin: 0 }}>
-                {onlineCount > 0 ? `${onlineCount} player(s) online` : 'No players online right now.'}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
 
       {activeTab === 'spin' && (
         <div style={{ ...cardStyle, textAlign: 'center' }}>
@@ -353,35 +260,28 @@ function MainComponent() {
             }}
           />
 
-          {isAdmin() ? (
+          <input
+            type="text"
+            placeholder="Admin Passcode / Referral (Optional)"
+            value={adminPasscode}
+            onChange={(e) => setAdminPasscode(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px',
+              borderRadius: '6px',
+              border: '1px solid rgba(255,255,255,0.2)',
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              color: '#ffffff',
+              fontSize: '12px',
+              textAlign: 'center',
+              marginBottom: '10px',
+              outline: 'none'
+            }}
+          />
+
+          {isAdmin() && (
             <div style={{ padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', marginBottom: '16px', fontWeight: 'bold' }}>
               ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
-            </div>
-          ) : (
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-              <input
-                type="text"
-                placeholder="Referral Code (Optional)"
-                value={usedRefCode}
-                onChange={(e) => setUsedRefCode(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
-                  color: '#ffffff',
-                  fontSize: '12px',
-                  textAlign: 'center',
-                  outline: 'none'
-                }}
-              />
-            </div>
-          )}
-
-          {extraSpins > 0 && !isAdmin() && (
-            <div style={{ color: '#22c55e', fontSize: '13px', fontWeight: 'bold', marginBottom: '10px' }}>
-              🎁 You have {extraSpins} Extra Spin(s) available from Referrals!
             </div>
           )}
 
@@ -425,7 +325,6 @@ function MainComponent() {
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={item.icon} alt={item.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
                     <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
                   </div>
@@ -446,143 +345,12 @@ function MainComponent() {
             {isSpinning ? 'SPINNING...' : canSpin() ? 'SPIN THE WHEEL 🎯' : 'SPIN AGAIN IN 24H ⏳'}
           </button>
 
-          {/* Referral Link Share Box */}
-          <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '12px', color: '#aaaaaa', marginBottom: '6px' }}>🔗 Invite Friends to get **+1 Free Spin**:</div>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" readOnly value={`${typeof window !== 'undefined' ? window.location.origin : ''}?ref=${myRefCode}`} style={{ flex: 1, padding: '6px 10px', borderRadius: '4px', border: 'none', background: 'rgba(0,0,0,0.5)', color: '#ffffff', fontSize: '11px' }} />
-              <button onClick={copyRefLink} style={{ padding: '6px 12px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: '4px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer' }}>
-                {copiedRef ? 'COPIED!' : 'COPY LINK'}
-              </button>
-            </div>
-          </div>
-
           {wonReward && (
             <div style={{ marginTop: '16px', padding: '14px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '8px' }}>
               <h3 style={{ margin: 0, color: '#22c55e', fontSize: '18px' }}>🎉 Congratulations {username}!</h3>
               <p style={{ margin: '6px 0 0 0', fontSize: '15px' }}>You won: <strong>{wonReward}</strong>!</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#aaaaaa' }}>Your reward log has been sent to server admins via Discord!</p>
             </div>
           )}
-
-          <div style={{ marginTop: '24px', textAlign: 'left' }}>
-            <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#eab308' }}>🏆 Possible Wheel Rewards:</h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '6px' }}>
-              {spinRewards.map((r) => (
-                <div key={r.id} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={r.icon} alt={r.name} style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
-                  <span style={{ fontWeight: 'bold' }}>{r.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'community' && (
-        <div style={cardStyle}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>Join Our Community</h2>
-          <a href="https://discord.gg/wR7UZzWakM" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#5865F2', fontSize: '16px' }}>👾 Discord Server</div></a>
-          <a href="https://www.instagram.com/modihater7" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#E1306C', fontSize: '16px' }}>📸 Instagram Page</div></a>
-          <a href="https://ig.me/j/AbbBXSakl1QBm9YN/" target="_blank" rel="noreferrer" style={linkBoxStyle}><div style={{ fontWeight: 'bold', color: '#F77737', fontSize: '16px' }}>💬 Instagram Group Chat</div></a>
-        </div>
-      )}
-
-      {activeTab === 'ranks' && (
-        <div>
-          <div style={cardStyle}>
-            <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>👑 Server Ranks</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-              {ranksList.map((rank, i) => (
-                <div key={i} style={{ background: rank.bg, border: `1px solid ${rank.border}`, padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ fontWeight: 'bold', color: rank.color, fontSize: '16px' }}>{rank.name}</div>
-                    <div style={{ fontSize: '14px', marginBottom: '8px' }}>{rank.price}</div>
-                  </div>
-                  <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>
-                    🛒 BUY RANK
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🏷️ Server Tags</h2>
-            
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#f97316' }}>OG_BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>PLAYABLE GIFT</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#06b6d4' }}>ADVANCED BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>PLAYABLE GIFT</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#10b981' }}>BASIC BUILDER</span>
-              <span style={{ color: '#22c55e', fontSize: '12px', fontWeight: 'bold' }}>PLAYABLE GIFT</span>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#6b7280' }}>NOOB (₹80)</span>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#ef4444' }}>PRO (₹75)</span>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#84cc16' }}>GAREEB (₹100)</span>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
-            </div>
-
-            <div style={tagBoxStyle}>
-              <span style={{ fontWeight: 'bold', color: '#a855f7' }}>ALPHA (₹149)</span>
-              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>BUY TAG</a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'crates' && (
-        <div style={cardStyle}>
-          <h2 style={{ color: '#dc2626', margin: '0 0 16px 0', fontSize: '20px' }}>🎁 Server Crates & Rewards</h2>
-          
-          {crateList.map((crate) => (
-            <div key={crate.id} style={crateCardStyle}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{crate.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 'bold', color: crate.color, fontSize: '16px' }}>{crate.name}</div>
-                  <div style={{ color: '#aaaaaa', fontSize: '12px' }}>{crate.sub}</div>
-                </div>
-                <div style={{ fontWeight: 'bold', color: '#22c55e', marginRight: '8px' }}>{crate.price}</div>
-                {crate.price !== 'Playable' && (
-                  <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={buyButtonStyle}>
-                    BUY
-                  </a>
-                )}
-              </div>
-              
-              <button 
-                onClick={() => setSelectedCrate(selectedCrate === crate.id ? null : crate.id)} 
-                style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: '#ffffff', width: '100%', padding: '8px', borderRadius: '6px', marginTop: '10px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>
-                {selectedCrate === crate.id ? '▼ Hide Rewards Photo' : '📷 View Rewards Photo'}
-              </button>
-
-              {selectedCrate === crate.id && (
-                <div style={{ marginTop: '10px', overflow: 'hidden', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={crate.imageUrl} alt={crate.name} style={{ width: '100%', height: 'auto', display: 'block' }} />
-                </div>
-              )}
-            </div>
-          ))}
         </div>
       )}
     </main>
