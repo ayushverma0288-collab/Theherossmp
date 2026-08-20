@@ -20,13 +20,13 @@ export default function Home() {
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   const spinRewards = [
-    { id: 1, name: '32 Golden Apples', color: '#eab308', icon: 'https://cdn.discordapp.com/emojis/1085189392265011210.webp', command: '/give %PLAYER% golden_apple 32' },
-    { id: 2, name: '20 Diamond Blocks', color: '#06b6d4', icon: 'https://cdn.discordapp.com/emojis/1085189326838059038.webp', command: '/give %PLAYER% diamond_block 20' },
-    { id: 3, name: 'Totem of Undying', color: '#f59e0b', icon: 'https://cdn.discordapp.com/emojis/1085189445104861214.webp', command: '/give %PLAYER% totem_of_undying 1' },
-    { id: 4, name: '1 Netherite Ingot', color: '#4b5563', icon: 'https://cdn.discordapp.com/emojis/1085189422057177118.webp', command: '/give %PLAYER% netherite_ingot 1' },
-    { id: 5, name: '1 Enchanted G-Apple', color: '#a855f7', icon: 'https://cdn.discordapp.com/emojis/1085189408429850634.webp', command: '/give %PLAYER% enchanted_golden_apple 1' },
-    { id: 6, name: '1 Hour Fly Pass', color: '#3b82f6', icon: 'https://cdn.discordapp.com/emojis/1085189366360981554.webp', command: '/tempgrant %PLAYER% fly 1h' },
-    { id: 7, name: '10k In-Game Cash', color: '#22c55e', icon: 'https://cdn.discordapp.com/emojis/1085189382211248168.webp', command: '/eco give %PLAYER% 10000' },
+    { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', color: '#eab308', icon: 'https://i.postimg.cc/CMJqVjsK/1423-goldenapple.png', command: '/give %PLAYER% golden_apple 32' },
+    { id: 2, name: '20 Diamond Blocks', shortText: '20 Dia Block', color: '#06b6d4', icon: 'https://i.postimg.cc/BQktqNLg/4178-mc-diamond-block.png', command: '/give %PLAYER% diamond_block 20' },
+    { id: 3, name: 'Totem of Undying', shortText: 'Totem', color: '#f59e0b', icon: 'https://i.postimg.cc/BvcvB0hx/7301-totem-mc.png', command: '/give %PLAYER% totem_of_undying 1' },
+    { id: 4, name: '1 Netherite Ingot', shortText: 'Netherite', color: '#4b5563', icon: 'https://i.postimg.cc/rszFTtqh/5032-Netherite-ingot.png', command: '/give %PLAYER% netherite_ingot 1' },
+    { id: 5, name: '1 Enchanted G-Apple', shortText: 'God Apple', color: '#a855f7', icon: 'https://i.postimg.cc/wBV6skvV/2024-enchantedgoldenapple.png', command: '/give %PLAYER% enchanted_golden_apple 1' },
+    { id: 6, name: '1 Hour Fly Pass', shortText: 'Fly Pass', color: '#3b82f6', icon: 'https://i.postimg.cc/GtBrVwjj/6758-Elytra.png', command: '/tempgrant %PLAYER% fly 1h' },
+    { id: 7, name: '10k In-Game Cash', shortText: '$10k Cash', color: '#22c55e', icon: 'https://i.postimg.cc/d3zvKHHc/7347-minecraftmoney.png', command: '/eco give %PLAYER% 10000' },
   ];
 
   useEffect(() => {
@@ -307,7 +307,7 @@ export default function Home() {
             }}
           />
 
-          <div style={{ position: 'relative', width: '260px', height: '260px', margin: '0 auto 20px auto' }}>
+          <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 20px auto' }}>
             <div style={{
               position: 'absolute',
               top: '-12px',
@@ -341,13 +341,15 @@ export default function Home() {
                     left: '50%',
                     width: '0px',
                     height: '0px',
-                    transform: `rotate(${angle}deg) translateY(-85px) rotate(-${angle}deg)`,
+                    transform: `rotate(${angle}deg) translateY(-90px) rotate(-${angle}deg)`,
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={item.icon} alt={item.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+                    <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
                   </div>
                 );
               })}
@@ -380,7 +382,7 @@ export default function Home() {
               {spinRewards.map((r) => (
                 <div key={r.id} style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={r.icon} alt={r.name} style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+                  <img src={r.icon} alt={r.name} style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
                   <span style={{ fontWeight: 'bold' }}>{r.name}</span>
                 </div>
               ))}
