@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 
 function MainComponent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('spin');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'community' | 'ranks' | 'crates' | 'spin'>('dashboard');
   const [copiedJava, setCopiedJava] = useState(false);
   const [copiedBedrock, setCopiedBedrock] = useState(false);
   const [players, setPlayers] = useState<string[]>([]);
@@ -19,25 +19,20 @@ function MainComponent() {
   const [wonReward, setWonReward] = useState<string | null>(null);
   const [lastSpinTime, setLastSpinTime] = useState<number | null>(null);
 
-  // Referral System & Admin Pass
   const [myRefCode, setMyRefCode] = useState('');
-  const [usedRefCode, setUsedRefCode] = useState('');
   const [extraSpins, setExtraSpins] = useState<number>(0);
-  const [copiedRef, setCopiedRef] = useState(false);
 
-  // 🔑 Secret Admin Passcode
   const SECRET_ADMIN_PASS = "mrayushdr143";
-
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   const spinRewards = [
-    { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', color: '#eab308', icon: 'https://i.postimg.cc/CMJqVjsK/1423-goldenapple.png', command: '/give %PLAYER% golden_apple 32' },
-    { id: 2, name: '20 Diamond Blocks', shortText: '20 Dia Block', color: '#06b6d4', icon: 'https://i.postimg.cc/BQktqNLg/4178-mc-diamond-block.png', command: '/give %PLAYER% diamond_block 20' },
-    { id: 3, name: 'Totem of Undying', shortText: 'Totem', color: '#f59e0b', icon: 'https://i.postimg.cc/BvcvB0hx/7301-totem-mc.png', command: '/give %PLAYER% totem_of_undying 1' },
-    { id: 4, name: '1 Netherite Ingot', shortText: 'Netherite', color: '#4b5563', icon: 'https://i.postimg.cc/rszFTtqh/5032-Netherite-ingot.png', command: '/give %PLAYER% netherite_ingot 1' },
-    { id: 5, name: '1 Enchanted G-Apple', shortText: 'God Apple', color: '#a855f7', icon: 'https://i.postimg.cc/wBV6skvV/2024-enchantedgoldenapple.png', command: '/give %PLAYER% enchanted_golden_apple 1' },
-    { id: 6, name: '1 Hour Fly Pass', shortText: 'Fly Pass', color: '#3b82f6', icon: 'https://i.postimg.cc/GtBrVwjj/6758-Elytra.png', command: '/tempgrant %PLAYER% fly 1h' },
-    { id: 7, name: '10k In-Game Cash', shortText: '$10k Cash', color: '#22c55e', icon: 'https://i.postimg.cc/d3zvKHHc/7347-minecraftmoney.png', command: '/eco give %PLAYER% 10000' },
+    { id: 1, name: '32 Golden Apples', shortText: '32 G-Apple', command: '/give %PLAYER% golden_apple 32' },
+    { id: 2, name: '20 Diamond Blocks', shortText: '20 Dia Block', command: '/give %PLAYER% diamond_block 20' },
+    { id: 3, name: 'Totem of Undying', shortText: 'Totem', command: '/give %PLAYER% totem_of_undying 1' },
+    { id: 4, name: '1 Netherite Ingot', shortText: 'Netherite', command: '/give %PLAYER% netherite_ingot 1' },
+    { id: 5, name: '1 Enchanted G-Apple', shortText: 'God Apple', command: '/give %PLAYER% enchanted_golden_apple 1' },
+    { id: 6, name: '1 Hour Fly Pass', shortText: 'Fly Pass', command: '/tempgrant %PLAYER% fly 1h' },
+    { id: 7, name: '10k In-Game Cash', shortText: '$10k Cash', command: '/eco give %PLAYER% 10000' },
   ];
 
   useEffect(() => {
@@ -49,19 +44,10 @@ function MainComponent() {
     setMyRefCode(ref);
 
     const savedExtraSpins = localStorage.getItem('extra_spins_count');
-    if (savedExtraSpins) {
-      setExtraSpins(parseInt(savedExtraSpins, 10));
-    }
-
-    const urlRef = searchParams.get('ref');
-    if (urlRef) {
-      setUsedRefCode(urlRef);
-    }
+    if (savedExtraSpins) setExtraSpins(parseInt(savedExtraSpins, 10));
 
     const savedTime = localStorage.getItem('last_spin_time');
-    if (savedTime) {
-      setLastSpinTime(parseInt(savedTime, 10));
-    }
+    if (savedTime) setLastSpinTime(parseInt(savedTime, 10));
 
     const fetchPlayers = async () => {
       try {
@@ -75,11 +61,8 @@ function MainComponent() {
 
         if (data && data.online) {
           setOnlineCount(data.players?.online || 0);
-          if (data.players && Array.isArray(data.players.list)) {
-            setPlayers(data.players.list);
-          } else {
-            setPlayers([]);
-          }
+          if (data.players && Array.isArray(data.players.list)) setPlayers(data.players.list);
+          else setPlayers([]);
         } else {
           setOnlineCount(0);
           setPlayers([]);
@@ -101,9 +84,7 @@ function MainComponent() {
     if (isAdmin()) return true;
     if (extraSpins > 0) return true;
     if (!lastSpinTime) return true;
-    const now = Date.now();
-    const hoursPassed = (now - lastSpinTime) / (1000 * 60 * 60);
-    return hoursPassed >= 24;
+    return (Date.now() - lastSpinTime) / (1000 * 60 * 60) >= 24;
   };
 
   const sendDiscordNotification = async (playerName: string, rewardName: string, command: string) => {
@@ -114,17 +95,17 @@ function MainComponent() {
         body: JSON.stringify({ playerName, rewardName, command })
       });
     } catch (e) {
-      console.error("Failed to trigger API spin notification", e);
+      console.error("Discord API fail", e);
     }
   };
 
   const handleSpin = () => {
     if (!username.trim()) {
-      alert('Please enter your Minecraft Gamertag first!');
+      alert('Pehle apna Minecraft Gamertag daalein!');
       return;
     }
     if (!canSpin()) {
-      alert('Cooldown active! Spin again in 24 Hours or use Admin Code.');
+      alert('24 Hours ka Cooldown active hai!');
       return;
     }
     if (isSpinning) return;
@@ -137,13 +118,12 @@ function MainComponent() {
     const randomIndex = Math.floor(Math.random() * totalSlices);
     const selected = spinRewards[randomIndex];
 
-    // Perfect alignment fix: arrow points at 0 degrees top
     const targetAngle = (totalSlices - randomIndex) * sliceAngle - (sliceAngle / 2);
-    const fullSpins = 360 * 5; 
-    const currentRotationOffset = wheelRotation % 360;
-    const newTotalRotation = wheelRotation + fullSpins + (targetAngle - currentRotationOffset + 360) % 360;
+    const fullSpins = 360 * 5;
+    const currentOffset = wheelRotation % 360;
+    const newRotation = wheelRotation + fullSpins + ((targetAngle - currentOffset + 360) % 360);
 
-    setWheelRotation(newTotalRotation);
+    setWheelRotation(newRotation);
 
     setTimeout(() => {
       setIsSpinning(false);
@@ -163,13 +143,6 @@ function MainComponent() {
 
       sendDiscordNotification(username, selected.name, selected.command);
     }, 4000);
-  };
-
-  const copyRefLink = () => {
-    const link = `${window.location.origin}?ref=${myRefCode}`;
-    navigator.clipboard.writeText(link);
-    setCopiedRef(true);
-    setTimeout(() => setCopiedRef(false), 2000);
   };
 
   const copyToClipboard = (text: string, type: 'java' | 'bedrock') => {
@@ -207,11 +180,11 @@ function MainComponent() {
   };
 
   const crateList = [
-    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308', icon: '📦' },
-    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7', icon: '🔮' },
-    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6', icon: '⚙️' },
-    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af', icon: '🛡️' },
-    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899', icon: '🔑' }
+    { id: 'master', name: 'Master Crate', price: '₹150', sub: '7 Keys included', color: '#eab308' },
+    { id: 'god', name: 'God Crate', price: '₹450', sub: '7 Keys included', color: '#a855f7' },
+    { id: 'spawner', name: 'Spawner Crate', price: '₹220', sub: '7 Keys included', color: '#3b82f6' },
+    { id: 'silver', name: 'Silver Crate', price: 'Playable', sub: '1 Hour = 2 Keys', color: '#9ca3af' },
+    { id: 'key', name: 'Key Crate', price: '₹410', sub: '7 Keys included', color: '#ec4899' }
   ];
 
   const ranksList = [
@@ -235,52 +208,108 @@ function MainComponent() {
         <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
       </div>
 
+      {/* DASHBOARD TAB */}
+      {activeTab === 'dashboard' && (
+        <>
+          <div style={cardStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Server Status</h2>
+                <span style={{ color: '#22c55e', fontSize: '14px', fontWeight: 'bold' }}>● ONLINE</span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#dc2626' }}>{onlineCount}</div>
+                <div style={{ fontSize: '12px', color: '#aaaaaa' }}>Players Online</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Java Edition</h3>
+            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in:19144</p>
+            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in:19144', 'java')} style={buttonStyle}>
+              {copiedJava ? 'COPIED!' : 'COPY JAVA IP'}
+            </button>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Bedrock / PE Edition</h3>
+            <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#aaaaaa' }}>IP: amd-9-1.skyraincloud.in</p>
+            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#aaaaaa' }}>Port: 19144</p>
+            <button onClick={() => copyToClipboard('amd-9-1.skyraincloud.in', 'bedrock')} style={buttonStyle}>
+              {copiedBedrock ? 'COPIED!' : 'COPY BEDROCK IP'}
+            </button>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Online Players ({players.length})</h3>
+            {players.length > 0 ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {players.map((p, i) => (
+                  <span key={i} style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p}</span>
+                ))}
+              </div>
+            ) : (
+              <p style={{ fontSize: '13px', color: '#aaaaaa', margin: 0 }}>No players online currently.</p>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* SPIN WHEEL TAB */}
       {activeTab === 'spin' && (
         <div style={{ ...cardStyle, textAlign: 'center' }}>
           <h2 style={{ color: '#dc2626', margin: '0 0 8px 0', fontSize: '22px' }}>🎡 Daily Reward Wheel</h2>
           <p style={{ color: '#aaaaaa', fontSize: '13px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
 
-          <input
-            type="text"
-            placeholder="Enter Minecraft Gamertag"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.2)',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              color: '#ffffff',
-              fontSize: '14px',
-              marginBottom: '10px',
-              textAlign: 'center',
-              boxSizing: 'border-box',
-              outline: 'none'
-            }}
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
+            <input
+              type="text"
+              placeholder="Enter Minecraft Gamertag"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              style={{
+                width: '90%',
+                maxWidth: '380px',
+                padding: '12px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                color: '#ffffff',
+                fontSize: '14px',
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                outline: 'none',
+                margin: '0 auto'
+              }}
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="Admin Passcode / Referral (Optional)"
-            value={adminPasscode}
-            onChange={(e) => setAdminPasscode(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px',
-              borderRadius: '6px',
-              border: '1px solid rgba(255,255,255,0.2)',
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              color: '#ffffff',
-              fontSize: '12px',
-              textAlign: 'center',
-              marginBottom: '10px',
-              outline: 'none'
-            }}
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '16px' }}>
+            <input
+              type="text"
+              placeholder="Admin Passcode / Referral (Optional)"
+              value={adminPasscode}
+              onChange={(e) => setAdminPasscode(e.target.value)}
+              style={{
+                width: '90%',
+                maxWidth: '380px',
+                padding: '10px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                color: '#ffffff',
+                fontSize: '13px',
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                outline: 'none',
+                margin: '0 auto'
+              }}
+            />
+          </div>
 
           {isAdmin() && (
-            <div style={{ padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', marginBottom: '16px', fontWeight: 'bold' }}>
+            <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
               ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
             </div>
           )}
@@ -325,8 +354,7 @@ function MainComponent() {
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    <img src={item.icon} alt={item.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
-                    <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
+                    <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#ffffff', textShadow: '1px 1px 2px #000', whiteSpace: 'nowrap' }}>{item.shortText}</span>
                   </div>
                 );
               })}
@@ -337,8 +365,14 @@ function MainComponent() {
             onClick={handleSpin}
             disabled={isSpinning || !canSpin()}
             style={{
-              ...buttonStyle,
               backgroundColor: canSpin() ? '#dc2626' : '#4b5563',
+              color: '#ffffff',
+              border: 'none',
+              padding: '12px',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              width: '90%',
+              maxWidth: '380px',
               cursor: canSpin() ? 'pointer' : 'not-allowed',
               opacity: isSpinning ? 0.7 : 1
             }}>
@@ -349,6 +383,57 @@ function MainComponent() {
             <div style={{ marginTop: '16px', padding: '14px', backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', borderRadius: '8px' }}>
               <h3 style={{ margin: 0, color: '#22c55e', fontSize: '18px' }}>🎉 Congratulations {username}!</h3>
               <p style={{ margin: '6px 0 0 0', fontSize: '15px' }}>You won: <strong>{wonReward}</strong>!</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* SOCIAL / COMMUNITY TAB */}
+      {activeTab === 'community' && (
+        <div style={cardStyle}>
+          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px' }}>Join Our Community</h2>
+          <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none' }}>
+            <button style={{ ...buttonStyle, backgroundColor: '#5865F2' }}>JOIN DISCORD SERVER 💬</button>
+          </a>
+        </div>
+      )}
+
+      {/* RANKS TAB */}
+      {activeTab === 'ranks' && (
+        <div>
+          {ranksList.map((rank, i) => (
+            <div key={i} style={{ ...cardStyle, backgroundColor: rank.bg, borderColor: rank.border }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ margin: 0, color: rank.color, fontSize: '20px' }}>{rank.name} Rank</h3>
+                <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{rank.price}</span>
+              </div>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                <button style={buttonStyle}>BUY VIA DISCORD 🛒</button>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* CRATES TAB */}
+      {activeTab === 'crates' && (
+        <div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+            {crateList.map((crate) => (
+              <div key={crate.id} onClick={() => setSelectedCrate(crate.id)} style={{ ...cardStyle, cursor: 'pointer', textAlign: 'center', borderColor: crate.color }}>
+                <h3 style={{ margin: '0 0 4px 0', color: crate.color, fontSize: '16px' }}>{crate.name}</h3>
+                <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', fontSize: '14px' }}>{crate.price}</p>
+                <p style={{ margin: 0, fontSize: '11px', color: '#aaaaaa' }}>{crate.sub}</p>
+              </div>
+            ))}
+          </div>
+
+          {selectedCrate && (
+            <div style={{ ...cardStyle, marginTop: '16px', textAlign: 'center' }}>
+              <h3 style={{ margin: '0 0 10px 0' }}>Buy Keys for {crateList.find(c => c.id === selectedCrate)?.name}</h3>
+              <a href={DISCORD_RANK_PAYMENT_URL} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                <button style={buttonStyle}>PURCHASE ON DISCORD 💬</button>
+              </a>
             </div>
           )}
         </div>
