@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('home');
@@ -19,7 +19,6 @@ export default function Home() {
       fontFamily: 'sans-serif'
     }}>
       <div style={{ width: '100%', maxWidth: '420px' }}>
-        
         <h1 style={{ fontSize: '30px', fontWeight: '900', textAlign: 'center', margin: '10px 0 20px 0' }}>
           <span style={{ color: '#e53e3e' }}>THEHERO</span>
           <span style={{ color: '#ffffff' }}>SMP</span>
@@ -33,28 +32,22 @@ export default function Home() {
           justify: 'space-around',
           marginBottom: '20px'
         }}>
-          {[
-            { id: 'home', label: 'Home' },
-            { id: 'spin', label: '🎡 Spin' },
-            { id: 'social', label: 'Social' },
-            { id: 'rank', label: 'Rank/Tag' },
-            { id: 'crates', label: '🎁 Crates' },
-          ].map((tab) => (
+          {['home', 'spin', 'social', 'rank', 'crates'].map((tab) => (
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              key={tab}
+              onClick={() => setActiveTab(tab)}
               style={{
-                backgroundColor: activeTab === tab.id ? '#e53e3e' : 'transparent',
+                backgroundColor: activeTab === tab ? '#e53e3e' : 'transparent',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '10px',
                 padding: '8px 10px',
                 fontSize: '12px',
                 fontWeight: 'bold',
-                cursor: 'pointer'
+                textTransform: 'capitalize'
               }}
             >
-              {tab.label}
+              {tab === 'spin' ? '🎡 Spin' : tab === 'crates' ? '🎁 Crates' : tab}
             </button>
           ))}
         </div>
@@ -94,12 +87,12 @@ export default function Home() {
         {activeTab === 'spin' && (
           <div style={{ backgroundColor: 'rgba(18, 18, 18, 0.95)', borderRadius: '24px', padding: '20px', textAlign: 'center', color: '#fff' }}>
             <h2 style={{ color: '#e53e3e', fontSize: '18px', fontWeight: 'bold', marginBottom: '6px' }}>🎡 Daily Reward Wheel</h2>
-            <p style={{ color: '#a0aec0', fontSize: '12px', marginBottom: '16px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
+            <p style={{ color: '#a0aec0', fontSize: '12px', marginBottom: '16px' }}>Enter Gamertag and Spin every 24 Hours for free rewards!</p>
             <input type="text" placeholder="Enter Minecraft Gamertag" style={{ width: '100%', padding: '12px', borderRadius: '12px', backgroundColor: '#000', border: '1px solid #333', color: 'white', marginBottom: '10px' }} />
             <input type="text" placeholder="Admin Passcode / Referral (Optional)" style={{ width: '100%', padding: '12px', borderRadius: '12px', backgroundColor: '#000', border: '1px solid #333', color: 'white', marginBottom: '16px' }} />
             <div style={{ margin: '20px auto', width: '200px', height: '200px', borderRadius: '50%', border: '4px solid #e53e3e', background: 'conic-gradient(#38a169 0deg 51deg, #ecc94b 51deg 102deg, #00b4d8 102deg 153deg, #ed8936 153deg 204deg, #4a5568 204deg 255deg, #9f7aea 255deg 306deg, #3182ce 306deg 360deg)' }} />
             <button style={{ width: '100%', backgroundColor: '#4a5568', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold' }}>
-              SPIN AGAIN IN 24H ⏳
+              SPIN AGAIN IN 24H
             </button>
           </div>
         )}
@@ -107,9 +100,9 @@ export default function Home() {
         {activeTab === 'social' && (
           <div style={{ backgroundColor: 'rgba(18, 18, 18, 0.95)', borderRadius: '24px', padding: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '14px', color: '#fff' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>Join Our Community</h2>
-            <button style={{ backgroundColor: '#5865F2', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>JOIN DISCORD SERVER 💬</button>
-            <button style={{ backgroundColor: '#E1306C', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>FOLLOW INSTAGRAM PROFILE 📸</button>
-            <button style={{ backgroundColor: '#C13584', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>JOIN INSTAGRAM GROUP CHAT 💬</button>
+            <button style={{ backgroundColor: '#5865F2', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>JOIN DISCORD SERVER</button>
+            <button style={{ backgroundColor: '#E1306C', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>FOLLOW INSTAGRAM PROFILE</button>
+            <button style={{ backgroundColor: '#C13584', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold' }}>JOIN INSTAGRAM GROUP CHAT</button>
           </div>
         )}
 
@@ -121,7 +114,7 @@ export default function Home() {
                   <span style={{ color: r.color, fontSize: '18px', fontWeight: 'bold' }}>{r.name}</span>
                   <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{r.price}</span>
                 </div>
-                <button style={{ width: '100%', backgroundColor: '#e53e3e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD 🛒</button>
+                <button style={{ width: '100%', backgroundColor: '#e53e3e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: 'bold' }}>BUY VIA DISCORD</button>
               </div>
             ))}
           </div>
@@ -141,7 +134,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
