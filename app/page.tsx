@@ -42,7 +42,10 @@ function MainComponent() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem('registered_username');
-    if (savedUser) setUsername(savedUser);
+    if (savedUser) {
+      setUsername(savedUser);
+      setMyRefCode('HERO-' + savedUser.trim().toUpperCase());
+    }
 
     const isRefUsed = localStorage.getItem('has_used_referral');
     if (isRefUsed === 'true') setHasUsedReferral(true);
@@ -72,14 +75,14 @@ function MainComponent() {
     return () => clearInterval(interval);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (username.trim()) {
-      const generatedCode = 'HERO-' + username.trim().toUpperCase();
-      setMyRefCode(generatedCode);
+  const handleGamertagChange = (val: string) => {
+    setUsername(val);
+    if (val.trim()) {
+      setMyRefCode('HERO-' + val.trim().toUpperCase());
     } else {
       setMyRefCode('');
     }
-  }, [username]);
+  };
 
   const isAdmin = () => adminPasscode.trim() === SECRET_ADMIN_PASS || username.trim() === SECRET_ADMIN_PASS;
 
@@ -98,7 +101,7 @@ function MainComponent() {
         body: JSON.stringify({ playerName, rewardName, command })
       });
     } catch (e) {
-      console.error("Discord API fail", e);
+      console.error("Discord API error", e);
     }
   };
 
@@ -109,7 +112,6 @@ function MainComponent() {
       return;
     }
 
-    // Process Referral for New Users
     if (!hasUsedReferral && !isAdmin()) {
       let currentExtra = extraSpins;
       if (referralInput.trim().length > 0) {
@@ -117,10 +119,10 @@ function MainComponent() {
           alert("Aap apna hi Referral Code use nahi kar sakte!");
           return;
         }
-        currentExtra += 1; // Buy 1 Get 1 Free Spin
+        currentExtra += 1;
         setExtraSpins(currentExtra);
         localStorage.setItem('extra_spins_count', currentExtra.toString());
-        alert("🎉 Referral Code Applied! Aapko 1 Extra Bonus Spin mila hai (Total 2 Spins)!");
+        alert("🎉 Referral Applied! 1 Extra Free Spin Added!");
       }
       setHasUsedReferral(true);
       localStorage.setItem('has_used_referral', 'true');
@@ -248,7 +250,7 @@ function MainComponent() {
           <button onClick={() => setActiveTab('crates')} style={{ padding: '8px 2px', borderRadius: '6px', border: 'none', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', backgroundColor: activeTab === 'crates' ? '#dc2626' : 'transparent', color: '#ffffff' }}>🎁 Crates</button>
         </div>
 
-        {/* DASHBOARD TAB */}
+        {/* HOME / DASHBOARD TAB */}
         {activeTab === 'dashboard' && (
           <>
             <div style={cardStyle}>
@@ -289,6 +291,10 @@ function MainComponent() {
                   <span style={{ fontSize: '14px', backgroundColor: 'rgba(234, 179, 8, 0.2)', padding: '4px 10px', borderRadius: '6px', border: '1px solid #eab308', fontWeight: 'bold', color: '#facc15' }}>Sriyash Rajesh Pagi</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#f97316' }}>🤝 Co-Owner</span>
+                  <span style={{ fontSize: '14px', backgroundColor: 'rgba(249, 115, 22, 0.2)', padding: '4px 10px', borderRadius: '6px', border: '1px solid #f97316', fontWeight: 'bold', color: '#fb923c' }}>Dhuruv</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#a855f7' }}>⚡ Server Admin</span>
                   <span style={{ fontSize: '14px', backgroundColor: 'rgba(168, 85, 247, 0.2)', padding: '4px 10px', borderRadius: '6px', border: '1px solid #a855f7', fontWeight: 'bold', color: '#c084fc' }}>Samosa_bhaiya</span>
                 </div>
@@ -309,9 +315,9 @@ function MainComponent() {
                 placeholder="Enter Minecraft Gamertag"
                 value={username}
                 disabled={hasUsedReferral}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => handleGamertagChange(e.target.value)}
                 style={{
-                  width: '90%',
+                  width: '100%',
                   maxWidth: '380px',
                   padding: '12px',
                   borderRadius: '8px',
@@ -321,13 +327,11 @@ function MainComponent() {
                   fontSize: '14px',
                   textAlign: 'center',
                   boxSizing: 'border-box',
-                  outline: 'none',
-                  margin: '0 auto'
+                  outline: 'none'
                 }}
               />
             </div>
 
-            {/* Strict Referral Input - Show ONLY for New Users */}
             {!hasUsedReferral && (
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '10px' }}>
                 <input
@@ -336,7 +340,7 @@ function MainComponent() {
                   value={referralInput}
                   onChange={(e) => setReferralInput(e.target.value)}
                   style={{
-                    width: '90%',
+                    width: '100%',
                     maxWidth: '380px',
                     padding: '10px',
                     borderRadius: '8px',
@@ -346,8 +350,7 @@ function MainComponent() {
                     fontSize: '13px',
                     textAlign: 'center',
                     boxSizing: 'border-box',
-                    outline: 'none',
-                    margin: '0 auto'
+                    outline: 'none'
                   }}
                 />
               </div>
@@ -360,7 +363,7 @@ function MainComponent() {
                 value={adminPasscode}
                 onChange={(e) => setAdminPasscode(e.target.value)}
                 style={{
-                  width: '90%',
+                  width: '100%',
                   maxWidth: '380px',
                   padding: '10px',
                   borderRadius: '8px',
@@ -370,27 +373,26 @@ function MainComponent() {
                   fontSize: '13px',
                   textAlign: 'center',
                   boxSizing: 'border-box',
-                  outline: 'none',
-                  margin: '0 auto'
+                  outline: 'none'
                 }}
               />
             </div>
 
-            {myRefCode && (
-              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '10px', backgroundColor: 'rgba(34, 197, 94, 0.15)', border: '1px solid #22c55e', borderRadius: '8px', fontSize: '13px' }}>
-                <span>Your Referral Code: <strong>{myRefCode}</strong></span>
-                <button onClick={() => copyToClipboard(myRefCode, 'ref')} style={{ marginLeft: '10px', padding: '4px 8px', backgroundColor: '#22c55e', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>COPY</button>
-              </div>
-            )}
+            <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '12px', backgroundColor: 'rgba(34, 197, 94, 0.15)', border: '1px solid #22c55e', borderRadius: '8px', fontSize: '13px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ color: '#ffffff' }}>Your Referral: <strong style={{ color: '#22c55e' }}>{myRefCode || 'Enter Gamertag'}</strong></span>
+              {myRefCode && (
+                <button onClick={() => copyToClipboard(myRefCode, 'ref')} style={{ padding: '6px 12px', backgroundColor: '#22c55e', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>COPY CODE</button>
+              )}
+            </div>
 
             {extraSpins > 0 && (
-              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
+              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '8px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
                 🎁 BONUS SPINS AVAILABLE: {extraSpins}
               </div>
             )}
 
             {isAdmin() && (
-              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '6px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
+              <div style={{ margin: '0 auto 16px auto', maxWidth: '380px', padding: '8px', backgroundColor: 'rgba(234, 179, 8, 0.2)', border: '1px solid #eab308', borderRadius: '6px', fontSize: '12px', color: '#eab308', fontWeight: 'bold' }}>
                 ⚡ ADMIN MODE ACTIVE: UNLIMITED SPINS!
               </div>
             )}
@@ -457,7 +459,7 @@ function MainComponent() {
                 padding: '12px',
                 borderRadius: '8px',
                 fontWeight: 'bold',
-                width: '90%',
+                width: '100%',
                 maxWidth: '380px',
                 cursor: canSpin() ? 'pointer' : 'not-allowed',
                 opacity: isSpinning ? 0.7 : 1
@@ -474,7 +476,7 @@ function MainComponent() {
           </div>
         )}
 
-        {/* SOCIAL / COMMUNITY TAB */}
+        {/* SOCIAL TAB */}
         {activeTab === 'community' && (
           <div style={cardStyle}>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', textAlign: 'center' }}>Join Our Community</h2>
