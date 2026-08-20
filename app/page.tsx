@@ -16,7 +16,6 @@ export default function Home() {
   const [wonReward, setWonReward] = useState<string | null>(null);
   const [lastSpinTime, setLastSpinTime] = useState<number | null>(null);
 
-  const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1539869461954306048/DvR9UTenWMiPiMl_imqtHxbm64SynzROOhDDsQi1Ae-xgmkjIaQMOy-2T_bx90a43J5"; 
   const DISCORD_RANK_PAYMENT_URL = "https://discord.gg/wR7UZzWakM";
 
   const spinRewards = [
@@ -76,25 +75,13 @@ export default function Home() {
 
   const sendDiscordNotification = async (playerName: string, rewardName: string, command: string) => {
     try {
-      await fetch(DISCORD_WEBHOOK_URL, {
+      await fetch('/api/spin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          embeds: [{
-            title: '🎉 NEW DAILY SPIN REWARD CLAIMED!',
-            color: 15158332,
-            fields: [
-              { name: '👤 Player Gamertag', value: `\`${playerName}\``, inline: true },
-              { name: '🎁 Reward Won', value: `**${rewardName}**`, inline: true },
-              { name: '💻 Admin Console Command', value: `\`\`\`${command.replace('%PLAYER%', playerName)}\`\`\`` }
-            ],
-            footer: { text: 'TheHerosSMP Web Reward System' },
-            timestamp: new Date().toISOString()
-          }]
-        })
+        body: JSON.stringify({ playerName, rewardName, command })
       });
     } catch (e) {
-      console.error("Failed to send webhook notification", e);
+      console.error("Failed to trigger API spin notification", e);
     }
   };
 
