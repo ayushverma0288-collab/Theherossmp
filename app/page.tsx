@@ -2,7 +2,17 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('spin');
+
+  const spinItems = [
+    { label: '$10k Cash', bg: '#4cd964' },
+    { label: '32 G-Apple', bg: '#ffcc00' },
+    { label: '20 Dia Block', bg: '#5ac8fa' },
+    { label: 'Totem', bg: '#ff9500' },
+    { label: 'Netherite', bg: '#5856d6' },
+    { label: 'God Apple', bg: '#af52de' },
+    { label: 'Fly Pass', bg: '#007aff' }
+  ];
 
   return (
     <div style={{
@@ -26,7 +36,7 @@ export default function Home() {
           <span style={{ color: '#ffffff' }}>SMP</span>
         </h1>
 
-        {/* Navigation Tabs */}
+        {/* Navigation Bar */}
         <div style={{
           backgroundColor: 'rgba(20, 20, 20, 0.85)',
           backdropFilter: 'blur(10px)',
@@ -97,15 +107,62 @@ export default function Home() {
           </div>
         )}
 
-        {/* SPIN TAB */}
+        {/* SPIN TAB (EXACT MATCH) */}
         {activeTab === 'spin' && (
-          <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.85)', backdropFilter: 'blur(10px)', borderRadius: '24px', padding: '24px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <h2 style={{ color: '#ff3b30', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>🎡 Daily Reward Wheel</h2>
-            <p style={{ color: '#a0aec0', fontSize: '13px', marginBottom: '20px' }}>Enter Gamertag & Spin every 24 Hours for free rewards!</p>
-            <input type="text" placeholder="Enter Minecraft Gamertag" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#000', border: '1px solid #333', color: 'white', marginBottom: '12px', outline: 'none' }} />
-            <input type="text" placeholder="Admin Passcode / Referral (Optional)" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#000', border: '1px solid #333', color: 'white', marginBottom: '20px', outline: 'none' }} />
-            <div style={{ margin: '20px auto', width: '180px', height: '180px', borderRadius: '50%', border: '4px solid #ff3b30', background: 'conic-gradient(#38a169 0deg 51deg, #ecc94b 51deg 102deg, #00b4d8 102deg 153deg, #ed8936 153deg 204deg, #4a5568 204deg 255deg, #9f7aea 255deg 306deg, #3182ce 306deg 360deg)' }} />
-            <button style={{ width: '100%', backgroundColor: '#3a3a3c', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: 'bold', cursor: 'pointer' }}>
+          <div style={{ backgroundColor: 'rgba(20, 20, 20, 0.9)', backdropFilter: 'blur(10px)', borderRadius: '24px', padding: '24px 20px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <h2 style={{ color: '#ff3b30', fontSize: '22px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              🎡 Daily Reward Wheel
+            </h2>
+            <p style={{ color: '#a0aec0', fontSize: '13px', marginBottom: '20px', lineHeight: '1.4' }}>
+              Enter Gamertag & Spin every 24 Hours for free rewards!
+            </p>
+
+            <input type="text" placeholder="Enter Minecraft Gamertag" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#141414', border: '1px solid #333', color: 'white', marginBottom: '12px', outline: 'none', textAlign: 'center' }} />
+            
+            <input type="text" placeholder="Referral Code (Optional - Get 1 Extra Spin)" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#141414', border: '1px solid #ecc94b', color: '#ecc94b', marginBottom: '12px', outline: 'none', textAlign: 'center' }} />
+            
+            <input type="text" placeholder="Admin Passcode (Optional)" style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: '#141414', border: '1px solid #333', color: 'white', marginBottom: '24px', outline: 'none', textAlign: 'center' }} />
+
+            {/* Wheel Container with Exact Top Pointer & Styled Slices */}
+            <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 24px auto' }}>
+              
+              {/* Pointer */}
+              <div style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderTop: '20px solid #ff3b30', zIndex: 10 }} />
+
+              {/* Graphical Wheel */}
+              <div style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                border: '4px solid #ff3b30',
+                background: 'conic-gradient(#4cd964 0deg 51.4deg, #ffcc00 51.4deg 102.8deg, #5ac8fa 102.8deg 154.2deg, #ff9500 154.2deg 205.6deg, #5856d6 205.6deg 257deg, #af52de 257deg 308.4deg, #007aff 308.4deg 360deg)',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+              }}>
+                {/* Labels inside the wheel */}
+                {spinItems.map((item, idx) => {
+                  const angle = (360 / 7) * idx + (360 / 14);
+                  return (
+                    <div key={idx} style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-85px)`,
+                      color: '#000',
+                      fontWeight: '800',
+                      fontSize: '11px',
+                      whiteSpace: 'nowrap',
+                      textShadow: '0px 0px 2px rgba(255,255,255,0.8)'
+                    }}>
+                      {item.label}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <button style={{ width: '100%', backgroundColor: '#2c2c2e', color: '#8e8e93', border: '1px solid #3a3a3c', borderRadius: '12px', padding: '16px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
               SPIN AGAIN IN 24H ⏳
             </button>
           </div>
