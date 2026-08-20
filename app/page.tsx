@@ -290,6 +290,7 @@ export default function Home() {
               fontSize: '14px',
               marginBottom: '20px',
               textAlign: 'center',
+              boxSizing: 'border-box',
               outline: 'none'
             }}
           />
