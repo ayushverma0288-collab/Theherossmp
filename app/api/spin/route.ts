@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const PANEL_URL = 'https://gp.skyraincloud.in';
-const SERVER_ID = '69dcc439'; // Aapki correct 8-digit Server ID
+const SERVER_ID = '69dcc439';
 const PANEL_API_KEY = 'ptlc_gSsHjVuLwvbK05MbWRGDyrUM0mXcm661aNnLsOTTyCW';
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1539869461954306048/DvR9UTenWMiPiMl_imqtHxhbm64SynzROOhDDsQi1Ae-xgmkjIaQMOy-2T_bx90a43J5';
 
@@ -15,15 +15,38 @@ export async function POST(req: Request) {
     }
 
     const formattedPlayer = playerName.trim();
-    
-    // Clean Item Name for Minecraft Command
-    let rawReward = rewardName ? rewardName.trim().toLowerCase() : 'god_apple';
-    rawReward = rawReward.replace(/^\d+\s+/, '').replace(/\s+/g, '_'); 
+    const rawReward = rewardName ? rewardName.trim().toLowerCase() : '';
 
-    // OfflineCommands format
-    const finalCommand = `offlinecommand ${formattedPlayer} give ${formattedPlayer} ${rawReward} 1`;
+    let commandToRun = '';
 
-    // 1. Send Command directly to Pterodactyl Console API
+    // Cash / Economy Rewards Logic
+    if (rawReward.includes('cash') || rawReward.includes('money')) {
+      let amount = 10000; // Default 10k
+      if (rawReward.includes('50k')) amount = 50000;
+      else if (rawReward.includes('100k')) amount = 100000;
+      else if (rawReward.includes('20k')) amount = 20000;
+      else if (rawReward.includes('10k')) amount = 10000;
+
+      commandToRun = `eco give ${formattedPlayer} ${amount}`;
+    } 
+    // Standard Items Logic
+    else {
+      let itemName = rawReward.replace(/^\d+\s+/, '').replace(/\s+/g, '_');
+      
+      // Minecraft valid item names mapping
+      if (itemName.includes('netherite')) itemName = 'netherite_ingot';
+      else if (itemName.includes('god_apple') || itemName.includes('apple')) itemName = 'enchanted_golden_apple';
+      else if (itemName.includes('totem')) itemName = 'totem_of_undying';
+      else if (itemName.includes('diamond_block')) itemName = 'diamond_block';
+      else if (itemName.includes('fly')) itemName = 'elytra';
+
+      commandToRun = `give ${formattedPlayer} ${itemName} 1`;
+    }
+
+    // OfflineCommands wrapper to support offline players
+    const finalCommand = `offlinecommand ${formattedPlayer} ${commandToRun}`;
+
+    // 1. Console me Command Bhejna
     const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
@@ -35,9 +58,8 @@ export async function POST(req: Request) {
     });
 
     const isServerSuccess = serverResponse.ok;
-    const serverStatusText = isServerSuccess ? 'SUCCESS (200)' : `FAILED (${serverResponse.status})`;
 
-    // 2. Discord Webhook Embed Notification
+    // 2. Discord Webhook Notification
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,11 +67,10 @@ export async function POST(req: Request) {
         embeds: [
           {
             title: '🎰 Wheel Spin Reward Executed',
-            color: isServerSuccess ? 3066993 : 15158332, // Green for Success, Red for Fail
+            color: isServerSuccess ? 3066993 : 15158332,
             fields: [
               { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
-              { name: '🎁 Reward', value: `\`${rawReward}\``, inline: true },
-              { name: '📡 Panel Status', value: `\`${serverStatusText}\``, inline: true },
+              { name: '🎁 Reward', value: `\`${rewardName}\``, inline: true },
               { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
             ],
             footer: { text: 'TheHerosSMP System' },
@@ -59,7 +80,7 @@ export async function POST(req: Request) {
       }),
     });
 
-    return NextResponse.json({ success: isServerSuccess, serverStatus: serverStatusText });
+    return NextResponse.json({ success: isServerSuccess });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
