@@ -19,9 +19,9 @@ export async function POST(req: Request) {
 
     let commandToRun = '';
 
-    // Cash / Economy Rewards Logic
+    // 1. Cash / Money Rewards (Essentials Economy)
     if (rawReward.includes('cash') || rawReward.includes('money')) {
-      let amount = 10000; // Default 10k
+      let amount = 10000;
       if (rawReward.includes('50k')) amount = 50000;
       else if (rawReward.includes('100k')) amount = 100000;
       else if (rawReward.includes('20k')) amount = 20000;
@@ -29,24 +29,40 @@ export async function POST(req: Request) {
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
     } 
-    // Standard Items Logic
+    // 2. 1 Hour Fly Pass (Essentials Fly / TempFly)
+    else if (rawReward.includes('fly')) {
+      commandToRun = `tempfly ${formattedPlayer} 1h`;
+    }
+    // 3. Minecraft Standard Items
     else {
-      let itemName = rawReward.replace(/^\d+\s+/, '').replace(/\s+/g, '_');
-      
-      // Minecraft valid item names mapping
-      if (itemName.includes('netherite')) itemName = 'netherite_ingot';
-      else if (itemName.includes('god_apple') || itemName.includes('apple')) itemName = 'enchanted_golden_apple';
-      else if (itemName.includes('totem')) itemName = 'totem_of_undying';
-      else if (itemName.includes('diamond_block')) itemName = 'diamond_block';
-      else if (itemName.includes('fly')) itemName = 'elytra';
+      let item = 'golden_apple';
+      let count = 1;
 
-      commandToRun = `give ${formattedPlayer} ${itemName} 1`;
+      if (rawReward.includes('netherite')) {
+        item = 'netherite_ingot';
+        count = 1;
+      } else if (rawReward.includes('totem')) {
+        item = 'totem_of_undying';
+        count = 1;
+      } else if (rawReward.includes('32 g-apple') || rawReward.includes('g-apple')) {
+        item = 'golden_apple';
+        count = 32;
+      } else if (rawReward.includes('god apple') || rawReward.includes('god_apple')) {
+        item = 'enchanted_golden_apple';
+        count = 1;
+      } else if (rawReward.includes('dia block') || rawReward.includes('diamond')) {
+        item = 'diamond_block';
+        count = 20;
+      }
+
+      // Exact Vanilla Minecraft Command Format
+      commandToRun = `give ${formattedPlayer} minecraft:${item} ${count}`;
     }
 
-    // OfflineCommands wrapper to support offline players
+    // OfflineCommands Plugin Format
     const finalCommand = `offlinecommand ${formattedPlayer} ${commandToRun}`;
 
-    // 1. Console me Command Bhejna
+    // Panel API Execution
     const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
@@ -59,7 +75,7 @@ export async function POST(req: Request) {
 
     const isServerSuccess = serverResponse.ok;
 
-    // 2. Discord Webhook Notification
+    // Discord Notification
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
