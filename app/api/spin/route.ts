@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const BOT_TOKEN = 'MTUzOTAwMzU0ODM5Njk0NTUxOQ.GI8WtC.oOQP31mk7ZxvHM0VAGXdKXEEPTB0SOR8Asr2Mk';
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 // Channel IDs
 const CONSOLE_COMMAND_CHANNEL = '1539525464064790558'; // Direct console command
@@ -13,6 +13,10 @@ export async function POST(req: Request) {
 
     if (!playerName) {
       return NextResponse.json({ error: 'Player name missing' }, { status: 400 });
+    }
+
+    if (!BOT_TOKEN) {
+      return NextResponse.json({ error: 'Bot token missing in Vercel settings' }, { status: 500 });
     }
 
     const formattedPlayer = playerName.trim();
@@ -38,19 +42,17 @@ export async function POST(req: Request) {
       consoleCmd = `minecraft:give ${formattedPlayer} netherite_ingot 1`;
     }
 
-    // 1. Post bare command to Console Channel
+    // 1. Bare command to Console Channel
     await fetch(`https://discord.com/api/v10/channels/${CONSOLE_COMMAND_CHANNEL}/messages`, {
       method: 'POST',
       headers: {
         'Authorization': `Bot ${BOT_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        content: consoleCmd,
-      }),
+      body: JSON.stringify({ content: consoleCmd }),
     });
 
-    // 2. Post announcement to Reward Channel
+    // 2. Announcement to Reward Channel
     await fetch(`https://discord.com/api/v10/channels/${PUBLIC_ANNOUNCE_CHANNEL}/messages`, {
       method: 'POST',
       headers: {
@@ -62,7 +64,7 @@ export async function POST(req: Request) {
       }),
     });
 
-    return NextResponse.json({ success: true, message: 'Both channels notified successfully!' });
+    return NextResponse.json({ success: true, message: 'Both channels notified!' });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
