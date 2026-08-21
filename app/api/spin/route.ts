@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     let commandToRun = '';
 
-    // Cash direct add hoga
+    // Cash rewards
     if (rawReward.includes('cash') || rawReward.includes('money')) {
       let amount = 10000;
       if (rawReward.includes('50k')) amount = 50000;
@@ -28,17 +28,19 @@ export async function POST(req: Request) {
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
     } 
-    // Items claim queue me jayenge
+    // Item rewards (Direct Give Command)
     else {
       let item = 'golden_apple';
+      let count = 1;
 
-      if (rawReward.includes('netherite')) { item = 'netherite_ingot'; }
-      else if (rawReward.includes('totem')) { item = 'totem_of_undying'; }
-      else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; }
-      else if (rawReward.includes('dia block')) { item = 'diamond_block'; }
+      if (rawReward.includes('netherite')) { item = 'netherite_ingot'; count = 1; }
+      else if (rawReward.includes('totem')) { item = 'totem_of_undying'; count = 1; }
+      else if (rawReward.includes('32 g-apple')) { item = 'golden_apple'; count = 32; }
+      else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
+      else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
 
-      // Direct clean item name send ho raha hai
-      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item}`;
+      // Direct /give command execute hogi
+      commandToRun = `minecraft:give ${formattedPlayer} ${item} ${count}`;
     }
 
     await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
