@@ -39,8 +39,8 @@ export async function POST(req: Request) {
       else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
       else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
 
-      // MyCommand pending reward variable set karega
-      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item} ${count}`;
+      // Pure item name and count formatted correctly
+      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item}:${count}`;
     }
 
     await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
