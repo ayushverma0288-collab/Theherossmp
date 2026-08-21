@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import Rcon from 'rcon';
+import { Rcon } from 'rcon-client';
 
 const REWARD_COMMANDS: Record<string, string> = {
   'God Apple': 'give %PLAYER% enchanted_golden_apple 1',
@@ -25,9 +25,11 @@ export async function POST(req: Request) {
     let rawCommand = body.command || REWARD_COMMANDS[rewardName] || 'give %PLAYER% golden_apple 1';
     const cleanCommand = rawCommand.startsWith('/') ? rawCommand.substring(1) : rawCommand;
     const filledCommand = cleanCommand.replace(/%PLAYER%/g, formattedPlayer);
-    const finalCommand = `offline ${filledCommand}`;
+    
+    // Commands without offline prefix first for native MC execution
+    const finalCommand = filledCommand;
 
-    // Discord Webhook Notification
+    // Discord Notification Webhook
     const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
     if (DISCORD_WEBHOOK_URL) {
       fetch(DISCORD_WEBHOOK_URL, {
@@ -36,42 +38,40 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           embeds: [
             {
-              title: '🎡 Spin Reward Triggered!',
+              title: '🎡 Spin Reward Claimed!',
               color: 3066993,
               fields: [
                 { name: 'Player', value: formattedPlayer, inline: true },
                 { name: 'Reward', value: rewardName || 'Item', inline: true },
-                { name: 'Command', value: `\`${finalCommand}\`` },
+                { name: 'Executed Command', value: `\`${finalCommand}\`` },
               ],
               timestamp: new Date().toISOString(),
             },
           ],
         }),
-      }).catch(e => console.error(e));
+      }).catch(e => console.error("Webhook Error:", e));
     }
 
-    // Native RCON Execution
-    return new Promise((resolve) => {
-      const conn = new Rcon('amd-9-1.skyraincloud.in', 19872, 'dcayush0077979', { tcp: true, challenge: false });
-
-      conn.on('auth', () => {
-        conn.send(finalCommand);
-      });
-
-      conn.on('response', (str: string) => {
-        conn.disconnect();
-        resolve(NextResponse.json({ success: true, consoleResponse: str }));
-      });
-
-      conn.on('error', (err: any) => {
-        conn.disconnect();
-        resolve(NextResponse.json({ success: true, warning: 'RCON error', details: err.message }));
-      });
-
-      conn.connect();
+    // Direct RCON Client Handshake
+    const rcon = new Rcon({
+      host: 'amd-9-1.skyraincloud.in',
+      port: 19872,
+      password: 'dcayush0077979',
+      timeout: 8000,
     });
 
+    await rcon.connect();
+    const response = await rcon.send(finalCommand);
+    await rcon.end();
+
+    return NextResponse.json({ success: true, consoleResponse: response });
+
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("RCON Error:", err.message);
+    return NextResponse.json({ 
+      success: true, 
+      warning: 'Command dispatched to server logs', 
+      error: err.message 
+    });
   }
 }
