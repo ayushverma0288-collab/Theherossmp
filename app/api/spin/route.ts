@@ -18,27 +18,40 @@ export async function POST(req: Request) {
 
     let commandToRun = '';
 
-    // Cash direct add hoga
-    if (rawReward.includes('cash') || rawReward.includes('money')) {
-      let amount = 10000;
-      if (rawReward.includes('50k')) amount = 50000;
-      else if (rawReward.includes('100k')) amount = 100000;
-      else if (rawReward.includes('20k')) amount = 20000;
-
-      commandToRun = `eco give ${formattedPlayer} ${amount}`;
+    // 1. 7k Money
+    if (rawReward.includes('7k') || rawReward.includes('money') || rawReward.includes('cash')) {
+      commandToRun = `eco give ${formattedPlayer} 7000`;
     } 
-    // Direct Item Give (Without Variables)
+    // 2. 1 Hour Fly
+    else if (rawReward.includes('fly')) {
+      commandToRun = `tempgrant user ${formattedPlayer} essentials.fly 1h`;
+    }
+    // 3. Item Rewards
     else {
       let item = 'golden_apple';
       let count = 1;
 
-      if (rawReward.includes('netherite')) { item = 'netherite_ingot'; count = 1; }
-      else if (rawReward.includes('totem')) { item = 'totem_of_undying'; count = 1; }
-      else if (rawReward.includes('32 g-apple')) { item = 'golden_apple'; count = 32; }
-      else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
-      else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
+      if (rawReward.includes('netherite')) {
+        item = 'netherite_ingot';
+        count = 1;
+      } 
+      else if (rawReward.includes('totem')) {
+        item = 'totem_of_undying';
+        count = 1;
+      } 
+      else if (rawReward.includes('32 g-apple') || (rawReward.includes('golden apple') && !rawReward.includes('enchanted'))) {
+        item = 'golden_apple';
+        count = 32;
+      } 
+      else if (rawReward.includes('enchanted') || rawReward.includes('god apple')) {
+        item = 'enchanted_golden_apple';
+        count = 1;
+      } 
+      else if (rawReward.includes('dia') || rawReward.includes('dimond') || rawReward.includes('diamond')) {
+        item = 'diamond_block';
+        count = 20;
+      }
 
-      // Direct /give command sent to server console
       commandToRun = `minecraft:give ${formattedPlayer} ${item} ${count}`;
     }
 
