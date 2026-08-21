@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 
-// Aapka Discord Webhook URL set kar diya gaya hai
+// Server, API Key aur Discord Configured Details
+const PANEL_URL = 'https://gp.skyraincloud.in';
+const SERVER_ID = '1a6b910';
+const PANEL_API_KEY = 'ptlc_gSsHjVuLwvbK05MbWRGDyrUM0mXcm661aNnLsOTTyCW';
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1539869461954306048/DvR9UTenWMiPiMl_imqtHxhbm64SynzROOhDDsQi1Ae-xgmkjIaQMOy-2T_bx90a43J5';
 
 export async function POST(req: Request) {
@@ -15,20 +18,25 @@ export async function POST(req: Request) {
     const formattedPlayer = playerName.trim();
     const formattedReward = rewardName ? rewardName.trim() : 'God Apple';
 
-    // OfflineCommands format (Online & Offline dono players ke liye)
+    // OfflineCommands command format
     const finalCommand = `offlinecommand ${formattedPlayer} give ${formattedPlayer} ${formattedReward.toLowerCase()} 1`;
 
-    // 1. Server Console ko Command Bhejna
-    await fetch('http://amd-9-1.skyraincloud.in:19872/', {
+    // 1. SkyRainCloud Console Command Execution
+    const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        secret: 'my_secret_key_123',
-        command: finalCommand,
-      }),
+      headers: {
+        'Authorization': `Bearer ${PANEL_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ command: finalCommand }),
     });
 
-    // 2. Discord Channel par Message Bhejna
+    if (!serverResponse.ok) {
+      return NextResponse.json({ error: 'Failed to send command to server panel' }, { status: 500 });
+    }
+
+    // 2. Discord Channel Embed Notification
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,7 +44,7 @@ export async function POST(req: Request) {
         embeds: [
           {
             title: '🎰 Wheel Spin Reward System',
-            color: 3066993, // Green Color
+            color: 3066993, // Green
             fields: [
               { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
               { name: '🎁 Reward', value: `\`${formattedReward}\``, inline: true },
