@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 
 const PANEL_URL = 'https://gp.skyraincloud.in';
 const SERVER_ID = '69dcc439';
-const PANEL_API_KEY = 'ptlc_gSsHjVuLwvbK05MbWRGDyrUM0mXcm661aNnLsOTTyCW';
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1539869461954306048/DvR9UTenWMiPiMl_imqtHxhbm64SynzROOhDDsQi1Ae-xgmkjIaQMOy-2T_bx90a43J5';
+const PANEL_API_KEY = 'ptlc_gSsHjVuLvvbK05Mb4RGDyrUW0mXcm661aNnLs0TTyCW';
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1539869461954306048/DvR9UTemM8lPlMl_imqtHxbm64SyncRDO4OE';
 
 export async function POST(req: Request) {
   try {
@@ -36,11 +36,11 @@ export async function POST(req: Request) {
       if (rawReward.includes('netherite')) { item = 'netherite_ingot'; count = 1; }
       else if (rawReward.includes('totem')) { item = 'totem_of_undying'; count = 1; }
       else if (rawReward.includes('32 g-apple')) { item = 'golden_apple'; count = 32; }
-      else if (rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
+      else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
       else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
 
       // MyCommand pending reward variable set karega
-      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item}:${count}`;
+      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item} ${count}`;
     }
 
     await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
