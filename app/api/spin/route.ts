@@ -17,10 +17,10 @@ export async function POST(req: Request) {
     const formattedPlayer = playerName.trim();
     const formattedReward = rewardName ? rewardName.trim() : 'God Apple';
 
-    // Player online ho ya offline, console direct give command bhejega
-    const finalCommand = `give ${formattedPlayer} ${formattedReward.toLowerCase()} 1`;
+    // OfflineCommands Plugin Format
+    const finalCommand = `offlinecommand ${formattedPlayer} give ${formattedPlayer} ${formattedReward.toLowerCase()} 1`;
 
-    // 1. Console me Direct Command Send
+    // 1. Console me Command Bhejna
     await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
@@ -37,21 +37,21 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         embeds: [
           {
-            title: '🎰 Wheel Spin Reward',
-            color: 3066993,
+            title: '🎰 Wheel Spin Reward System',
+            color: 3066993, // Green
             fields: [
               { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
               { name: '🎁 Reward', value: `\`${formattedReward}\``, inline: true },
               { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
             ],
-            footer: { text: 'TheHerosSMP Spin System' },
+            footer: { text: 'TheHerosSMP • Offline Queue Active' },
             timestamp: new Date().toISOString(),
           },
         ],
       }),
     });
 
-    return NextResponse.json({ success: true, message: 'Done!' });
+    return NextResponse.json({ success: true, message: 'Reward Queued/Delivered!' });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
