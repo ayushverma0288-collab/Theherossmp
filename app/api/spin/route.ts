@@ -10,26 +10,63 @@ export async function POST(req: Request) {
     }
 
     const formattedPlayer = playerName.trim();
-    // In-game command execute karne ke liye slash '/' hataya hai
     const cleanCommand = command.startsWith('/') ? command.substring(1) : command;
-    const finalCommand = cleanCommand.replace(/%PLAYER%/g, formattedPlayer);
+    const filledCommand = cleanCommand.replace(/%PLAYER%/g, formattedPlayer);
+    
+    // OfflineCommands Plugin Syntax
+    const finalCommand = `offline ${filledCommand}`;
 
-    // SkyRainCloud RCON Connection
-    const rcon = await Rcon.connect({
-      host: 'amd-9-1.skyraincloud.in',
-      port: 25575,
-      password: 'dcayush0077979',
-    });
+    // 1. Send Discord Webhook First (Ensures notification is never missed)
+    const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+    if (DISCORD_WEBHOOK_URL) {
+      try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: '🎡 Spin Reward Claimed!',
+                color: 3066993,
+                fields: [
+                  { name: 'Player', value: formattedPlayer, inline: true },
+                  { name: 'Reward', value: rewardName, inline: true },
+                  { name: 'Command', value: `\`${finalCommand}\`` },
+                ],
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          }),
+        });
+      } catch (err) {
+        console.error('Discord Webhook Error:', err);
+      }
+    }
 
-    const response = await rcon.send(finalCommand);
-    await rcon.end();
+    // 2. Execute Command via RCON
+    try {
+      const rcon = await Rcon.connect({
+        host: 'amd-9-1.skyraincloud.in',
+        port: 25575,
+        password: 'dcayush0077979',
+        timeout: 5000,
+      });
 
-    return NextResponse.json({ success: true, consoleResponse: response });
+      const response = await rcon.send(finalCommand);
+      await rcon.end();
+
+      return NextResponse.json({ success: true, consoleResponse: response });
+    } catch (rconErr: any) {
+      console.error('RCON Failed:', rconErr);
+      return NextResponse.json({ 
+        success: true, 
+        warning: 'Discord notified, but RCON connection failed.',
+        rconError: rconErr.message 
+      });
+    }
+
   } catch (error: any) {
-    console.error('RCON Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to execute command on server', details: error.message },
-      { status: 500 }
-    );
+    console.error('API Error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
