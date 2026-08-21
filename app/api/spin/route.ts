@@ -29,11 +29,11 @@ export async function POST(req: Request) {
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
     } 
-    // 2. 1 Hour Fly Pass (Essentials Fly / TempFly)
+    // 2. Fly Pass (Essentials Fly Command)
     else if (rawReward.includes('fly')) {
-      commandToRun = `tempfly ${formattedPlayer} 1h`;
+      commandToRun = `fly ${formattedPlayer} on`;
     }
-    // 3. Minecraft Standard Items
+    // 3. Minecraft Items
     else {
       let item = 'golden_apple';
       let count = 1;
@@ -55,12 +55,11 @@ export async function POST(req: Request) {
         count = 20;
       }
 
-      // Exact Vanilla Minecraft Command Format
-      commandToRun = `give ${formattedPlayer} minecraft:${item} ${count}`;
+      commandToRun = `give ${formattedPlayer} ${item} ${count}`;
     }
 
-    // OfflineCommands Plugin Format
-    const finalCommand = `offlinecommand ${formattedPlayer} ${commandToRun}`;
+    // Direct command without broken offlinecommand plugin wrapper
+    const finalCommand = commandToRun;
 
     // Panel API Execution
     const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
@@ -75,7 +74,7 @@ export async function POST(req: Request) {
 
     const isServerSuccess = serverResponse.ok;
 
-    // Discord Notification
+    // Discord Webhook Notification
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
