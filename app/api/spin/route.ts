@@ -18,52 +18,32 @@ export async function POST(req: Request) {
     const rawReward = rewardName ? rewardName.trim().toLowerCase() : '';
 
     let commandToRun = '';
-    let mailCommand = '';
 
-    // 1. Cash Rewards (Works Direct for Offline Players)
+    // Cash direct add hoga
     if (rawReward.includes('cash') || rawReward.includes('money')) {
       let amount = 10000;
       if (rawReward.includes('50k')) amount = 50000;
       else if (rawReward.includes('100k')) amount = 100000;
       else if (rawReward.includes('20k')) amount = 20000;
-      else if (rawReward.includes('10k')) amount = 10000;
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
-      mailCommand = `mail send ${formattedPlayer} You received $${amount} cash from Website Spin!`;
     } 
-    // 2. Fly Pass
-    else if (rawReward.includes('fly')) {
-      commandToRun = `fly ${formattedPlayer} on`;
-      mailCommand = `mail send ${formattedPlayer} You received Fly Pass from Website Spin!`;
-    }
-    // 3. Item Rewards
+    // Items claim queue me jayenge
     else {
       let item = 'golden_apple';
       let count = 1;
 
-      if (rawReward.includes('netherite')) {
-        item = 'netherite_ingot';
-        count = 1;
-      } else if (rawReward.includes('totem')) {
-        item = 'totem_of_undying';
-        count = 1;
-      } else if (rawReward.includes('32 g-apple') || rawReward.includes('g-apple')) {
-        item = 'golden_apple';
-        count = 32;
-      } else if (rawReward.includes('god apple') || rawReward.includes('god_apple')) {
-        item = 'enchanted_golden_apple';
-        count = 1;
-      } else if (rawReward.includes('dia block') || rawReward.includes('diamond')) {
-        item = 'diamond_block';
-        count = 20;
-      }
+      if (rawReward.includes('netherite')) { item = 'netherite_ingot'; count = 1; }
+      else if (rawReward.includes('totem')) { item = 'totem_of_undying'; count = 1; }
+      else if (rawReward.includes('32 g-apple')) { item = 'golden_apple'; count = 32; }
+      else if (rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
+      else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
 
-      commandToRun = `give ${formattedPlayer} ${item} ${count}`;
-      mailCommand = `mail send ${formattedPlayer} You won ${count}x ${rewardName} from Website Spin!`;
+      // MyCommand pending reward variable set karega
+      commandToRun = `mycommand pdata set ${formattedPlayer} pending_reward ${item}:${count}`;
     }
 
-    // Send Main Command (Give/Eco)
-    const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
+    await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${PANEL_API_KEY}`,
@@ -72,40 +52,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ command: commandToRun }),
     });
 
-    // Send Mail Notification Command
-    await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${PANEL_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ command: mailCommand }),
-    });
-
-    const isServerSuccess = serverResponse.ok;
-
-    // Discord Webhook Log
-    await fetch(DISCORD_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        embeds: [
-          {
-            title: '🎰 Wheel Spin Reward Executed',
-            color: isServerSuccess ? 3066993 : 15158332,
-            fields: [
-              { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
-              { name: '🎁 Reward', value: `\`${rewardName}\``, inline: true },
-              { name: '💻 Executed Commands', value: `\`\`\`1. ${commandToRun}\n2. ${mailCommand}\`\`\``, inline: false },
-            ],
-            footer: { text: 'TheHerosSMP Mail System' },
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      }),
-    });
-
-    return NextResponse.json({ success: isServerSuccess });
+    return NextResponse.json({ success: true });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
