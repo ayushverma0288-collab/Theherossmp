@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     let commandToRun = '';
 
-    // Cash direct account me jayega
+    // Cash direct add hoga
     if (rawReward.includes('cash') || rawReward.includes('money')) {
       let amount = 10000;
       if (rawReward.includes('50k')) amount = 50000;
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
     } 
-    // Item Rewards (Offline & Online dono ke liye 100% safe)
+    // Direct Item Give (Without Variables)
     else {
       let item = 'golden_apple';
       let count = 1;
@@ -38,8 +38,8 @@ export async function POST(req: Request) {
       else if (rawReward.includes('enchanted g-apple') || rawReward.includes('god apple')) { item = 'enchanted_golden_apple'; count = 1; }
       else if (rawReward.includes('dia block')) { item = 'diamond_block'; count = 20; }
 
-      // MyCommand me dynamic command create karega
-      commandToRun = `mycommand pdata set ${formattedPlayer} claim_cmd "minecraft:give %player% ${item} ${count}"`;
+      // Direct /give command sent to server console
+      commandToRun = `minecraft:give ${formattedPlayer} ${item} ${count}`;
     }
 
     await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
