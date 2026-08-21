@@ -18,8 +18,9 @@ export async function POST(req: Request) {
     const rawReward = rewardName ? rewardName.trim().toLowerCase() : '';
 
     let commandToRun = '';
+    let mailCommand = '';
 
-    // 1. Cash / Money Rewards (Essentials Economy)
+    // 1. Cash Rewards (Works Direct for Offline Players)
     if (rawReward.includes('cash') || rawReward.includes('money')) {
       let amount = 10000;
       if (rawReward.includes('50k')) amount = 50000;
@@ -28,12 +29,14 @@ export async function POST(req: Request) {
       else if (rawReward.includes('10k')) amount = 10000;
 
       commandToRun = `eco give ${formattedPlayer} ${amount}`;
+      mailCommand = `mail send ${formattedPlayer} You received $${amount} cash from Website Spin!`;
     } 
-    // 2. Fly Pass (Essentials Fly Command)
+    // 2. Fly Pass
     else if (rawReward.includes('fly')) {
       commandToRun = `fly ${formattedPlayer} on`;
+      mailCommand = `mail send ${formattedPlayer} You received Fly Pass from Website Spin!`;
     }
-    // 3. Minecraft Items
+    // 3. Item Rewards
     else {
       let item = 'golden_apple';
       let count = 1;
@@ -56,25 +59,32 @@ export async function POST(req: Request) {
       }
 
       commandToRun = `give ${formattedPlayer} ${item} ${count}`;
+      mailCommand = `mail send ${formattedPlayer} You won ${count}x ${rewardName} from Website Spin!`;
     }
 
-    // Direct command without broken offlinecommand plugin wrapper
-    const finalCommand = commandToRun;
-
-    // Panel API Execution
+    // Send Main Command (Give/Eco)
     const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${PANEL_API_KEY}`,
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
       },
-      body: JSON.stringify({ command: finalCommand }),
+      body: JSON.stringify({ command: commandToRun }),
+    });
+
+    // Send Mail Notification Command
+    await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${PANEL_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ command: mailCommand }),
     });
 
     const isServerSuccess = serverResponse.ok;
 
-    // Discord Webhook Notification
+    // Discord Webhook Log
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -86,9 +96,9 @@ export async function POST(req: Request) {
             fields: [
               { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
               { name: '🎁 Reward', value: `\`${rewardName}\``, inline: true },
-              { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
+              { name: '💻 Executed Commands', value: `\`\`\`1. ${commandToRun}\n2. ${mailCommand}\`\`\``, inline: false },
             ],
-            footer: { text: 'TheHerosSMP System' },
+            footer: { text: 'TheHerosSMP Mail System' },
             timestamp: new Date().toISOString(),
           },
         ],
