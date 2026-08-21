@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-// Apne Discord Channel ka Webhook URL yahan paste karein
-const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+// Aapka Discord Webhook URL set kar diya gaya hai
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1539869461954306048/DvR9UTenWMiPiMl_imqtHxhbm64SynzROOhDDsQi1Ae-xgmkjIaQMOy-2T_bx90a43J5';
 
 export async function POST(req: Request) {
   try {
@@ -15,10 +15,10 @@ export async function POST(req: Request) {
     const formattedPlayer = playerName.trim();
     const formattedReward = rewardName ? rewardName.trim() : 'God Apple';
 
-    // OfflineCommands format (Offline & Online dono ke liye kaam karta hai)
+    // OfflineCommands format (Online & Offline dono players ke liye)
     const finalCommand = `offlinecommand ${formattedPlayer} give ${formattedPlayer} ${formattedReward.toLowerCase()} 1`;
 
-    // 1. Minecraft Server Console par Command Bhejna
+    // 1. Server Console ko Command Bhejna
     await fetch('http://amd-9-1.skyraincloud.in:19872/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,30 +28,28 @@ export async function POST(req: Request) {
       }),
     });
 
-    // 2. Discord Embed Message Send Karna
-    if (DISCORD_WEBHOOK_URL && DISCORD_WEBHOOK_URL !== 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
-      await fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          embeds: [
-            {
-              title: '🎰 Wheel Spin Reward System',
-              color: 3066993, // Green Color
-              fields: [
-                { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
-                { name: '🎁 Reward', value: `\`${formattedReward}\``, inline: true },
-                { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
-              ],
-              footer: { text: 'TheHerosSMP • Offline Support Active' },
-              timestamp: new Date().toISOString(),
-            },
-          ],
-        }),
-      });
-    }
+    // 2. Discord Channel par Message Bhejna
+    await fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [
+          {
+            title: '🎰 Wheel Spin Reward System',
+            color: 3066993, // Green Color
+            fields: [
+              { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
+              { name: '🎁 Reward', value: `\`${formattedReward}\``, inline: true },
+              { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
+            ],
+            footer: { text: 'TheHerosSMP • Offline Support Active' },
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
 
-    return NextResponse.json({ success: true, message: 'Reward Sent!' });
+    return NextResponse.json({ success: true, message: 'Reward Sent & Logged to Discord!' });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
