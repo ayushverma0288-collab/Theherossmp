@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-// Server, API Key aur Discord Configured Details
 const PANEL_URL = 'https://gp.skyraincloud.in';
 const SERVER_ID = '1a6b910';
 const PANEL_API_KEY = 'ptlc_gSsHjVuLwvbK05MbWRGDyrUM0mXcm661aNnLsOTTyCW';
@@ -18,10 +17,11 @@ export async function POST(req: Request) {
     const formattedPlayer = playerName.trim();
     const formattedReward = rewardName ? rewardName.trim() : 'God Apple';
 
-    // OfflineCommands command format
+    // Apne offline plugin ke exact command ke hisaab se yahan change karo:
+    // E.g., 'offlinecommand <player> give <player> <item> 1'
     const finalCommand = `offlinecommand ${formattedPlayer} give ${formattedPlayer} ${formattedReward.toLowerCase()} 1`;
 
-    // 1. SkyRainCloud Console Command Execution
+    // 1. SkyRainCloud Panel API se Command Send karna
     const serverResponse = await fetch(`${PANEL_URL}/api/client/servers/${SERVER_ID}/command`, {
       method: 'POST',
       headers: {
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to send command to server panel' }, { status: 500 });
     }
 
-    // 2. Discord Channel Embed Notification
+    // 2. Discord Webhook Embed
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -44,20 +44,20 @@ export async function POST(req: Request) {
         embeds: [
           {
             title: '🎰 Wheel Spin Reward System',
-            color: 3066993, // Green
+            color: 3066993,
             fields: [
               { name: '👤 Player', value: `\`${formattedPlayer}\``, inline: true },
               { name: '🎁 Reward', value: `\`${formattedReward}\``, inline: true },
               { name: '💻 Executed Command', value: `\`\`\`${finalCommand}\`\`\``, inline: false },
             ],
-            footer: { text: 'TheHerosSMP • Offline Support Active' },
+            footer: { text: 'TheHerosSMP System' },
             timestamp: new Date().toISOString(),
           },
         ],
       }),
     });
 
-    return NextResponse.json({ success: true, message: 'Reward Sent & Logged to Discord!' });
+    return NextResponse.json({ success: true, message: 'Command Sent & Logged!' });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
