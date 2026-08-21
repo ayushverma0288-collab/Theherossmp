@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 // Channel IDs
-const CONSOLE_COMMAND_CHANNEL = '1539525464064790558'; // Direct console command
-const PUBLIC_ANNOUNCE_CHANNEL = '1539868772389748747'; // Reward announcement
+const CONSOLE_COMMAND_CHANNEL = '1539525464064790558'; // Direct console command channel
+const PUBLIC_ANNOUNCE_CHANNEL = '1539868772389748747'; // Reward announcement channel
 
 export async function POST(req: Request) {
   try {
@@ -23,26 +23,26 @@ export async function POST(req: Request) {
     const rawReward = rewardName ? rewardName.trim() : 'Unknown Reward';
     const rewardLower = rawReward.toLowerCase();
 
-    // Command Logic Mappings
-    let consoleCmd = `minecraft:give ${formattedPlayer} golden_apple 1`;
+    // Exact Clean Commands (Without 'minecraft:' prefix)
+    let consoleCmd = `give ${formattedPlayer} golden_apple 1`;
     
     if (rewardLower.includes('7k') || rewardLower.includes('7000')) {
       consoleCmd = `eco give ${formattedPlayer} 7000`;
     } else if (rewardLower.includes('fly')) {
       consoleCmd = `tempgrant user ${formattedPlayer} essentials.fly 1h`;
     } else if (rewardLower.includes('dia') || rewardLower.includes('diamond')) {
-      consoleCmd = `minecraft:give ${formattedPlayer} diamond_block 20`;
+      consoleCmd = `give ${formattedPlayer} diamond_block 20`;
     } else if (rewardLower.includes('32') || rewardLower.includes('g-apple')) {
-      consoleCmd = `minecraft:give ${formattedPlayer} golden_apple 32`;
+      consoleCmd = `give ${formattedPlayer} golden_apple 32`;
     } else if (rewardLower.includes('enchanted') || rewardLower.includes('god')) {
-      consoleCmd = `minecraft:give ${formattedPlayer} enchanted_golden_apple 1`;
+      consoleCmd = `give ${formattedPlayer} enchanted_golden_apple 1`;
     } else if (rewardLower.includes('totem')) {
-      consoleCmd = `minecraft:give ${formattedPlayer} totem_of_undying 1`;
+      consoleCmd = `give ${formattedPlayer} totem_of_undying 1`;
     } else if (rewardLower.includes('netherite')) {
-      consoleCmd = `minecraft:give ${formattedPlayer} netherite_ingot 1`;
+      consoleCmd = `give ${formattedPlayer} netherite_ingot 1`;
     }
 
-    // 1. Bare command to Console Channel
+    // 1. Post exact command to Server Console Channel
     await fetch(`https://discord.com/api/v10/channels/${CONSOLE_COMMAND_CHANNEL}/messages`, {
       method: 'POST',
       headers: {
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({ content: consoleCmd }),
     });
 
-    // 2. Announcement to Reward Channel
+    // 2. Post visual announcement to Daily Rewards Channel
     await fetch(`https://discord.com/api/v10/channels/${PUBLIC_ANNOUNCE_CHANNEL}/messages`, {
       method: 'POST',
       headers: {
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       }),
     });
 
-    return NextResponse.json({ success: true, message: 'Both channels notified!' });
+    return NextResponse.json({ success: true, message: 'Commands sent successfully!' });
 
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
