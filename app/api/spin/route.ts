@@ -1,72 +1,78 @@
+cat << 'EOF' > app/api/spin/route.ts
 import { NextResponse } from 'next/server';
-
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-
-// Channel IDs
-const CONSOLE_COMMAND_CHANNEL = '1539525464064790558'; // Direct console command channel
-const PUBLIC_ANNOUNCE_CHANNEL = '1539868772389748747'; // Reward announcement channel
+import { Rcon } from 'rcon-client';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { playerName, rewardName } = body;
+    const { playerName, rewardName, command } = await req.json();
 
-    if (!playerName) {
-      return NextResponse.json({ error: 'Player name missing' }, { status: 400 });
-    }
-
-    if (!BOT_TOKEN) {
-      return NextResponse.json({ error: 'Bot token missing in Vercel settings' }, { status: 500 });
+    if (!playerName || !command) {
+      return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
     }
 
     const formattedPlayer = playerName.trim();
-    const rawReward = rewardName ? rewardName.trim() : 'Unknown Reward';
-    const rewardLower = rawReward.toLowerCase();
-
-    // Commands with '/' prefix for DiscordSRV execution
-    let consoleCmd = `/give ${formattedPlayer} golden_apple 1`;
+    const cleanCommand = command.startsWith('/') ? command.substring(1) : command;
+    const filledCommand = cleanCommand.replace(/%PLAYER%/g, formattedPlayer);
     
-    if (rewardLower.includes('7k') || rewardLower.includes('7000')) {
-      consoleCmd = `/eco give ${formattedPlayer} 7000`;
-    } else if (rewardLower.includes('fly')) {
-      consoleCmd = `/tempgrant user ${formattedPlayer} essentials.fly 1h`;
-    } else if (rewardLower.includes('dia') || rewardLower.includes('diamond')) {
-      consoleCmd = `/give ${formattedPlayer} diamond_block 20`;
-    } else if (rewardLower.includes('32') || rewardLower.includes('g-apple')) {
-      consoleCmd = `/give ${formattedPlayer} golden_apple 32`;
-    } else if (rewardLower.includes('enchanted') || rewardLower.includes('god')) {
-      consoleCmd = `/give ${formattedPlayer} enchanted_golden_apple 1`;
-    } else if (rewardLower.includes('totem')) {
-      consoleCmd = `/give ${formattedPlayer} totem_of_undying 1`;
-    } else if (rewardLower.includes('netherite')) {
-      consoleCmd = `/give ${formattedPlayer} netherite_ingot 1`;
+    // OfflineCommands Plugin Syntax
+    const finalCommand = `offline ${filledCommand}`;
+
+    // 1. Send Discord Webhook First (Ensures notification is never missed)
+    const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+    if (DISCORD_WEBHOOK_URL) {
+      try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: '🎡 Spin Reward Claimed!',
+                color: 3066993,
+                fields: [
+                  { name: 'Player', value: formattedPlayer, inline: true },
+                  { name: 'Reward', value: rewardName, inline: true },
+                  { name: 'Command', value: `\`${finalCommand}\`` },
+                ],
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          }),
+        });
+      } catch (err) {
+        console.error('Discord Webhook Error:', err);
+      }
     }
 
-    // 1. Post command with '/' to Server Console Channel
-    await fetch(`https://discord.com/api/v10/channels/${CONSOLE_COMMAND_CHANNEL}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bot ${BOT_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: consoleCmd }),
-    });
+    // 2. Execute Command via RCON
+    try {
+      const rcon = await Rcon.connect({
+        host: 'amd-9-1.skyraincloud.in',
+        port: 25575,
+        password: 'dcayush0077979',
+        timeout: 5000,
+      });
 
-    // 2. Post visual announcement to Daily Rewards Channel
-    await fetch(`https://discord.com/api/v10/channels/${PUBLIC_ANNOUNCE_CHANNEL}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bot ${BOT_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: `🎉 **Spin Reward Claimed!**\n👤 **Player:** \`${formattedPlayer}\`\n🎁 **Reward Won:** **${rawReward}**`,
-      }),
-    });
+      const response = await rcon.send(finalCommand);
+      await rcon.end();
 
-    return NextResponse.json({ success: true, message: 'Commands sent successfully!' });
+      return NextResponse.json({ success: true, consoleResponse: response });
+    } catch (rconErr: any) {
+      console.error('RCON Failed:', rconErr);
+      return NextResponse.json({ 
+        success: true, 
+        warning: 'Discord notified, but RCON connection failed.',
+        rconError: rconErr.message 
+      });
+    }
 
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (error: any) {
+    console.error('API Error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+EOF
+
+git add .
+git commit -m "Fix Discord notification flow and RCON error fallback"
+git push origin main
